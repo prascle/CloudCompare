@@ -283,6 +283,8 @@ private slots:
 	void doActionFitQuadric();
 	void doShowPrimitiveFactory();
 
+	void doActionCreatePoint();
+
 	void doActionComputeNormals();
 	void doActionInvertNormals();
 	void doActionConvertNormalsToHSV();

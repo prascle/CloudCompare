@@ -605,6 +605,7 @@ void MainWindow::connectActions()
 	connect(m_UI->actionEditGlobalShiftAndScale,	&QAction::triggered, this, &MainWindow::doActionEditGlobalShiftAndScale);
 	connect(m_UI->actionSubsample,					&QAction::triggered, this, &MainWindow::doActionSubsample);
 	connect(m_UI->actionDelete,						&QAction::triggered,	m_ccRoot,	&ccDBRoot::deleteSelectedEntities);
+	connect(m_UI->actionCreatePoint,				&QAction::triggered, this, &MainWindow::doActionCreatePoint);
 
 	//"Tools > Clean" menu
 	connect(m_UI->actionSORFilter,					&QAction::triggered, this, &MainWindow::doActionSORFilter);
@@ -8004,6 +8005,29 @@ void MainWindow::doShowPrimitiveFactory()
 	m_pfDlg->setModal(false);
 	m_pfDlg->setWindowModality(Qt::NonModal);
 	m_pfDlg->show();
+}
+
+void MainWindow::doActionCreatePoint()
+{
+	static CCVector3 myPoint(0.0, 0.0, 0.0);
+	ccAskThreeDoubleValuesDlg myPointDlg("x", "y", "z", -1.0e12, 1.0e12, myPoint.x, myPoint.y, myPoint.z, 6, "my point", this);
+	if (myPointDlg.buttonBox->button(QDialogButtonBox::Ok))
+		myPointDlg.buttonBox->button(QDialogButtonBox::Ok)->setFocus();
+	if (!myPointDlg.exec())
+		return;
+	myPoint.x = myPointDlg.doubleSpinBox1->value();
+	myPoint.y = myPointDlg.doubleSpinBox2->value();
+	myPoint.z = myPointDlg.doubleSpinBox3->value();
+
+	ccPointCloud* cloud  = new ccPointCloud("single point");
+	if (!cloud->reserve(1))
+	{
+		delete cloud;
+		ccLog::Error("not enough memory");
+	}
+    cloud->addPoint(myPoint);
+    addToDB(cloud);
+
 }
 
 void MainWindow::doComputeGeometricFeature()

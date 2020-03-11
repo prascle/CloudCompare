@@ -39,7 +39,7 @@
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>31</height>
+     <height>39</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -347,6 +347,7 @@
     <addaction name="separator"/>
     <addaction name="menuToggle"/>
     <addaction name="separator"/>
+    <addaction name="actionCreatePoint"/>
     <addaction name="actionDelete"/>
    </widget>
    <widget class="QMenu" name="menu3DViews">
@@ -509,8 +510,8 @@
   <widget class="QDockWidget" name="DockableDBTree">
    <property name="minimumSize">
     <size>
-     <width>146</width>
-     <height>175</height>
+     <width>174</width>
+     <height>212</height>
     </size>
    </property>
    <property name="floating">
@@ -612,7 +613,7 @@ QTreeView::branch:open:has-children:has-siblings  {
    <property name="minimumSize">
     <size>
      <width>103</width>
-     <height>137</height>
+     <height>154</height>
     </size>
    </property>
    <property name="maximumSize">
@@ -730,8 +731,8 @@ QTreeView::branch:open:has-children:has-siblings  {
   <widget class="QDockWidget" name="DockableProperties">
    <property name="minimumSize">
     <size>
-     <width>133</width>
-     <height>164</height>
+     <width>174</width>
+     <height>212</height>
     </size>
    </property>
    <property name="floating">
@@ -3046,6 +3047,11 @@ QTreeView::branch:open:has-children:has-siblings  {
    </property>
    <property name="toolTip">
     <string>Export normals to one or several scalar fields</string>
+   </property>
+  </action>
+  <action name="actionCreatePoint">
+   <property name="text">
+    <string>Create Point</string>
    </property>
   </action>
  </widget>
