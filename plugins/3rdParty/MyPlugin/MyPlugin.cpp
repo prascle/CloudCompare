@@ -32,6 +32,13 @@
 //	 "authors", "maintainers", and "references" show up in the plugin dialog as well
 
 #include <QtGui>
+#include <QInputDialog>
+#include <QMainWindow>
+#include <ccPointCloud.h>
+#include <ccPolyline.h>
+#include "Chaikin.cpp"
+
+//ccPolyline* SmoothChaikin(const ccPolyline& inputPolyline, PointCoordinateType ratio, unsigned iterations);
 
 #include "MyPlugin.h"
 
@@ -104,20 +111,31 @@ void MyPlugin::doAction()
 		return;
 	}
 
-	/*** HERE STARTS THE ACTION ***/
+	const ccHObject::Container& selectedEntities = getMainAppInterface()->getSelectedEntities();
+	if (selectedEntities.size() != 1 || !selectedEntities.front()->isA(CC_TYPES::POLY_LINE))
+		{
+			return;
+		}
 
-	// Put your code here
-	// --> you may want to start by asking for parameters (with a custom dialog, etc.)
-
-	// This is how you can output messages
-	// Display a standard message in the console
-	m_app->dispToConsole( "[MyPlugin] Hello world!", ccMainAppInterface::STD_CONSOLE_MESSAGE );
+		ccPolyline* polyline = ccHObjectCaster::ToPolyline(selectedEntities.front());
+	if (nullptr == polyline)
+	{
+		assert(false);
+		return;
+	}
+	bool ok = false;
+	int iterationCount = QInputDialog::getInt(getMainAppInterface()->getMainWindow(),"Chaikin", "Iterations", 5, 1, 100, 1, &ok);
+	if (!ok)
+	{
+		return;
+	}
+	ccPolyline* smoothPoly = SmoothChaikin(*polyline, 0.25, iterationCount);
+	if (nullptr == smoothPoly)
+	{
+		ccLog::Error("algorithm failed");
+		return;
+	}
 	
-	// Display a warning message in the console
-	m_app->dispToConsole( "[MyPlugin] Warning: my plugin shouldn't be used as is", ccMainAppInterface::WRN_CONSOLE_MESSAGE );
-	
-	// Display an error message in the console AND pop-up an error box
-	m_app->dispToConsole( "my plugin shouldn't be used - it doesn't do anything!", ccMainAppInterface::ERR_CONSOLE_MESSAGE );
+	getMainAppInterface()->addToDB(smoothPoly);
 
-	/*** HERE ENDS THE ACTION ***/
 }

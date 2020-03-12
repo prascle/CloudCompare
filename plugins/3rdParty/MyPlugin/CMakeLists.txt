@@ -6,7 +6,7 @@ cmake_minimum_required( VERSION 3.0 )
 # AND ADAPT THE CODE BELOW TO YOUR OWN NEEDS!
 
 # Add an option to CMake to control whether we build this plugin or not
-option( PLUGIN_MYPLUGIN_STANDARD "Check to install example plugin" OFF )
+option( PLUGIN_MYPLUGIN_STANDARD "Check to install my example plugin" OFF )
 
 if ( PLUGIN_MYPLUGIN_STANDARD )
 	# Name the plugin
