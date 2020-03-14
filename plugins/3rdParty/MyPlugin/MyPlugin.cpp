@@ -37,6 +37,7 @@
 #include <ccPointCloud.h>
 #include <ccPolyline.h>
 #include "Chaikin.cpp"
+#include "qMyPluginCommands.h"
 
 //ccPolyline* SmoothChaikin(const ccPolyline& inputPolyline, PointCoordinateType ratio, unsigned iterations);
 
@@ -139,3 +140,12 @@ void MyPlugin::doAction()
 	getMainAppInterface()->addToDB(smoothPoly);
 
 }
+
+void MyPLugin::registerCommands(ccCommandInterface* cmd)
+{
+	cmd->registerCommand(ccCommandLineInterface::command::shared(new CommandCHAIKIN));
+}
+
+
+
+
