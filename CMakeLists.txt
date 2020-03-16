@@ -101,6 +101,9 @@ add_subdirectory( plugins )
 # qCC
 add_subdirectory( qCC )
 
+# Python API
+add_subdirectory ( CCPAPI )
+
 # CCViewer
 if( ${OPTION_BUILD_CCVIEWER} )
 	add_subdirectory( ccViewer )
