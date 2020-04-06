@@ -21,18 +21,6 @@ cmake_policy(SET CMP0071 NEW)
 MESSAGE(STATUS "CC PYthon API")
 LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../cmake")
 
-# --- Python detection
-
-SET(Python_ADDITIONAL_VERSIONS 3.6) # priority to this version 
-FIND_PACKAGE(PythonInterp)
-FIND_PACKAGE(PythonLibs)
-MESSAGE(STATUS "python version: " ${PYTHON_VERSION_STRING})
-
-# --- Sip detection
-
-FIND_PACKAGE(SIP REQUIRED)  # should come after Python (and before PyQt if needed)
-INCLUDE(UseSIP)
-
 # --- C++ library cc Python Api (ccPApi)
 
 include_directories( ${CC_FBO_LIB_SOURCE_DIR}/include )
@@ -64,42 +52,12 @@ target_link_libraries( CC_PAPI_LIB QCC_IO_LIB )
 target_link_libraries( CC_PAPI_LIB QCC_GL_LIB )
 target_link_libraries( CC_PAPI_LIB qcustomplot )
 
-# --- Python wrapping with sip
+#PROJECT( cloudCompare )
+#SET(SIP_FILE cloudCompare.sip)
 
-INCLUDE_DIRECTORIES(
-  ${SIP_INCLUDE_DIR}
-  ${PYTHON_INCLUDE_DIRS}
-  ${CMAKE_CURRENT_SOURCE_DIR}
-)
-
-SET(_add_SOURCES
-    sipcloudCompareccPointCloud.cc
-    sipcloudCompareQList0101ccPointCloud.cc
-    sipcloudCompareCCLib.cc
-    sipcloudCompareCCLibScalarField.cc
-)
-
-MESSAGE(STATUS "_add_SOURCES: " "${_add_SOURCES}")
-
-set_source_files_properties( ${_add_SOURCES} PROPERTIES GENERATED TRUE )
-
-# --- sources / sip wrappings
-
-SIP_WRAP_SIP( _sip_SOURCES cloudCompare.sip OPTIONS -t WS_X11 -t Qt_5_9_5 -I /usr/share/sip/PyQt5)
-MESSAGE(STATUS "_sip_SOURCES: " "${_sip_SOURCES}")
-
-# --- sources / to compile
-
-ADD_LIBRARY( cloudCompare SHARED ${_sip_SOURCES} ${_add_SOURCES} )
-
-TARGET_LINK_LIBRARIES(cloudCompare ${PYTHON_LIBRARIES} CC_PAPI_LIB CC_FBO_LIB CC_CORE_LIB QCC_DB_LIB QCC_GL_LIB qcustomplot Qt5::Core Qt5::Widgets Qt5::Concurrent)
-
-SET(INSTALL_CLOUDCOMPARE_PYTHON ${CMAKE_INSTALL_LIBDIR}/cloudcompare)
-MESSAGE(STATUS "INSTALL_CLOUDCOMPARE_PYTHON: " ${INSTALL_CLOUDCOMPARE_PYTHON})
-INSTALL(TARGETS cloudCompare LIBRARY DESTINATION ${INSTALL_CLOUDCOMPARE_PYTHON})
-
-IF(WIN32)
-  SET_TARGET_PROPERTIES(cloudCompare PROPERTIES SUFFIX ".pyd" DEBUG_OUTPUT_NAME cloudCompare_d RELEASE_OUTPUT_NAME cloudCompare)
-ELSE()
-  SET_TARGET_PROPERTIES(cloudCompare PROPERTIES PREFIX "")
-ENDIF()
+SET(Python_ADDITIONAL_VERSIONS 3.6) # priority to this version 
+find_package(catkin REQUIRED)
+catkin_package(CFG_EXTRAS python_qt_binding-extras.cmake)
+catkin_python_setup()
+INCLUDE(sip_helper)
+build_sip_binding(cloudCompare cloudCompare.sip)
