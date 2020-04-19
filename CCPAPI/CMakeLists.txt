@@ -17,6 +17,7 @@
 ##########################################################################
 
 cmake_minimum_required(VERSION 3.10)
+cmake_policy(SET CMP0076 NEW)
 
 option(PYTHONAPI_TRACES "Activate console trace in the Python API" OFF)
 if (PYTHONAPI_TRACES)
