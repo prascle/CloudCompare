@@ -32,6 +32,7 @@ function(InstallSharedLibrary)
 				TARGET ${shared_lib_target}
 				DEST_PATH ${destination}
 		)
+        message( STATUS "Install shared library: ${shared_lib_target} ${destination}")
 	endforeach ()
 endfunction()
 
