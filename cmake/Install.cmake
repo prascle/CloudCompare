@@ -28,16 +28,17 @@ function( InstallSharedLibrary )
                 # this is a an hack to restore install ability on linux systems
                 # TODO this should not be the right way for managing install probably
                 if (IS_ABSOLUTE ${CMAKE_INSTALL_LIBDIR})
-                    set( destination "${CMAKE_INSTALL_LIBDIR}")
+                    set( destination "${CMAKE_INSTALL_LIBDIR}/cloudcompare")
                 else()
-                    set( destination "${destination}/${CMAKE_INSTALL_LIBDIR}/")
+                    set( destination "${destination}/${CMAKE_INSTALL_LIBDIR}/cloudcompare")
                 endif()
             endif()
 
 		_InstallSharedTarget(
 			TARGET ${shared_lib_target}
 			DEST_PATH ${destination}
-		)		
+		)
+		message( STATUS "Install shared library: ${shared_lib_target} ${destination}")
 	endforeach()
 endfunction()
 
