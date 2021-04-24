@@ -38,6 +38,9 @@ endif()
 set( CMAKE_DEBUG_POSTFIX "d" )
 
 
+# Install prerequisite libraries
+option( INSTALL_PREREQUISITE_LIBRARIES "install the external prerequisite libraries (standalone install)" ON)
+
 # Define target folders
 # (now that ccViewer can have its own plugins, qCC and ccViewer must fall in separate folders!
 if(WIN32 OR APPLE) 
