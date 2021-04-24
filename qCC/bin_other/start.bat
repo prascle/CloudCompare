@@ -1,2 +1,2 @@
-@set PATH=.
+@set PATH=.;%PATH%
 CloudCompare.exe
