@@ -8,6 +8,11 @@ function( copy_files )	# 2 (or 3) arguments:
 						# ARGV1 = target (directory)
                         # ARGV2 = 1 for debug install (if available)
 
+	if( NOT INSTALL_PREREQUISITE_LIBRARIES )
+		message( STATUS "Files: ${ARGV0} will NOT be installed in ${ARGV1}")
+		return()
+	endif()
+
 	message(STATUS "Files: ${ARGV0} will be installed in ${ARGV1}" )
 
 	if( APPLE )
