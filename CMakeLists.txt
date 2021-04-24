@@ -44,6 +44,9 @@ if( UNIX AND NOT APPLE )
 	set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}/cloudcompare")
 endif()
 
+# Install prerequisite libraries
+option( INSTALL_PREREQUISITE_LIBRARIES "install the external prerequisite libraries (standalone install)" ON)
+
 # Define target folders
 # (now that ccViewer can have its own plugins, qCC and ccViewer must fall in separate folders!
 if(WIN32 OR APPLE) 
