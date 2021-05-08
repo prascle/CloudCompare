@@ -78,23 +78,44 @@ function( DeployQt )
 		endif()
 		set( temp_app_path "${temp_dir}/${app_name}" )
 
-		add_custom_command(
-			TARGET ${DEPLOY_QT_TARGET}
-			POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E remove_directory "${temp_dir}"
-			COMMAND ${CMAKE_COMMAND} -E make_directory "${temp_dir}"
-			COMMAND ${CMAKE_COMMAND} -E copy ${app_path} ${temp_app_path}
-			COMMAND "${win_deploy_qt}"
-				${temp_app_path}
-				--no-angle
-				--no-opengl-sw
-				--no-quick-import
-				--no-system-d3d-compiler
-				--concurrent				
-				--verbose=1
-			VERBATIM
-		)
-	
+        if ( INSTALL_PREREQUISITE_LIBRARIES )
+			add_custom_command(
+				TARGET ${DEPLOY_QT_TARGET}
+				POST_BUILD
+				COMMAND ${CMAKE_COMMAND} -E remove_directory "${temp_dir}"
+				COMMAND ${CMAKE_COMMAND} -E make_directory "${temp_dir}"
+				COMMAND ${CMAKE_COMMAND} -E copy ${app_path} ${temp_app_path}
+				COMMAND "${win_deploy_qt}"
+					${temp_app_path}
+					--no-angle
+					--no-opengl-sw
+					--no-quick-import
+					--no-system-d3d-compiler
+					--concurrent				
+					--verbose=1
+				VERBATIM
+			)
+		else()
+			add_custom_command(
+				TARGET ${DEPLOY_QT_TARGET}
+				POST_BUILD
+				COMMAND ${CMAKE_COMMAND} -E remove_directory "${temp_dir}"
+				COMMAND ${CMAKE_COMMAND} -E make_directory "${temp_dir}"
+				COMMAND ${CMAKE_COMMAND} -E copy ${app_path} ${temp_app_path}
+				COMMAND "${win_deploy_qt}"
+					${temp_app_path}
+					--no-angle
+					--no-opengl-sw
+					--no-quick-import
+					--no-compiler-runtime
+					--no-libraries
+					--no-system-d3d-compiler
+					--concurrent				
+					--verbose=1
+				VERBATIM
+			)
+		endif()
+
 		if( NOT CMAKE_CONFIGURATION_TYPES )
 			install(
 				DIRECTORY ${temp_dir}/

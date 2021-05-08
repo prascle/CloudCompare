@@ -69,12 +69,14 @@ function( InstallFiles )
 	
 	message( STATUS "Install files: ${files} to ${INSTALL_DESTINATIONS}")
 	
-	foreach( destination ${INSTALL_DESTINATIONS} )			
-		_InstallFiles(
-			FILES ${files}
-			DEST_PATH ${destination}
-		)		
-	endforeach()
+	if ( INSTALL_PREREQUISITE_LIBRARIES )
+		foreach( destination ${INSTALL_DESTINATIONS} )			
+			_InstallFiles(
+				FILES ${files}
+				DEST_PATH ${destination}
+			)		
+		endforeach()
+	endif()
 endfunction()
 
 # InstallPlugins should be called once for each application.
@@ -155,7 +157,7 @@ function( InstallPlugins )
 					
 					get_target_property( shader_files ${plugin_target} SOURCES )
 					list( FILTER shader_files INCLUDE REGEX ".*\.vert|frag" )					
-					
+					message( STATUS "shader_files ${shader_files}" )
 					_InstallFiles(
 						FILES ${shader_files}
 						DEST_PATH ${INSTALL_PLUGINS_SHADER_DEST_PATH}
@@ -290,7 +292,7 @@ function( _InstallFiles )
 				CONFIGURATIONS RelWithDebInfo
 				RUNTIME DESTINATION "${INSTALL_FILES_DEST_PATH}_withDebInfo/${INSTALL_FILES_DEST_FOLDER}"
 			)
-		endif()			
+		endif()
 	else()
 		install(
 			FILES ${files}
