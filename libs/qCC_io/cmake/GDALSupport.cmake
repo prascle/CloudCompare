@@ -62,7 +62,6 @@ function( target_link_GDAL ) # ARGV0 = project name
 		else()
 			set (  GDAL_DEP_DLL_FILES	${GDAL_BIN_DIR}/expat.dll
 										${GDAL_BIN_DIR}/libpq.dll
-										${GDAL_BIN_DIR}/szip.dll
 										${GDAL_BIN_DIR}/netcdf.dll
 										${GDAL_BIN_DIR}/sqlite3.dll
 										${GDAL_BIN_DIR}/spatialite.dll
@@ -71,16 +70,14 @@ function( target_link_GDAL ) # ARGV0 = project name
 										${GDAL_BIN_DIR}/geos_c.dll
 										${GDAL_BIN_DIR}/libcurl.dll
 										${GDAL_BIN_DIR}/openjp2.dll
-										${GDAL_BIN_DIR}/proj.dll
+										${GDAL_BIN_DIR}/proj_8_0.dll
 										${GDAL_BIN_DIR}/iconv.dll
 										${GDAL_BIN_DIR}/freexl.dll
-										${GDAL_BIN_DIR}/zlib1.dll
+										${GDAL_BIN_DIR}/zlib.dll
 										${GDAL_BIN_DIR}/hdf5_hl.dll
 										${GDAL_BIN_DIR}/hdf5.dll
 										${GDAL_BIN_DIR}/libxml2.dll
-										${GDAL_BIN_DIR}/xerces-c_3_1.dll
-										${GDAL_BIN_DIR}/ssleay32.dll
-										${GDAL_BIN_DIR}/libeay32.dll
+										${GDAL_BIN_DIR}/xerces-c_3_2.dll
 			)
 		endif()
 		
