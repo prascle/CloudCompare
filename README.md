@@ -1,5 +1,5 @@
-CloudCompare
-============
+CloudCompare (clone version for Python interface)
+=================================================
 
 Homepage: https://cloudcompare.org
 
@@ -8,6 +8,11 @@ Homepage: https://cloudcompare.org
 - [![Build Status](https://travis-ci.org/CloudCompare/CloudCompare.svg?branch=master)](https://travis-ci.org/CloudCompare/CloudCompare) Linux
 - [![Build](https://github.com/CloudCompare/CloudCompare/workflows/Build/badge.svg?branch=master)](https://github.com/CloudCompare/CloudCompare/actions?query=workflow%3ABuild+branch%3Amaster) Windows & MacOS
 - [![Releases](https://coderelease.io/badge/CloudCompare/CloudCompare)](https://coderelease.io/github/repository/CloudCompare/CloudCompare)
+
+Python interface
+----------------
+The Python Interface, *CloudCompy*, is a separate project build upon this CloudCompare clone.
+More on CloudComPy [here](https://github.com/prascle/CloudCompy)
 
 Introduction
 ------------
