@@ -507,7 +507,12 @@ bool qM3C2Process::Compute(const qM3C2Dialog& dlg, QString& errorMessage, ccPoin
 	int maxThreadCount = dlg.getMaxThreadCount();
 
 	//progress dialog
-	ccProgressDialog pDlg(parentWidget);
+    ccProgressDialog myDlg(parentWidget);
+	ccProgressDialog* pDlg =nullptr;
+    if (app)
+    {
+        pDlg = &myDlg;
+    }
 
 	//Duration: initialization & normals computation
 	QElapsedTimer initTimer;
@@ -517,7 +522,7 @@ bool qM3C2Process::Compute(const qM3C2Dialog& dlg, QString& errorMessage, ccPoin
 	s_M3C2Params.cloud1Octree = cloud1->getOctree();
 	if (!s_M3C2Params.cloud1Octree)
 	{
-		s_M3C2Params.cloud1Octree = cloud1->computeOctree(&pDlg);
+		s_M3C2Params.cloud1Octree = cloud1->computeOctree(pDlg);
 		if (s_M3C2Params.cloud1Octree && cloud1->getParent() && app)
 		{
 			app->addToDB(cloud1->getOctreeProxy());
@@ -532,7 +537,7 @@ bool qM3C2Process::Compute(const qM3C2Dialog& dlg, QString& errorMessage, ccPoin
 	s_M3C2Params.cloud2Octree = cloud2->getOctree();
 	if (!s_M3C2Params.cloud2Octree)
 	{
-		s_M3C2Params.cloud2Octree = cloud2->computeOctree(&pDlg);
+		s_M3C2Params.cloud2Octree = cloud2->computeOctree(pDlg);
 		if (s_M3C2Params.cloud2Octree && cloud2->getParent() && app)
 		{
 			app->addToDB(cloud2->getOctreeProxy());
@@ -556,7 +561,7 @@ bool qM3C2Process::Compute(const qM3C2Dialog& dlg, QString& errorMessage, ccPoin
 			static_cast<PointCoordinateType>(samplingDist),
 			modParams,
 			s_M3C2Params.cloud1Octree.data(),
-			&pDlg);
+			pDlg);
 
 		if (subsampled)
 		{
@@ -666,7 +671,7 @@ bool qM3C2Process::Compute(const qM3C2Dialog& dlg, QString& errorMessage, ccPoin
 				invalidNormals,
 				maxThreadCount,
 				normalScaleSF,
-				&pDlg,
+				pDlg,
 				baseOctree);
 
 			//now fix the orientation
@@ -708,7 +713,7 @@ bool qM3C2Process::Compute(const qM3C2Dialog& dlg, QString& errorMessage, ccPoin
 																			*s_M3C2Params.coreNormals,
 																			orientationCloud,
 																			maxThreadCount,
-																			&pDlg)
+																			pDlg)
 						)
 					{
 						errorMessage = "[M3C2] Failed to re-orient the normals with input point cloud!";
@@ -795,11 +800,14 @@ bool qM3C2Process::Compute(const qM3C2Dialog& dlg, QString& errorMessage, ccPoin
 		unsigned corePointCount = s_M3C2Params.corePoints->size();
 		assert(normMode == qM3C2Normals::VERT_MODE || (s_M3C2Params.coreNormals && corePointCount == s_M3C2Params.coreNormals->currentSize()));
 
-		pDlg.reset();
-		CCCoreLib::NormalizedProgress nProgress(&pDlg, corePointCount);
-		pDlg.setMethodTitle(QObject::tr("M3C2 Distances Computation"));
-		pDlg.setInfo(QObject::tr("Core points: %1").arg(corePointCount));
-		pDlg.start();
+		if (pDlg) pDlg->reset();
+		CCCoreLib::NormalizedProgress nProgress(pDlg, corePointCount);
+		if (pDlg)
+		{
+            pDlg->setMethodTitle(QObject::tr("M3C2 Distances Computation"));
+            pDlg->setInfo(QObject::tr("Core points: %1").arg(corePointCount));
+            pDlg->start();
+		}
 		s_M3C2Params.nProgress = &nProgress;
 
 		//allocate distances SF
