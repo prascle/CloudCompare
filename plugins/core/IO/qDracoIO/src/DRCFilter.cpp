@@ -142,7 +142,7 @@ static CC_FILE_ERROR CCCloudToDraco(const ccGenericPointCloud& ccCloud, draco::P
 	}
 
 	// create generic attribute (if any)
-	if (ccCloud.hasScalarFields())
+	if (ccCloud.hasScalarFields() && ccCloud.hasDisplayedScalarField())
 	{
 		if (ccCloud.isA(CC_TYPES::POINT_CLOUD))
 		{
