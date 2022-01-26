@@ -7,15 +7,16 @@ if( PLUGIN_IO_QDRACO )
 
 	AddPlugin( NAME ${PROJECT_NAME} TYPE io )
 	
-	target_include_directories( ${PROJECT_NAME} PRIVATE ${DRACO_INCLUDE_DIRS} )
+	target_include_directories( ${PROJECT_NAME} PRIVATE ${DRACO_INCLUDE_DIR} )
 	if (MSVC)
 		target_link_libraries( ${PROJECT_NAME} ${Draco_DIR}/../../lib/${DRACO_LIBRARIES}.lib )
-	elseif()
-		target_link_libraries( ${DRACO_LIBRARIES} )
+	else()
+		target_link_libraries( ${PROJECT_NAME} optimized ${DRACO_LIBRARY} )
+		message("link ${PROJECT_NAME} with ${DRACO_LIBRARY}")
 	endif()
 
-	message (${DRACO_INCLUDE_DIRS})
-	message (${DRACO_LIBRARIES})
+	message (STATUS "DRACO_INCLUDE_DIR ${DRACO_INCLUDE_DIR}")
+	message (STATUS "DRACO_LIBRARY ${DRACO_LIBRARY}")
 
 	add_subdirectory( include )
 	add_subdirectory( src )
