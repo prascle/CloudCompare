@@ -32,6 +32,10 @@ if( PLUGIN_IO_QDRACO )
 		target_link_libraries( ${PROJECT_NAME} ${DRACO_LIBRARIES} )
 
 	endif()
+    message("link ${PROJECT_NAME} with ${DRACO_LIBRARIES}")
+
+	message (STATUS "DRACO_INCLUDE_DIR ${DRACO_INCLUDE_DIR}")
+	message (STATUS "DRACO_LIBRARY ${DRACO_LIBRARY}")
 
 	add_subdirectory( include )
 	add_subdirectory( src )
