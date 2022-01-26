@@ -11,21 +11,13 @@ if( PLUGIN_IO_QDRACO )
 	
 	if( MSVC )
 		target_link_libraries( ${PROJECT_NAME} ${Draco_DIR}/../../lib/${DRACO_LIBRARIES}.lib )
-	elseif( UNIX )
-		set ( DRACO_INCLUDE_DIR "" CACHE PATH "Draco include dir" )
-		set ( DRACO_LIB_DIR "" CACHE PATH "Draco library dir" )
-		
-		if( NOT DRACO_INCLUDE_DIR )
-			message( FATAL_ERROR "Draco include dir not specified (DRACO_INCLUDE_DIR)" )
-		endif()
-		if( NOT DRACO_LIB_DIR )
-			message( FATAL_ERROR "Draco library dir not specified (DRACO_LIB_DIR)" )
-		endif()
-		
-		target_link_libraries( ${PROJECT_NAME} ${DRACO_LIBRARIES} )
-	elseif()
-		target_link_libraries( ${PROJECT_NAME} ${DRACO_LIBRARIES} )
+	else()
+        target_link_libraries( ${PROJECT_NAME} optimized ${DRACO_LIBRARY} )
+        message("link ${PROJECT_NAME} with ${DRACO_LIBRARY}")
 	endif()
+
+	message (STATUS "DRACO_INCLUDE_DIR ${DRACO_INCLUDE_DIR}")
+	message (STATUS "DRACO_LIBRARY ${DRACO_LIBRARY}")
 
 	add_subdirectory( include )
 	add_subdirectory( src )
