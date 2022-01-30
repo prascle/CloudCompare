@@ -18,6 +18,8 @@
 #ifndef Q_M3C2_TOOLS_HEADER
 #define Q_M3C2_TOOLS_HEADER
 
+#include <qM3C2Export.h>
+
 //CCCoreLib
 #include <GenericIndexedCloud.h>
 #include <GenericProgressCallback.h>
@@ -30,7 +32,7 @@ class ccPointCloud;
 class ccMainAppInterface;
 
 //! M3C2 normals computation related tools
-class qM3C2Normals
+class QM3C2_PLUGIN_LIB_API qM3C2Normals
 {
 public:
 
@@ -73,7 +75,7 @@ public:
 };
 
 //! M3C2 generic tools
-class qM3C2Tools
+class QM3C2_PLUGIN_LIB_API qM3C2Tools
 {
 public:
 
