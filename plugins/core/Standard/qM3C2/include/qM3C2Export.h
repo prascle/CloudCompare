@@ -15,31 +15,16 @@
 //#                                                                        #
 //##########################################################################
 
-#ifndef Q_M3C2_PROCESS_HEADER
-#define Q_M3C2_PROCESS_HEADER
+#ifndef Q_M3C2_PLUGIN_EXPORT_HEADER
+#define Q_M3C2_PLUGIN_EXPORT_HEADER
 
-//Local
-#include <qM3C2Export.h>
-#include "qM3C2Dialog.h"
+#include <QtCore/QtGlobal>
 
-class ccMainAppInterface;
+#if defined(QM3C2_PLUGIN_LIBRARY_BUILD)
+   #define QM3C2_PLUGIN_LIB_API Q_DECL_EXPORT
+#else
+   #define QM3C2_PLUGIN_LIB_API Q_DECL_IMPORT
+#endif
 
-//! M3C2 process
-/** See "Accurate 3D comparison of complex topography with terrestrial laser scanner:
-	application to the Rangitikei canyon (N-Z)", Lague, D., Brodu, N. and Leroux, J.,
-	2013, ISPRS journal of Photogrammmetry and Remote Sensing
-**/
-class QM3C2_PLUGIN_LIB_API qM3C2Process
-{
-public:
-	
-	static bool Compute(const qM3C2Dialog& dlg,
-						QString& errorMessage,
-						ccPointCloud*& outputCloud,
-						bool allowDialogs,
-						QWidget* parentWidget = nullptr,
-						ccMainAppInterface* app = nullptr);
 
-};
-
-#endif //Q_M3C2_PROCESS_HEADER
+#endif //Q_M3C2_PLUGIN_EXPORT_HEADER
