@@ -21,6 +21,7 @@
 #include <ui_qM3C2Dialog.h>
 
 //Local
+#include <qM3C2Export.h>
 #include <qM3C2Tools.h>
 
 //Qt
@@ -30,7 +31,7 @@ class ccMainAppInterface;
 class ccPointCloud;
 
 //! M3C2 plugin's main dialog
-class qM3C2Dialog : public QDialog, public Ui::M3C2Dialog
+class QM3C2_PLUGIN_LIB_API qM3C2Dialog : public QDialog, public Ui::M3C2Dialog
 {
 	Q_OBJECT
 
