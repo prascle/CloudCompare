@@ -23,6 +23,39 @@
 //System
 #include <cassert>
 #include <vector>
+#include <iostream>
+#include <sstream>
+
+//CloudComPy trace
+#ifdef _PYTHONAPI_DEBUG_
+bool ccLogTrace::_isTrace = false;
+
+void ccLogTrace::settrace()
+{
+    const char * cstr = std::getenv("_CCTRACE_");
+    std::string var="unset";
+    if (cstr != nullptr)
+    {
+        var = cstr;
+        CCTRACE("CloudComPy C++ debug trace environment variable (_CCTRACE_) is set to: " << var << ". Activations values are: ON \"ON\" ")
+    }
+    else
+    {
+        CCTRACE("CloudComPy C++ debug trace environment variable (_CCTRACE_) is unset, activations values are: ON \"ON\" ")
+    }
+    if ((var == "ON") || (var == "\"ON\""))
+    {
+        std::cerr << std::flush << __FILE__ << " [" << __LINE__ << "] : " << "trace ON" << std::endl << std::flush;
+        ccLogTrace::_isTrace = true;
+    }
+    else
+    {
+        std::cerr << std::flush << __FILE__ << " [" << __LINE__ << "] : " << "trace OFF" << std::endl << std::flush;
+        ccLogTrace::_isTrace = false;
+    }
+}
+#endif
+
 
 #if !defined(CC_WINDOWS)
 #define _vsnprintf vsnprintf
@@ -68,6 +101,8 @@ void ccLog::EnableMessageBackup(bool state)
 
 void ccLog::LogMessage(const QString& message, int level)
 {
+    CCTRACF(message.toStdString());
+
 #ifndef QT_DEBUG
 	//skip debug messages in release mode as soon as possible
 	if (level & LOG_DEBUG)
