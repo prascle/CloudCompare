@@ -27,6 +27,9 @@
 //Qt
 #include <QString>
 
+//CloudComPy trace
+#include "pyccTrace.h"
+
 //! Main log interface
 /** This interface is meant to be used as a unique (static) instance.
 	It should be thread safe!
