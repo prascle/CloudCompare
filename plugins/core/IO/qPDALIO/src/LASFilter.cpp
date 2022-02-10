@@ -409,8 +409,10 @@ CC_FILE_ERROR LASFilter::saveToFile(ccHObject* entity, const QString& filename, 
 		maxScale = pow(10.0, n);
 		optimalScale.x = optimalScale.y = optimalScale.z = maxScale;
 	}
-
+    CCTRACE("originalLasScale " << originalLasScale[0] << " "<< originalLasScale[1] << " " << originalLasScale[2] << " ");
+    CCTRACE("optimalScale " << optimalScale[0] << " "<< optimalScale[1] << " " << optimalScale[2] << " ");
 	CCVector3d lasScale = (canUseOriginalScale ? originalLasScale : optimalScale);
+    CCTRACE("lasScale " << lasScale[0] << " "<< lasScale[1] << " " << lasScale[2] << " ");
 
 	if (parameters.alwaysDisplaySaveDialog)
 	{
@@ -452,14 +454,17 @@ CC_FILE_ERROR LASFilter::saveToFile(ccHObject* entity, const QString& filename, 
 
 		if (s_saveDlg->bestRadioButton->isChecked())
 		{
+		    CCTRACE("---");
 			lasScale = optimalScale;
 		}
 		else if (s_saveDlg->origRadioButton->isChecked())
 		{
+            CCTRACE("---");
 			lasScale = originalLasScale;
 		}
 		else if (s_saveDlg->customRadioButton->isChecked())
 		{
+            CCTRACE("---");
 			double s = s_saveDlg->customScaleDoubleSpinBox->value();
 			lasScale = CCVector3d(s, s, s);
 		}
@@ -470,8 +475,10 @@ CC_FILE_ERROR LASFilter::saveToFile(ccHObject* entity, const QString& filename, 
 	{
 		for (unsigned int i = 0; i < extraFields.size(); ++i)
 		{
+		    CCTRACE("extraFieldsToSave i " << i);
 			if (!s_saveDlg || s_saveDlg->doSaveEVLR(i))
 			{
+	            CCTRACE("extraFieldsToSave i " << i);
 				// All extra scalar fields are written as double.
 				// A more specific solution would be welcome.
 				extraFieldsToSave.push_back(extraFields[i]);
@@ -492,6 +499,7 @@ CC_FILE_ERROR LASFilter::saveToFile(ccHObject* entity, const QString& filename, 
 		unsigned previousPointFormat = theCloud->getMetaData(LAS_POINT_FORMAT_META_DATA).toUInt(&ok);
 		if (ok && previousPointFormat < 256)
 		{
+		    CCTRACE("---");
 			minPointFormat = std::max(static_cast<uint8_t>(previousPointFormat), minPointFormat);
 		}
 		else
@@ -607,6 +615,7 @@ CC_FILE_ERROR LASFilter::saveToFile(ccHObject* entity, const QString& filename, 
 		// extra las fields
 		for (const ExtraLasField::Shared &extraField : extraFieldsToSave)
 		{
+		    CCTRACE("---");
 			point.setField(extraField->pdalId, extraField->sf->getValue(ptsWritten) + extraField->sf->getGlobalShift());
 		}
 
@@ -625,14 +634,17 @@ CC_FILE_ERROR LASFilter::saveToFile(ccHObject* entity, const QString& filename, 
 		{
 			//restore the SRS if possible
 			QString wkt = theCloud->getMetaData(s_LAS_SRS_Key).value<QString>();
+            CCTRACE("a_srs " << wkt.toStdString());
 			writerOptions.add("a_srs", wkt.toStdString());
 		}
 		writerOptions.add("dataformat_id", minPointFormat);
 
+        CCTRACE("lasOffset " << lasOffset.x << " "<< lasOffset.y << " " << lasOffset.z << " ");
 		writerOptions.add("offset_x", lasOffset.x);
 		writerOptions.add("offset_y", lasOffset.y);
 		writerOptions.add("offset_z", lasOffset.z);
 
+	    CCTRACE("lasScale " << lasScale.x << " "<< lasScale.y << " " << lasScale.z << " ");
 		writerOptions.add("scale_x", lasScale.x);
 		writerOptions.add("scale_y", lasScale.y);
 		writerOptions.add("scale_z", lasScale.z);
@@ -707,10 +719,13 @@ CC_FILE_ERROR LASFilter::saveToFile(ccHObject* entity, const QString& filename, 
 		}
 
 		writer.prepare(table);
+	    CCTRACE("---");
 		writer.execute(table);
+	    CCTRACE("---");
 	}
 	catch (const pdal::pdal_error& p)
 	{
+	    CCTRACE("---");
 		ccLog::Error(QString("PDAL exception: %1").arg(p.what()));
 		return CC_FERR_THIRD_PARTY_LIB_EXCEPTION;
 	}
