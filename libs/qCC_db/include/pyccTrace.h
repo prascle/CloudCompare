@@ -23,10 +23,15 @@
 #define CLOUDCOMPY_PYAPI_CCTRACE_H_
 
 #ifdef _PYTHONAPI_DEBUG_
+
+//Local
+#include "qCC_db.h"
+
+//system
 #include <iostream>
 #include <sstream>
 
-struct ccLogTrace
+struct QCC_DB_LIB_API ccLogTrace
 {
 static bool _isTrace;
 static void settrace();
