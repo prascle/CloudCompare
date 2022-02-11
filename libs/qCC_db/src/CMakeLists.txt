@@ -62,6 +62,16 @@ target_sources( ${PROJECT_NAME}
 	    ${CMAKE_CURRENT_LIST_DIR}/ccTorus.cpp
 	    ${CMAKE_CURRENT_LIST_DIR}/ccViewportParameters.cpp
 	    ${CMAKE_CURRENT_LIST_DIR}/ccWaveform.cpp
-	    PUBLIC
-        ${CMAKE_CURRENT_LIST_DIR}/ccLog.cpp
 )
+
+if( UNIX )
+	target_sources( ${PROJECT_NAME}
+		PUBLIC
+			${CMAKE_CURRENT_LIST_DIR}/ccLog.cpp
+	)
+else()
+	target_sources( ${PROJECT_NAME}
+		PRIVATE
+			${CMAKE_CURRENT_LIST_DIR}/ccLog.cpp
+	)
+endif()
