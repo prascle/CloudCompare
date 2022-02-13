@@ -306,6 +306,10 @@ struct LasField
 			sanitizedStr = str;
 		}
 		sanitizedStr.replace('=', '_');
+        sanitizedStr.replace(' ', '_');
+        sanitizedStr.replace('(', '_');
+        sanitizedStr.replace(')', '_');
+        sanitizedStr.replace('.', '_');
 
 		return sanitizedStr;
 	}
