@@ -77,6 +77,7 @@ struct ExtraLasField : LasField
 		, scale(1.0)
 		, offset(0.0)
 	{
+	    CCTRACE("name :" << name.toStdString() << " fieldName " << fieldName.toStdString());
 		if (fieldName != name)
 		{
 			ccLog::Warning(QString("Extra field '%1' renamed '%2' to comply to LAS specifications").arg(name).arg(fieldName));
@@ -216,6 +217,7 @@ pdal::Dimension::Id typeToId(LAS_FIELDS sfType, uint8_t pointFormat)
 
 CC_FILE_ERROR LASFilter::saveToFile(ccHObject* entity, const QString& filename, const SaveParameters& parameters)
 {
+    CCTRACE("LASFilter::saveToFile");
 	if (!entity || filename.isEmpty())
 		return CC_FERR_BAD_ARGUMENT;
 
@@ -245,12 +247,14 @@ CC_FILE_ERROR LASFilter::saveToFile(ccHObject* entity, const QString& filename, 
 
 	if (theCloud->isA(CC_TYPES::POINT_CLOUD))
 	{
+        CCTRACE("---");
 		ccPointCloud* pc = static_cast<ccPointCloud*>(theCloud);
 
 		LasField::GetLASFields(pc, fieldsToSave, minPointFormat);
 
 		for (unsigned i = 0; i < pc->getNumberOfScalarFields(); ++i)
 		{
+            CCTRACE("---");
 			ccScalarField* sf = static_cast<ccScalarField*>(pc->getScalarField(i));
 			//find an equivalent in official LAS fields
 			QString sfName = QString(sf->getName()).toUpper();
@@ -259,6 +263,7 @@ CC_FILE_ERROR LASFilter::saveToFile(ccHObject* entity, const QString& filename, 
 			auto pos = std::find_if(fieldsToSave.begin(), fieldsToSave.end(), name_matches);
 			if (pos == fieldsToSave.end())
 			{
+			    CCTRACE("---");
 				ExtraLasField::Shared extraField(new ExtraLasField(QString(sf->getName()), Id::Unknown));
 				extraFields.emplace_back(extraField);
 				extraFields.back()->sf = sf;
@@ -615,7 +620,6 @@ CC_FILE_ERROR LASFilter::saveToFile(ccHObject* entity, const QString& filename, 
 		// extra las fields
 		for (const ExtraLasField::Shared &extraField : extraFieldsToSave)
 		{
-		    CCTRACE("---");
 			point.setField(extraField->pdalId, extraField->sf->getValue(ptsWritten) + extraField->sf->getGlobalShift());
 		}
 
@@ -927,6 +931,7 @@ struct LasCloudChunk
 		//extra fields
 		for (unsigned int i = 0; i < extraNamesToLoad.size(); ++i)
 		{
+            CCTRACE("---");
 			QString name = QString::fromStdString(extraNamesToLoad[i]);
 			ExtraLasField *eField = new ExtraLasField(name, extraFieldsToLoad[i]);
 			lasFields.emplace_back(eField);
