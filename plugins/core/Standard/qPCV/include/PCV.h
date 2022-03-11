@@ -18,6 +18,8 @@
 #ifndef MESH_ILLUMINATION_HEADER
 #define MESH_ILLUMINATION_HEADER
 
+#include <qPCVExport.h>
+
 //CCCoreLib
 #include <GenericCloud.h>
 #include <GenericIndexedMesh.h>
@@ -32,7 +34,7 @@
 //! PCV (Portion de Ciel Visible) algorithm
 /** "Ambient Occlusion" in english!
 **/
-class PCV
+class QPCV_PLUGIN_LIB_API PCV
 {
 public:
 	//! Simulates global illumination on a cloud (or a mesh) with OpenGL - shortcut version
