@@ -18,6 +18,8 @@
 //#                                                                        #
 //##########################################################################
 
+#include <qPCVExport.h>
+
 #include "ccCommandLineInterface.h"
 
 class ccProgressDialog;
@@ -26,7 +28,7 @@ class ccMainAppInterface;
 //qCC_db
 #include <ccHObject.h>
 
-class PCVCommand : public ccCommandLineInterface::Command
+class QPCV_PLUGIN_LIB_API PCVCommand : public ccCommandLineInterface::Command
 {
 public:
 	PCVCommand();
