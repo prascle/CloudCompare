@@ -38,7 +38,7 @@
 //Qhull
 extern "C"
 {
-#include <qhull_a.h>
+#include <qhull/qhull_a.h>
 }
 
 qHPR::qHPR(QObject* parent)
