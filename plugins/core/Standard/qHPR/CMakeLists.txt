@@ -5,7 +5,13 @@ if( PLUGIN_STANDARD_QHPR )
 		
 	AddPlugin( NAME ${PROJECT_NAME} )
 	
-	add_subdirectory( extern/qhull EXCLUDE_FROM_ALL )
+	include( cmake/FindQhull.cmake )
+
+    target_include_directories( ${PROJECT_NAME} PUBLIC
+        ${QHULL_INCLUDE_DIR}
+    )
+ 	
+	#add_subdirectory( extern/qhull EXCLUDE_FROM_ALL )
 	add_subdirectory( include )
 	add_subdirectory( src )
 	add_subdirectory( ui )
