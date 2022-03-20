@@ -17,6 +17,8 @@
 //#                                                                        #
 //##########################################################################
 
+#include "qMeshBooleanExport.h"
+
 //Qt
 #include <QObject>
 
@@ -86,3 +88,7 @@ protected:
 	//! Associated action
 	QAction* m_action;
 };
+
+QMESHBOOLEAN_PLUGIN_LIB_API ccMesh* computeMeshBoolean(ccMesh* meshA,
+	ccMesh* meshB,
+	CSG_OPERATION operation);
