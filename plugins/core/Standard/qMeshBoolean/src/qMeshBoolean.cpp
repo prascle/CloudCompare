@@ -88,7 +88,7 @@ void qMeshBoolean::onNewSelection(const ccHObject::Container& selectedEntities)
 	}
 }
 
-bool ToIGLMesh(const ccMesh* in, IGLMesh& out, ccMainAppInterface* app = nullptr)
+bool ToIGLMesh(const ccMesh* in, IGLMesh& out, ccMainAppInterface* app)
 {
 	if (!in || !in->getAssociatedCloud())
 	{
@@ -141,7 +141,7 @@ bool ToIGLMesh(const ccMesh* in, IGLMesh& out, ccMainAppInterface* app = nullptr
 	return true;
 }
 
-ccMesh* FromIGLMesh(const IGLMesh& in, ccMainAppInterface* app = nullptr)
+ccMesh* FromIGLMesh(const IGLMesh& in, ccMainAppInterface* app)
 {
 	if (in.F.rows() == 0 || in.V.rows() == 0)
 	{
@@ -197,23 +197,12 @@ ccMesh* FromIGLMesh(const IGLMesh& in, ccMainAppInterface* app = nullptr)
 	return mesh;
 }
 
-//! Boolean operation parameters (for concurrent run)
-struct BoolOpParameters
-{
-	ccMeshBooleanDialog::CSG_OPERATION operation = ccMeshBooleanDialog::UNION;
-	IGLMesh* meshA = nullptr;
-	IGLMesh* meshB = nullptr;
-	IGLMesh output;
-	QString nameA;
-	QString nameB;
-	ccMainAppInterface* app = nullptr;
-};
-static BoolOpParameters s_params;
+BoolOpParameters qMeshBoolean::s_params;
 
-static bool DoPerformBooleanOp()
+bool DoPerformMeshBooleanOp()
 {
 	//invalid parameters
-	if (!s_params.meshA || !s_params.meshB)
+	if (!qMeshBoolean::s_params.meshA || !qMeshBoolean::s_params.meshB)
 	{
 		assert(false);
 		return false;
@@ -226,56 +215,56 @@ static bool DoPerformBooleanOp()
 
 		igl::MeshBooleanType booleanType = igl::NUM_MESH_BOOLEAN_TYPES; // = invalid
 		//perform the boolean operation
-		switch (s_params.operation)
+		switch (qMeshBoolean::s_params.operation)
 		{
-		case ccMeshBooleanDialog::UNION:
+		case UNION:
 			booleanType = igl::MESH_BOOLEAN_TYPE_UNION;
 			break;
 
-		case ccMeshBooleanDialog::INTERSECT:
+		case INTERSECT:
 			booleanType = igl::MESH_BOOLEAN_TYPE_INTERSECT;
 			break;
 
-		case ccMeshBooleanDialog::DIFF:
+		case DIFF:
 			booleanType = igl::MESH_BOOLEAN_TYPE_MINUS;
 			break;
 
-		case ccMeshBooleanDialog::SYM_DIFF:
+		case SYM_DIFF:
 			booleanType = igl::MESH_BOOLEAN_TYPE_XOR;
 			break;
 
 		default:
 			assert(false);
-			if (s_params.app)
-				s_params.app->dispToConsole("[Mesh boolean] Unhandled operation?!", ccMainAppInterface::WRN_CONSOLE_MESSAGE); //DGM: can't issue an error message (i.e. with dialog) in another thread!
+			if (qMeshBoolean::s_params.app)
+				qMeshBoolean::s_params.app->dispToConsole("[Mesh boolean] Unhandled operation?!", ccMainAppInterface::WRN_CONSOLE_MESSAGE); //DGM: can't issue an error message (i.e. with dialog) in another thread!
 			return false;
 		}
 
-		s_params.output = IGLMesh();
-		if (!igl::copyleft::cgal::mesh_boolean(	s_params.meshA->V,
-												s_params.meshA->F,
-												s_params.meshB->V,
-												s_params.meshB->F,
+		qMeshBoolean::s_params.output = IGLMesh();
+		if (!igl::copyleft::cgal::mesh_boolean(	qMeshBoolean::s_params.meshA->V,
+												qMeshBoolean::s_params.meshA->F,
+												qMeshBoolean::s_params.meshB->V,
+												qMeshBoolean::s_params.meshB->F,
 												booleanType,
-												s_params.output.V,
-												s_params.output.F ))
+												qMeshBoolean::s_params.output.V,
+												qMeshBoolean::s_params.output.F ))
 		{
-			if (s_params.app)
-				s_params.app->dispToConsole("[Mesh boolean] CSG operation failed", ccMainAppInterface::WRN_CONSOLE_MESSAGE);
+			if (qMeshBoolean::s_params.app)
+				qMeshBoolean::s_params.app->dispToConsole("[Mesh boolean] CSG operation failed", ccMainAppInterface::WRN_CONSOLE_MESSAGE);
 			return false;
 		}
 
-		if (s_params.app)
+		if (qMeshBoolean::s_params.app)
 		{
 			// display the duration time
-			s_params.app->dispToConsole(QString("[Mesh boolean] CSG operation duration: %1 s").arg(timer.elapsed() / 1000.0, 0, 'f', 2));
+			qMeshBoolean::s_params.app->dispToConsole(QString("[Mesh boolean] CSG operation duration: %1 s").arg(timer.elapsed() / 1000.0, 0, 'f', 2));
 		}
 
 	}
 	catch (const std::exception& e)
 	{
-		if (s_params.app)
-			s_params.app->dispToConsole(QString("[Mesh boolean] Exception caught: %1").arg(e.what()), ccMainAppInterface::WRN_CONSOLE_MESSAGE);
+		if (qMeshBoolean::s_params.app)
+			qMeshBoolean::s_params.app->dispToConsole(QString("[Mesh boolean] Exception caught: %1").arg(e.what()), ccMainAppInterface::WRN_CONSOLE_MESSAGE);
 		return false;
 	}
 
@@ -339,7 +328,7 @@ void qMeshBoolean::doAction()
 		s_params.nameB = meshB->getName();
 		s_params.operation = cDlg.getSelectedOperation();
 
-		QFuture<bool> future = QtConcurrent::run(DoPerformBooleanOp);
+		QFuture<bool> future = QtConcurrent::run(DoPerformMeshBooleanOp);
 
 		//wait until process is finished!
 		while (!future.isFinished())
@@ -383,16 +372,16 @@ void qMeshBoolean::doAction()
 		QString opName;
 		switch (cDlg.getSelectedOperation())
 		{
-		case ccMeshBooleanDialog::UNION:
+		case UNION:
 			opName = "union";
 			break;
-		case ccMeshBooleanDialog::INTERSECT:
+		case INTERSECT:
 			opName = "isect";
 			break;
-		case ccMeshBooleanDialog::DIFF:
+		case DIFF:
 			opName = "diff";
 			break;
-		case ccMeshBooleanDialog::SYM_DIFF:
+		case SYM_DIFF:
 			opName = "sym_diff";
 			break;
 		default:
