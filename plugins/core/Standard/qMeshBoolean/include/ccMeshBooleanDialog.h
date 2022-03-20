@@ -18,6 +18,7 @@
 //##########################################################################
 
 #include "ui_meshBooleanDlg.h"
+#include "qMeshBoolean.h"
 
 //! Dialog for qCork plugin
 class ccMeshBooleanDialog : public QDialog, public Ui::MeshBooleanDialog
@@ -28,9 +29,6 @@ public:
 
 	//! Default constructor
 	explicit ccMeshBooleanDialog(QWidget* parent = nullptr);
-
-	//! Supported CSG operations
-	enum CSG_OPERATION { UNION, INTERSECT, DIFF, SYM_DIFF };
 
 	//! Set meshes names
 	void setNames(const QString& A, const QString& B);
