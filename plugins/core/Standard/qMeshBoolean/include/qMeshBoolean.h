@@ -24,7 +24,38 @@
 
 class QAction;
 
-//! Mes Boolean Operations (CSG) plugin
+//libIGL
+//#include <igl/all.h>
+#include <igl/copyleft/cgal/mesh_boolean.h>
+
+//! ligIGL mesh
+struct IGLMesh
+{
+    Eigen::MatrixXd V; //!< Vertices
+    Eigen::MatrixXi F; //!< Triangles
+};
+
+//! Supported CSG operations
+enum CSG_OPERATION { UNION, INTERSECT, DIFF, SYM_DIFF };
+
+//! Boolean operation parameters (for concurrent run)
+struct BoolOpParameters
+{
+    CSG_OPERATION operation = CSG_OPERATION::UNION;
+    IGLMesh* meshA = nullptr;
+    IGLMesh* meshB = nullptr;
+    IGLMesh output;
+    QString nameA;
+    QString nameB;
+    ccMainAppInterface* app = nullptr;
+};
+
+bool ToIGLMesh(const ccMesh* in, IGLMesh& out, ccMainAppInterface* app = nullptr);
+ccMesh* FromIGLMesh(const IGLMesh& in, ccMainAppInterface* app = nullptr);
+bool DoPerformMeshBooleanOp();
+
+
+//! Mesh Boolean Operations (CSG) plugin
 /** This plugin is based on ligIGL: https://libigl.github.io/
 **/
 class qMeshBoolean : public QObject, public ccStdPluginInterface
@@ -42,6 +73,8 @@ public:
 	//inherited from ccStdPluginInterface
 	virtual void onNewSelection(const ccHObject::Container& selectedEntities);
 	virtual QList<QAction *> getActions() override;
+
+	static BoolOpParameters s_params;
 
 protected:
 
