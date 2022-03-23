@@ -111,10 +111,15 @@ static RansacShapeDetector* s_detector = 0;
 static PointCloud* s_cloud = 0;
 void doDetection()
 {
+    CCTRACE("enter doDetection");
 	if (!s_detector || !s_cloud || !s_shapes)
+	{
+	    CCTRACE("abort");
 		return;
+    }
 
 	s_remainingPoints = s_detector->Detect(*s_cloud, 0, s_cloud->size(), s_shapes);
+	CCTRACE("end doDetection " << s_remainingPoints);
 }
 
 //for parameters persistence

@@ -10,6 +10,7 @@
 #include <MiscLib/NoShrinkVector.h>
 #include "Octree.h"
 #include <algorithm>
+#include "ccTrace.h"
 
 #ifndef DLL_LINKAGE
 #define DLL_LINKAGE
@@ -158,9 +159,15 @@ bool Candidate::ImproveBounds(const MiscLib::Vector< ImmediateOctreeType * > &oc
 	size_t maxSubset, size_t minPoints)
 {
 	if(m_subset >= maxSubset)
+	{
+	    CCTRACE("m_subset: " << m_subset << " maxSubset " << maxSubset);
 		return false;
+	}
 	if(m_subset >= octrees.size())
+	{
+	    CCTRACE("m_subset: " << m_subset << " octrees.size() " << octrees.size());
 		return false;
+	}
 
 	size_t sampledPoints = 0;
 	for(size_t i = 0; i < m_subset; ++i)
@@ -170,11 +177,13 @@ bool Candidate::ImproveBounds(const MiscLib::Vector< ImmediateOctreeType * > &oc
 	scoreVisitor.SetIndices(m_indices);
 	do
 	{
+	    CCTRACE("+ " << m_subset << " " << minPoints);
 		scoreVisitor.SetOctree(*octrees[m_subset]);
 		m_shape->Visit(&scoreVisitor);
 		newlySampledPoints += octrees[m_subset]->size();
 		sampledPoints += octrees[m_subset]->size();
 		++m_subset;
+		CCTRACE("newlySampledPoints: " <<newlySampledPoints);
 	}
 	while(m_subset < octrees.size() && newlySampledPoints < minPoints);
 
@@ -184,6 +193,7 @@ bool Candidate::ImproveBounds(const MiscLib::Vector< ImmediateOctreeType * > &oc
 	// check if connected component is worthwhile
     if( m_subset == 1)
 	{
+        CCTRACE("true");
 		return true;
 	}
 	if( m_hasConnectedComponent ||
@@ -192,6 +202,7 @@ bool Candidate::ImproveBounds(const MiscLib::Vector< ImmediateOctreeType * > &oc
 	{
 		if(!m_hasConnectedComponent && m_indices->size() < 2)
 		{
+		    CCTRACE("iftrue");
 			return true;
 		}
 		m_hasConnectedComponent = true;
@@ -203,6 +214,7 @@ bool Candidate::ImproveBounds(const MiscLib::Vector< ImmediateOctreeType * > &oc
 		{
 			GetScore( pc, bitmapEpsilon, true);
 			m_upperBound = m_lowerBound = static_cast<float>(m_score);
+			CCTRACE("m_upperBound " << m_upperBound);
 			return true;
 		}
 		GetScore( pc, (2 << ((octrees.size() - m_subset) / 2)) * bitmapEpsilon, false);

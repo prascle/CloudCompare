@@ -13,6 +13,7 @@
 #include "Octree.h"
 #include "ScorePrimitiveShapeVisitor.h"
 #include "FlatNormalThreshPointCompatibilityFunc.h"
+#include "ccTrace.h"
 #ifdef DOPARALLEL
 #include <omp.h>
 #endif
@@ -136,6 +137,7 @@ void RansacShapeDetector::GenerateCandidates(
 		for(ConstructorsType::const_iterator i = m_constructors.begin(),
 			iend = m_constructors.end(); i != iend; ++i)
 		{
+		    //CCTRACE("      -");
 			if((*i)->RequiredSamples() > samples.size() 
 					|| !(shape = (*i)->Construct(samplePoints)))
 				continue;
@@ -155,6 +157,7 @@ void RansacShapeDetector::GenerateCandidates(
 				shape->Release();
 				continue;
 			}
+            CCTRACE("      +");
 			Candidate cand(shape, node->Level());
 			cand.Indices(new MiscLib::RefCounted< MiscLib::Vector< size_t > >);
 			cand.Indices()->Release();
@@ -163,6 +166,7 @@ void RansacShapeDetector::GenerateCandidates(
 				currentSize, m_options.m_bitmapEpsilon, 1);
 			if(cand.UpperBound() < m_options.m_minSupport)
 			{
+	            CCTRACE("      ...cand.UpperBound() " << cand.UpperBound() << " " << m_options.m_minSupport);
 #ifdef DOPARALLEL
 				#pragma omp critical
 #endif
@@ -177,6 +181,7 @@ void RansacShapeDetector::GenerateCandidates(
 			#pragma omp critical
 #endif
 			{
+                CCTRACE("      ......");
 				(*sampleLevelScores)[node->Level()].first += cand.ExpectedValue();
 				++(*sampleLevelScores)[node->Level()].second;
 				candidates->push_back(cand);
@@ -204,8 +209,12 @@ bool RansacShapeDetector::FindBestCandidate(CandidatesType &candidates,
 	size_t drawnCandidates, size_t numInvalid, size_t minSize, size_t numLevels,
 	float *maxForgottenCandidate, float *candidateFailProb) const
 {
+    CCTRACE("   FindBestCandidate");
 	if(!candidates.size())
+	{
+	    CCTRACE("   empty");
 		return false;
+	}
 	size_t maxImproveSubsetDuringMaxSearch = octrees.size();
 	// sort by expected value
 	std::sort(candidates.begin(), candidates.end());
@@ -230,6 +239,7 @@ bool RansacShapeDetector::FindBestCandidate(CandidatesType &candidates,
 
 	if(!candHeap.size())
 	{
+        CCTRACE("   empty");
 		return false;
 	}
 
@@ -316,6 +326,7 @@ bool RansacShapeDetector::FindBestCandidate(CandidatesType &candidates,
 		|| trial->UpperBound() < minSize)
 		&& (!m_autoAcceptSize || trial->UpperBound() < m_autoAcceptSize))
 	{
+        CCTRACE("   hum");
 		return false;
 	}
 	std::sort(candidates.begin(), candidates.end());
@@ -448,6 +459,7 @@ bool RansacShapeDetector::FindBestCandidate(CandidatesType &candidates,
 		return true;
 	}
 	std::sort(candidates.begin(), candidates.end()/*, std::greater< Candidate >()*/);
+	CCTRACE("   ...");
 	return false;
 }
 
@@ -455,6 +467,7 @@ size_t
 RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 	MiscLib::Vector< std::pair< RefCountPtr< PrimitiveShape >, size_t > > *shapes)
 {
+    CCTRACE("RansacShapeDetector");
 	size_t pcSize = endIdx - beginIdx;
 	/*
 	 * Initialization part
@@ -475,12 +488,13 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 	size_t subsets = std::max(int(std::floor(std::log((float)pcSize)/std::log(2.f)))-9, 2);
 	GfxTL::AACube< GfxTL::Vector3Df > bcube;
 	bcube.Bound(pc.begin() + beginIdx, pc.begin() + endIdx); 
-
+    CCTRACE("---");
 	// construct stratified subsets
 	MiscLib::Vector< ImmediateOctreeType * > octrees(subsets);
 	for(size_t i = octrees.size(); i;)
 	{
 		--i;
+		CCTRACE(" -------------- i: " << i << " pcSize " << pcSize);
 		size_t subsetSize = pcSize;
 		if(i)
 		{
@@ -509,7 +523,9 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 		octrees[i]->MaxSubdivisionLevel() = 10;
 		octrees[i]->Build(bcube);
 		pcSize -= subsetSize;
+		CCTRACE("size: " << octrees[i]->size());
 	}
+    CCTRACE("---");
 
 	pcSize = endIdx - beginIdx;
 
@@ -544,6 +560,7 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 	subsetScoreVisitor.SetShapeIndex(shapeIndex);
 	globalScoreVisitor.SetShapeIndex(shapeIndex);
 	size_t currentSize = pcSize;
+    CCTRACE("---");
 	do
 	{
 		MiscLib::Vector< std::pair< float, size_t > > sampleLevelScores(
@@ -558,11 +575,13 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 		sampleLevelProbSum[sampleLevelProbSum.size() - 1] = 1;
 		// generate candidates
 		float bestExpectedValue = 0;
+		CCTRACE("candidates.size() " << candidates.size());
 		if(candidates.size())
 			bestExpectedValue = candidates.back().ExpectedValue();
 		bestExpectedValue = std::min((float)(currentSize - numInvalid), bestExpectedValue);
 		do
 		{
+		    CCTRACE("   ---");
 			GenerateCandidates(globalOctree,
 				octrees, pc, subsetScoreVisitor,
 				currentSize, numInvalid,
@@ -583,12 +602,14 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 		float failureProbability = std::numeric_limits< float >::infinity();
 		bool foundCandidate = false;
 		size_t firstCandidateSize = 0;
+	    CCTRACE("---");
 		while(FindBestCandidate(candidates, octrees, pc, subsetScoreVisitor,
 			currentSize, drawnCandidates, numInvalid,
 			std::max(static_cast<size_t>(m_options.m_minSupport), static_cast<size_t>(0.8 * firstCandidateSize)),
 			globalOctTreeMaxNodeDepth, &maxForgottenCandidate,
 			&bestCandidateFailureProbability))
 		{
+            CCTRACE("   ---");
 			if(!foundCandidate)
 			{
 				// this is the first candidate
@@ -612,6 +633,7 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 			if(bestCandidateFailureProbability < failureProbability)
 				failureProbability = bestCandidateFailureProbability;
 
+	        CCTRACE("---");
 			// do fitting
 			if(m_options.m_fitting != Options::NO_FITTING)
 			{
@@ -630,6 +652,7 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 				size_t fittingIter = 0;
 				do
 				{
+			        CCTRACE("   ---");
 					++fittingIter;
 					oldScore = newScore;
 					oldSize = newSize;
@@ -665,6 +688,7 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 				candidates.back().GlobalScore(globalScoreVisitor, globalOctree);
 				candidates.back().ConnectedComponent(pc, m_options.m_bitmapEpsilon);
 			}
+	        CCTRACE("---");
 			if(candidates.back().Size() == 0)
 				std::cout << "ERROR: candidate size == 0 after fitting" << std::endl;
 			// best candidate is ok!
@@ -680,6 +704,7 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 				static_cast<double>(currentSize - numInvalid)), 3.f) * drawnCandidates);
 			numInvalid += candidates.back().Indices()->size();
 			candidates.pop_back();
+	        CCTRACE("---");
 			if(numInvalid > currentSize / 4) // more than half of the points assigned?
 			{
 				// do a housekeeping step
@@ -721,6 +746,7 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 						++mergedSubsets;
 					}
 				}
+		        CCTRACE("---");
 
 				// reindex global octree
 				size_t minInvalidIndex = currentSize - numInvalid + beginIdx;
@@ -751,6 +777,7 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 					}
 					
 				numInvalid = 0;
+		        CCTRACE("---");
 
 				// rebuild subset octrees
 				if(mergedSubsets) // the octree for the first subset has to be constructed
@@ -800,6 +827,7 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 						octrees[i]->DataRange(begin, begin + subsetSizes[i]);
 						octrees[i]->Rebuild();
 					}
+		        CCTRACE("---");
 
 				//so everything is in its correct place, but we need to update the global octree ranges
 				currentSize = globalOctreeIndices.size();
@@ -815,9 +843,11 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 				std::fill(shapeIndex.begin() + beginIdx,
 					shapeIndex.begin() + beginIdx + currentSize, -1);
 				numShapes = 0;
+		        CCTRACE("---");
 			}
 			else
 			{
+		        CCTRACE("---");
 				// the bounds of the candidates have become invalid and have to be
 				// recomputed
 #ifdef DOPARALLEL
@@ -828,6 +858,7 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 						currentSize - numInvalid, m_options.m_epsilon,
 						m_options.m_normalThresh, m_options.m_bitmapEpsilon);
 			}
+	        CCTRACE("---");
 			// remove all candidates that have become obsolete
 			std::sort(candidates.begin(), candidates.end(), std::greater< Candidate >());
 			size_t remainingCandidates = 0;
@@ -839,6 +870,7 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 		} // Ende abgrasen
 		if(foundCandidate)
 		{
+	        CCTRACE("---");
 			std::sort(candidates.begin(), candidates.end(), std::greater< Candidate >());
 			size_t remainingCandidates = 0;
 			size_t nonConnectedCount = 0;
@@ -858,11 +890,13 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 		{
 			numTries++;
 		}
+        CCTRACE("---");
 	}
 	while(CandidateFailureProbability(static_cast<float>(m_options.m_minSupport), currentSize - numInvalid,
 		drawnCandidates, globalOctTreeMaxNodeDepth) > m_options.m_probability
 		&& (currentSize - numInvalid) >= m_options.m_minSupport);
 
+    CCTRACE("---");
 	if(numInvalid)
 	{
 		// rearrange the last shapes
@@ -890,6 +924,7 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 				std::swap(shapeIndex[i], shapeIndex[shapeIndex[i]]);
 			}
 	}
+    CCTRACE("---");
 	// clean up subset octrees
 	for(size_t i = 0; i < octrees.size(); ++i)
 		delete octrees[i];
@@ -909,6 +944,7 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 		if(shapes->at(i - 1).second == 0)
 			shapes->erase(shapes->begin() + i - 1);
 	}
+    CCTRACE("---");
 	return currentSize - numInvalid;
 }
 
