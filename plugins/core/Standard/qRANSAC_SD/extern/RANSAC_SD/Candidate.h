@@ -126,9 +126,11 @@ void Candidate::Clone(Candidate *c) const
 
 void Candidate::GetBounds(size_t sampledPoints, size_t totalPoints)
 {
+    CCTRACE("GetBounds " << totalPoints << " " << sampledPoints << " " << m_score << " " << m_lowerBound  << " " << m_upperBound);
 	Induct((double)totalPoints, (double)sampledPoints, (double)m_score, &m_lowerBound,
 		&m_upperBound);
 	m_lowerBound = std::max(0.f, m_lowerBound);
+	CCTRACE("m_lowerBound, m_upperBound " << m_lowerBound << " " << m_upperBound);
 }
 
 void Candidate::Induct(double totalSize, double sampleSize,
@@ -200,6 +202,8 @@ bool Candidate::ImproveBounds(const MiscLib::Vector< ImmediateOctreeType * > &oc
 		(2.f * ( m_upperBound - ( m_lowerBound / .7f)) /
 		(m_upperBound + (m_lowerBound / .7f))) < .3f)
 	{
+	    CCTRACE("(octrees.size() - m_subset) / 2 : " << ((octrees.size() - m_subset) / 2) );
+	    CCTRACE("(4 << ((octrees.size() - m_subset) / 2)) " << (4 << ((octrees.size() - m_subset) / 2)));
 		if(!m_hasConnectedComponent && m_indices->size() < 2)
 		{
 		    CCTRACE("iftrue");

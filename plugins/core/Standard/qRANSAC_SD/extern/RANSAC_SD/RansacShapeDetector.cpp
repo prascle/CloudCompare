@@ -157,7 +157,7 @@ void RansacShapeDetector::GenerateCandidates(
 				shape->Release();
 				continue;
 			}
-            CCTRACE("      +");
+            CCTRACE("      + " << i);
 			Candidate cand(shape, node->Level());
 			cand.Indices(new MiscLib::RefCounted< MiscLib::Vector< size_t > >);
 			cand.Indices()->Release();
