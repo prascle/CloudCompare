@@ -112,6 +112,7 @@ bool Candidate::operator>=(const Candidate &c) const
 
 void Candidate::Clone(Candidate *c) const
 {
+    CCTRACE("Candidate::Clone");
 	c->m_shape = m_shape->Clone();
 	c->m_shape->Release();
 	c->m_subset = m_subset;
@@ -255,6 +256,7 @@ void Candidate::RecomputeBounds(const MiscLib::Vector< ImmediateOctreeType * > &
 		{
 			if((float)indicesSize / m_indices->size() > 0.95)
 			{
+			    CCTRACE("Candidate::RecomputeBounds...resize");
 				m_indices->resize(indicesSize);
 
 				GetScore( pc, m_subset >= octrees.size()? bitmapEpsilon :
@@ -270,6 +272,7 @@ void Candidate::RecomputeBounds(const MiscLib::Vector< ImmediateOctreeType * > &
 			}
 			else
 			{
+                CCTRACE("Candidate::RecomputeBounds...clear");
 				m_subset = 0;
 				m_hasConnectedComponent = false;
 				m_indices->clear();

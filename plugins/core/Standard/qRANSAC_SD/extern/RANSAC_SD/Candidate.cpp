@@ -23,6 +23,7 @@ Candidate::Candidate(PrimitiveShape *shape, size_t level)
 
 void Candidate::Reset()
 {
+    CCTRACE("Candidate::Reset");
 	m_indices->clear();
 	m_subset = 0;
 	m_lowerBound = 0;
@@ -36,6 +37,7 @@ void Candidate::Reindex(const MiscLib::Vector< int > &newIndices, int minInvalid
 	const PointCloud &pc, size_t currentSize, float epsilon, float normalThresh,
 	float bitmapEpsilon)
 {
+    CCTRACE("Candidate::Reindex");
 	size_t i = 0, j = 0;
 	for(; i < m_indices->size(); ++i)
 		if(newIndices[(*m_indices)[i]] < minInvalidIndex)
@@ -88,6 +90,7 @@ float Candidate::WeightedScore(const PointCloud &pc, float epsilon,
 
 void Candidate::ConnectedComponent(const PointCloud &pc, float bitmapEpsilon, float* borderRatio )
 {
+    CCTRACE("Candidate::ConnectedComponent");
 	size_t connectedSize = m_shape->ConnectedComponent(pc, bitmapEpsilon, m_indices, true, borderRatio);
 	m_indices->resize(connectedSize);
 	m_lowerBound = m_upperBound = (float)m_indices->size();
@@ -177,6 +180,7 @@ void Candidate::GetScore( const PointCloud& pc, float bitmapEpsilon, bool doFilt
 
 void Candidate::GetScoreMaxCCSize( const PointCloud& pc, float bitmapEpsilon, bool doFiltering )
 {
+    CCTRACE("Candidate::GetScoreMaxCCSize");
 	size_t connectedSize = m_shape->ConnectedComponent(pc, bitmapEpsilon, 
 					m_indices, doFiltering );
 	m_indices->resize(connectedSize);
@@ -186,6 +190,7 @@ void Candidate::GetScoreMaxCCSize( const PointCloud& pc, float bitmapEpsilon, bo
 
 void Candidate::GetScoreMaxCCMinBorder( const PointCloud& pc, float bitmapEpsilon, bool doFiltering )
 {
+    CCTRACE("Candidate::GetScoreMaxCCMinBorder");
 	float borderRatio;
 	size_t connectedSize = m_shape->ConnectedComponent(pc, bitmapEpsilon, 
 					m_indices, doFiltering, &borderRatio);
