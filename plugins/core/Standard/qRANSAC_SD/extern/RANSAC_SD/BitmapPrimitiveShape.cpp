@@ -7,6 +7,7 @@
 #include "IndexIterator.h"
 #include <MiscLib/Performance.h>
 #include <float.h>
+#include "ccTrace.h"
 using namespace MiscLib;
 
 void BitmapPrimitiveShape::PreWrapBitmap(
@@ -161,7 +162,10 @@ size_t BitmapPrimitiveShape::ConnectedComponent(
 
 	BitmapInfo bitmapInfo;
 	if( AllConnectedComponents( pc, epsilon, bitmapInfo, indices, componentsImg, labels, doFiltering ) <= 1 )
+	{
+	    CCTRACE("AllConnectedComponents");
 		return 0;
+	}
 
 	size_t size = indices->size();
 	MiscLib::Vector< size_t >::iterator begin = indices->begin();
@@ -261,6 +265,7 @@ size_t BitmapPrimitiveShape::ConnectedComponent(
 	}
 
 	m_extBbox = bbox;
+	CCTRACE("offset = " << offset)
 	return offset;
 }
 
