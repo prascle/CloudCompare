@@ -234,6 +234,7 @@ void Candidate::RecomputeBounds(const MiscLib::Vector< ImmediateOctreeType * > &
 	const PointCloud &pc, ScoreVisitorT &scoreVisitor, size_t currentSize,
 	float epsilon, float normalThresh, float bitmapEpsilon)
 {
+    CCTRACE("Candidate::RecomputeBounds");
 	// run over indices and check if still unassigned
 	const MiscLib::Vector< int > &shapeIndex = scoreVisitor.GetShapeIndex();
 	size_t indicesSize = m_indices->size();
@@ -303,6 +304,7 @@ template< class ScoreVisitorT >
 void Candidate::GlobalScore(ScoreVisitorT &scoreVisitor,
 	const IndexedOctreeType &oct)
 {
+    CCTRACE("Candidate::GlobalScore");
 	m_indices->clear();
 	scoreVisitor.SetOctree(oct);
 	scoreVisitor.SetIndices(m_indices);
