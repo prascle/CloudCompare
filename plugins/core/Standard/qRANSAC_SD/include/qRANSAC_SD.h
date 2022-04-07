@@ -18,6 +18,8 @@
 #ifndef Q_RANSAC_SD_PLUGIN_HEADER
 #define Q_RANSAC_SD_PLUGIN_HEADER
 
+#include <qRANSAC_SDExport.h>
+
 #include "ccStdPluginInterface.h"
 
 
@@ -26,7 +28,7 @@
 	and Reinhard Klein, in Computer Graphics Forum (June 2007), 26:2(214-226)
 	http://cg.cs.uni-bonn.de/en/publications/paper-details/schnabel-2007-efficient/
 **/
-class qRansacSD : public QObject, public ccStdPluginInterface
+class QRANSAC_SD_PLUGIN_LIB_API qRansacSD : public QObject, public ccStdPluginInterface
 {
 	Q_OBJECT
 	Q_INTERFACES( ccPluginInterface ccStdPluginInterface )
