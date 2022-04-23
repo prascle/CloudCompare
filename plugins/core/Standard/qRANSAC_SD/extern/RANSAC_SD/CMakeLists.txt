@@ -23,8 +23,9 @@ target_compile_definitions( ${PROJECT_NAME}
 # DGM: OpenMP doesn't work with MSVC (the process loops infinitely)
 #if( NOT WIN32 )
 #	find_package( OpenMP )
-
+#
 #	if( OpenMP_CXX_FOUND )
+#	    message(STATUS "Plugin Ransac_SD built with OpenMP")
 #		target_link_libraries( ${PROJECT_NAME} PUBLIC OpenMP::OpenMP_CXX )
 #		target_compile_definitions( ${PROJECT_NAME} PRIVATE DOPARALLEL )
 #	endif()
