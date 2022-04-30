@@ -1,5 +1,5 @@
 # Windows only
-if( WIN32 )
+#if( WIN32 )
 	option( PLUGIN_IO_QLAS_FWF "Check to install qLAS FWF I/O plugin" OFF )
 	
 	if( PLUGIN_IO_QLAS_FWF )
@@ -22,4 +22,4 @@ if( WIN32 )
 		
 		target_link_LASLib( ${PROJECT_NAME} )
 	endif()
-endif()
+#endif()

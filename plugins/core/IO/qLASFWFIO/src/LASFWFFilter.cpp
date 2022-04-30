@@ -107,7 +107,11 @@ static QByteArray ToQByteArray(const LASvlr& vlr)
 		for (int j = 0; j < 32; ++j, ++bufferData)
 			*bufferData = vlr.description[j];
 		// data
+#if defined( _WIN32 )
 		memcpy_s(bufferData, bufferSize - VLR_HEADER_SIZE, vlr.data, vlr.record_length_after_header);
+#else
+        memcpy(bufferData, vlr.data, vlr.record_length_after_header);
+#endif
 	}
 	else
 	{
@@ -158,7 +162,11 @@ static bool FromQByteArray(const QByteArray& buffer, LASvlr& vlr)
 		return false;
 	}
 
+#if defined( _WIN32 )
 	memcpy_s(vlr.data, vlr.record_length_after_header, buffer.data() + VLR_HEADER_SIZE, buffer.size() - VLR_HEADER_SIZE);
+#else
+	memcpy(vlr.data, buffer.data() + VLR_HEADER_SIZE, buffer.size() - VLR_HEADER_SIZE);
+#endif
 	return true;
 }
 
