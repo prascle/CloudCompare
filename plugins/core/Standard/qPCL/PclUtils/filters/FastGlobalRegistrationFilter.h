@@ -28,10 +28,16 @@ public:
 	FastGlobalRegistrationFilter();
 	~FastGlobalRegistrationFilter() override;
 
-protected:
-
 	//inherited from BaseFilter
 	int compute() override;
+    void setParameters(ccPointCloud* refCloud, std::vector<ccPointCloud*> alignClouds, double radius)
+    {
+        m_referenceCloud = refCloud;
+        m_alignedClouds = alignClouds;
+        m_featureRadius = radius;
+    }
+
+protected:
 	int getParametersFromDialog() override;
 	bool checkSelected() const override;
 	QString getErrorMessage(int errorCode) const override;
