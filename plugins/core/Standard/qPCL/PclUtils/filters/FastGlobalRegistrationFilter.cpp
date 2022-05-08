@@ -312,3 +312,37 @@ int FastGlobalRegistrationFilter::compute()
 
 	return Success;
 }
+void FastGlobalRegistrationFilter::setParameters(ccPointCloud* refCloud, std::vector<ccPointCloud*> alignClouds, double radius)
+{
+    ccOctree::BestRadiusParams params;
+    {
+        params.aimedPopulationPerCell = 64;
+        params.aimedPopulationRange = 16;
+        params.minCellPopulation = 48;
+        params.minAboveMinRatio = 0.97;
+    }
+
+    if (radius == 0)
+    {
+        PointCoordinateType largestRadius = 0.0;
+        std::vector<ccPointCloud*> clouds = alignClouds;
+        clouds.push_back(refCloud);
+        for (ccPointCloud* cloud : clouds)
+        {
+            PointCoordinateType radius = ccOctree::GuessBestRadiusAutoComputeOctree(cloud, params, nullptr);
+            if (radius < 0)
+            {
+                ccLog::Error(tr("Failed to estimate the radius for cloud %1").arg(cloud->getName()));
+                return;
+            }
+            largestRadius = std::max(largestRadius, radius);
+        }
+        radius = largestRadius;
+    }
+
+    m_referenceCloud = refCloud;
+    m_alignedClouds = alignClouds;
+    m_featureRadius = radius;
+}
+
+
