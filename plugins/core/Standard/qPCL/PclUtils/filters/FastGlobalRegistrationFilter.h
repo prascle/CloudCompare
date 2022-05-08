@@ -30,11 +30,10 @@ public:
 
 	//inherited from BaseFilter
 	int compute() override;
-    void setParameters(ccPointCloud* refCloud, std::vector<ccPointCloud*> alignClouds, double radius)
+    void setParameters(ccPointCloud* refCloud, std::vector<ccPointCloud*> alignClouds, double radius = 0);
+    double getAutoRadius()
     {
-        m_referenceCloud = refCloud;
-        m_alignedClouds = alignClouds;
-        m_featureRadius = radius;
+        return m_featureRadius;
     }
 
 protected:
