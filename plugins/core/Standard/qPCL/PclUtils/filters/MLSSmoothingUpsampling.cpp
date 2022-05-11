@@ -116,7 +116,8 @@ MLSSmoothingUpsampling::MLSSmoothingUpsampling()
 	: BaseFilter(FilterDescription(	"MLS smoothing",
 									"Smooth using MLS, optionally upsample",
 									"Smooth the cloud using Moving Least Sqares algorithm, estimate normals and optionally upsample",
-									":/toolbar/PclUtils/icons/mls_smoothing.png"))
+									":/toolbar/PclUtils/icons/mls_smoothing.png")),
+      m_outputCloud(0)
 {
 }
 
@@ -182,7 +183,7 @@ int MLSSmoothingUpsampling::compute()
 	}
 
 	emit newEntity(outputCCCloud);
-
+	m_outputCloud = outputCCCloud;
 	return Success;
 }
 
@@ -242,5 +243,6 @@ void MLSSmoothingUpsampling::setParameters(ccPointCloud* cloud,
     m_parameters.step_point_density_ = stepPointDensity;
     m_parameters.dilation_voxel_size_ = dilationVoxelSize;
     m_parameters.dilation_iterations_ = dilationIterations;
+    CCTRACE("m_parameters.upsample_method_ = " <<  m_parameters.upsample_method_);
 }
 
