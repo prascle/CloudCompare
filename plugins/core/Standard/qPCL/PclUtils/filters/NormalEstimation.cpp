@@ -160,3 +160,18 @@ int NormalEstimation::compute()
 	return Success;
 }
 
+void NormalEstimation::setParameters(ccPointCloud* cloud, bool useKnn, bool ovewriteCurvature, int knn, double radius)
+{
+    m_selectedEntities.push_back(cloud);
+    m_useKnn = useKnn;
+    m_overwrite_curvature = ovewriteCurvature;
+    m_knn_radius = knn;
+    if (radius == 0.)
+    {
+        ccBBox bBox = cloud->getOwnBB();
+        m_radius = bBox.getDiagNorm() / 200.0;
+    }
+    else
+        m_radius = radius;
+}
+
