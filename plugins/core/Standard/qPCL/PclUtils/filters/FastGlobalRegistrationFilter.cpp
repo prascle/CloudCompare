@@ -312,6 +312,7 @@ int FastGlobalRegistrationFilter::compute()
 
 	return Success;
 }
+
 void FastGlobalRegistrationFilter::setParameters(ccPointCloud* refCloud, std::vector<ccPointCloud*> alignClouds, double radius)
 {
     ccOctree::BestRadiusParams params;
