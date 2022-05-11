@@ -65,9 +65,11 @@ public:
 	    bool polyfit=true, int order=2, double sqrGauss=0.0001,
 	    int upsampleMethod =0, double upsampingRadius=0.01, double upsamplingStep=0.01,
 	    int stepPointDensity=4, double dilationVoxelSize=0.01, int dilationIterations=0);
+	inline ccPointCloud* getOutputCloud() { return m_outputCloud; };
 protected:
 	int getParametersFromDialog() override;
 
 protected:
 	MLSParameters m_parameters; //We directly store all the parameters here
+	ccPointCloud* m_outputCloud;
 };
