@@ -41,6 +41,7 @@
 #include <ReferenceCloud.h>
 #include <Neighbourhood.h>
 #include <Delaunay2dMesh.h>
+#include <ccHObjectCaster.h>
 
 //System
 #include <string.h>
@@ -4211,4 +4212,18 @@ bool ccMesh::mergeDuplicatedVertices(unsigned char octreeLevel/*=10*/, QWidget* 
 	}
 
 	return true;
+}
+
+ccMesh* ccMesh::crop2D(const ccPolyline* poly, unsigned char orthoDim, bool inside)
+{
+    ccPointCloud* cloud = ccHObjectCaster::ToPointCloud(this->getAssociatedCloud());
+    bool ret = cloud->setVisibility(poly, orthoDim, inside);
+    if (!ret)
+    {
+        ccLog::Warning("[ccMesh::crop2D] problem with setVisibility");
+        return nullptr;
+    }
+    ccMesh* result = createNewMeshFromSelection(false);
+    cloud->resetVisibilityArray();
+    return result;
 }
