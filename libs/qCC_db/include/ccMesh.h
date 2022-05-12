@@ -402,6 +402,8 @@ public:
 	//! Merges duplicated vertices
 	bool mergeDuplicatedVertices(unsigned char octreeLevel = DefaultMergeDuplicateVerticesLevel, QWidget* parentWidget = nullptr);
 
+	ccMesh* crop2D(const ccPolyline* poly, unsigned char orthoDim, bool inside = true);
+
 protected: //methods
 
 	//inherited from ccHObject
