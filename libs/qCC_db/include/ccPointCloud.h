@@ -756,6 +756,10 @@ public: //other methods
 	//! Removes the duplicate points and return the corresponding cloud (if any, or the same cloud if there's no duplicate point)
 	ccPointCloud* removeDuplicatePoints(double minDistanceBetweenPoints, ccProgressDialog* pDlg = nullptr);
 
+	//! Sets the visibility array from a polyline, a direction (oX, oY, oZ), a status (inside, outside)
+    virtual bool setVisibility(const ccPolyline* poly, unsigned char orthoDim, bool inside=true);
+
+
 protected:
 
 	//inherited from ccHObject
