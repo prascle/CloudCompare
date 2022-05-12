@@ -746,6 +746,9 @@ public: //other methods
 	//! Shift the points of a given quantity along their normals
 	bool shiftPointsAlongNormals(PointCoordinateType shift);
 
+	//! Sets the visibility array from a polyline, a direction (oX, oY, oZ), a status (inside, outside)
+    virtual bool setVisibility(const ccPolyline* poly, unsigned char orthoDim, bool inside=true);
+
 protected:
 
 	//inherited from ccHObject
