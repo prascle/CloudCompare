@@ -787,6 +787,8 @@ public: //other methods
 	/** Must be called before the OpenGL context is released.
 	**/
 	static void ReleaseShaders();
+	//! Sets the visibility array from a polyline, a direction (oX, oY, oZ), a status (inside, outside)
+    virtual bool setVisibility(const ccPolyline* poly, unsigned char orthoDim, bool inside=true);
 
 protected:
 
