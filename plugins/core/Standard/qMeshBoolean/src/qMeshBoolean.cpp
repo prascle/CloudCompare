@@ -47,12 +47,12 @@
 #include <igl/copyleft/cgal/mesh_boolean.h>
 #endif
 
-//! ligIGL mesh
-struct IGLMesh
-{
-	Eigen::MatrixXd V; //!< Vertices
-	Eigen::MatrixXi F; //!< Triangles
-};
+////! ligIGL mesh
+//struct IGLMesh
+//{
+//	Eigen::MatrixXd V; //!< Vertices
+//	Eigen::MatrixXi F; //!< Triangles
+//};
 
 qMeshBoolean::qMeshBoolean(QObject* parent/*=nullptr*/)
 	: QObject(parent)
