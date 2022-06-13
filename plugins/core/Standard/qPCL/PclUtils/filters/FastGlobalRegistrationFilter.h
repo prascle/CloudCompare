@@ -18,6 +18,7 @@
 //##########################################################################
 
 #include "BaseFilter.h"
+#include "ccGLMatrix.h"
 
 //! Filter based on "Q.-Y. Zhou, J. Park, and V. Koltun, Fast Global Registration, ECCV, 2016."
 /** See https://github.com/isl-org/FastGlobalRegistration
@@ -35,6 +36,7 @@ public:
     {
         return m_featureRadius;
     }
+    ccGLMatrix getTransformation() {return m_ccTrans; };
 
 protected:
 	int getParametersFromDialog() override;
@@ -46,4 +48,5 @@ protected: // variables
 	std::vector<ccPointCloud*> m_alignedClouds;
 	ccPointCloud* m_referenceCloud;
 	double m_featureRadius;
+	ccGLMatrix m_ccTrans;
 };
