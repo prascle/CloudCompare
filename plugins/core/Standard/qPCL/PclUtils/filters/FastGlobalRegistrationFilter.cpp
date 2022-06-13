@@ -274,7 +274,6 @@ int FastGlobalRegistrationFilter::compute()
 			return NotEnoughMemory;
 		}
 
-		ccGLMatrix ccTrans;
 		try
 		{
 			fgr::CApp fgrProcess;
@@ -292,7 +291,7 @@ int FastGlobalRegistrationFilter::compute()
 			for (int i = 0; i < 16; ++i)
 			{
 				// both ccGLMatrix and Eigen::Matrix4f should use column-major storage
-				ccTrans.data()[i] = trans.data()[i];
+				m_ccTrans.data()[i] = trans.data()[i];
 			}
 		}
 		catch (...)
@@ -301,10 +300,10 @@ int FastGlobalRegistrationFilter::compute()
 			return ComputationError;
 		}
 
-		alignedCloud->applyRigidTransformation(ccTrans);
+		alignedCloud->applyRigidTransformation(m_ccTrans);
 
 		ccLog::Print(tr("[Fast Global Registration] Resulting matrix for cloud %1").arg(alignedCloud->getName()));
-		ccLog::Print(ccTrans.toString(12, ' ')); //full precision
+		ccLog::Print(m_ccTrans.toString(12, ' ')); //full precision
 		ccLog::Print(tr("Hint: copy it (CTRL+C) and apply it - or its inverse - on any entity with the 'Edit > Apply transformation' tool"));
 
 		emit entityHasChanged(alignedCloud);
