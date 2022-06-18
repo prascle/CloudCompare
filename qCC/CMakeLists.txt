@@ -53,6 +53,7 @@ target_link_libraries( ${PROJECT_NAME}
     CCAppCommon
     QCustomPlot
     Qt5::PrintSupport
+    "-static-libstdc++"
 )
 
 if( CCCORELIB_USE_QT_CONCURRENT )
