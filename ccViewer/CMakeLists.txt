@@ -55,6 +55,7 @@ endif()
 
 target_link_libraries( ${PROJECT_NAME}
     CCAppCommon
+    "-static-libstdc++"
 )
 
 # Add custom preprocessor definitions
