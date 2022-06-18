@@ -13,6 +13,7 @@ if ( OPTION_USE_SHAPE_LIB )
     target_link_libraries( TestShpFilter
         QCC_IO_LIB
         Qt5::Test
+        "-static-libstdc++"
     )
 
     if ( WIN32 )
