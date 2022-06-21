@@ -1128,6 +1128,7 @@ CC_FILE_ERROR PlyFilter::loadFile(const QString& filename, const QString& inputT
 
 			QString elementName = QString(pointElements[pp.elemIndex].elementName).toUpper();
 			QString propName = QString(pp.propName).toUpper();
+            //CCTRACE("propName: " << propName.toStdString() << " elementName: " << elementName.toStdString());
 
 			if (nxIndex == 0 && (propName.contains("NX") || (elementName.contains("NORM") && propName.endsWith("X")) || (propName.contains("NORM") && propName.endsWith("X"))))
 				nxIndex = i;
@@ -1155,6 +1156,11 @@ CC_FILE_ERROR PlyFilter::loadFile(const QString& filename, const QString& inputT
 					yIndex = i;
 				else if (zIndex == 0 && propName.endsWith("Z"))
 					zIndex = i;
+				else if (propName.contains(parameters.extraData))
+				{
+	                //CCTRACE("propName: " << propName.toStdString() << " extradata: " << parameters.extraData.pattern().toStdString());
+	                sfPropIndexes.push_back(i);
+				}
 			}
 			else if (propName.contains("SCAL") || propName.contains("VAL"))
 			{
