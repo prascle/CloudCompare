@@ -69,6 +69,7 @@ public:
 			, autoComputeNormals(false)
 			, parentWidget(nullptr)
 			, sessionStart(true)
+		    , extraData("Empty")
 		{}
 		
 		//! How to handle big coordinates
@@ -87,6 +88,8 @@ public:
 		QWidget* parentWidget;
 		//! Session start (whether the load action is the first of a session)
 		bool sessionStart;
+		//! regular expression to select extra fields (e.g. for .ply) from Python
+		QRegExp extraData;
 	};
 	
 	//! Generic saving parameters
