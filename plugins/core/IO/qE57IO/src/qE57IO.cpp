@@ -18,12 +18,13 @@
 #include "qE57IO.h"
 
 #include "E57Filter.h"
-
+#include "ccLog.h"
 
 qE57IO::qE57IO( QObject *parent )
 	: QObject( parent )
 	, ccIOPluginInterface( ":/CC/plugin/qE57IO/info.json" )
 {
+    ccLogTrace::settrace();
 }
 
 void qE57IO::registerCommands( ccCommandLineInterface *cmd )
