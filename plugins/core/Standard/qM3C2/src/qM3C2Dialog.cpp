@@ -679,6 +679,20 @@ void qM3C2Dialog::saveParamsToFile()
 	}
 }
 
+void qM3C2Dialog::saveParamsToGivenFile(const QString& filename)
+{
+    QSettings settings("qM3C2");
+    QString currentPath = QFileInfo(filename).absolutePath();
+    settings.setValue("currentPath", currentPath);
+    //save file
+    {
+        QSettings fileSettings(filename, QSettings::IniFormat);
+        //set version tag (mandatory for a valid parameters file!)
+        fileSettings.setValue("M3C2VER", QVariant::fromValue<int>(1));
+        saveParamsTo(fileSettings);
+    }
+}
+
 void qM3C2Dialog::guessParams(bool fastMode/*=false*/)
 {
 	if (!m_cloud1 || !m_cloud2)
