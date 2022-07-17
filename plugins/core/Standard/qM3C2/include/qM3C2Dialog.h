@@ -91,6 +91,10 @@ public:
 	//! Saves parameters to persistent settings
 	void saveParamsToPersistentSettings();
 
+    //! Guess parameters from the cloud #1
+    void guessParams(bool fastMode);
+    void saveParamsToGivenFile(const QString& filename);
+
 protected:
 
 	void swapClouds();
@@ -106,9 +110,6 @@ protected:
 	void updateNormalComboBox();
 
 protected: //methods
-
-	//! Guess parameters from the cloud #1
-	void guessParams(bool fastMode);
 
 	//! Sets clouds
 	void setClouds(ccPointCloud* cloud1, ccPointCloud* cloud2);
