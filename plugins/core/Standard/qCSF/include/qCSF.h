@@ -31,12 +31,13 @@
 // A mex version for programming in Matlab is at File Exchange of Mathworks website:
 // http://www.mathworks.com/matlabcentral/fileexchange/58139-csf--ground-filtering-of-point-cloud-based-on-cloth-simulation
 
+#include "qCSFExport.h"
 #include "ccStdPluginInterface.h"
 #include <ccHObject.h>
 #include <vector>
 
 //! A point-clouds filtering algorithm utilize cloth simulation process.
-class qCSF : public QObject, public ccStdPluginInterface
+class QCSF_PLUGIN_LIB_API qCSF : public QObject, public ccStdPluginInterface
 {
 	Q_OBJECT
 	Q_INTERFACES( ccPluginInterface ccStdPluginInterface )
