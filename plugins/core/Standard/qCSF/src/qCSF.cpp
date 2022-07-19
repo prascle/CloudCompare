@@ -250,3 +250,105 @@ void qCSF::registerCommands(ccCommandLineInterface* cmd)
 	}
 	cmd->registerCommand(ccCommandLineInterface::Command::Shared(new CommandCSF));
 }
+
+std::vector<ccHObject*> qCSF::computeCSF( ccPointCloud* pc,
+                                          int csfRigidness,
+                                          int maxIteration,
+                                          double clothResolution,
+                                          double classThreshold,
+                                          bool csfPostprocessing)
+{
+    std::vector<ccHObject*> results;
+
+    //Convert CC point cloud to CSF type
+    unsigned count = pc->size();
+    wl::PointCloud csfPC;
+    try
+    {
+        csfPC.reserve(count);
+    }
+    catch (const std::bad_alloc&)
+    {
+        //cmd.error("Not enough memory!");
+        return results;
+    }
+
+    for (unsigned i = 0; i < count; i++)
+    {
+        const CCVector3* P = pc->getPoint(i);
+        wl::Point tmpPoint;
+        tmpPoint.x = P->x;
+        tmpPoint.y = -P->z;
+        tmpPoint.z = P->y;
+        csfPC.push_back(tmpPoint);
+    }
+    //instantiation a CSF class
+    CSF csf(csfPC);
+
+    //setup parameters
+    csf.params.k_nearest_points = 1;
+    csf.params.bSloopSmooth = csfPostprocessing;
+    csf.params.time_step = 0.65;
+    csf.params.class_threshold = classThreshold;
+    csf.params.cloth_resolution = clothResolution;
+    csf.params.rigidness = csfRigidness;
+    csf.params.iterations = maxIteration;
+
+    std::vector<unsigned> groundIndexes;
+    std::vector<unsigned> offGroundIndexes;
+    ccMesh* clothMesh = nullptr;
+    if (!csf.do_filtering(groundIndexes, offGroundIndexes, false, clothMesh, nullptr, nullptr))
+    {
+        return results;
+    }
+
+    //extract ground subset
+    ccPointCloud* groundpoint = nullptr;
+    {
+        CCCoreLib::ReferenceCloud groundpc(pc);
+        if (groundpc.reserve(static_cast<unsigned>(groundIndexes.size())))
+        {
+            for (unsigned j = 0; j < groundIndexes.size(); ++j)
+            {
+                groundpc.addPointIndex(groundIndexes[j]);
+            }
+            groundpoint = pc->partialClone(&groundpc);
+        }
+    }
+    if (!groundpoint)
+    {
+       //cmd.print("Failed to extract the ground subset (not enough memory)");
+        return results;
+    }
+    else
+    {
+        groundpoint->setName("ground points");
+        results.push_back(groundpoint);
+    }
+
+    ccPointCloud* offgroundpoint = nullptr;
+    {
+        CCCoreLib::ReferenceCloud offgroundpc(pc);
+        if (offgroundpc.reserve(static_cast<unsigned>(offGroundIndexes.size())))
+        {
+            for (unsigned k = 0; k < offGroundIndexes.size(); ++k)
+            {
+                offgroundpc.addPointIndex(offGroundIndexes[k]);
+            }
+            offgroundpoint = pc->partialClone(&offgroundpc);
+        }
+    }
+    if (!offgroundpoint)
+    {
+        //cmd.print("Failed to extract the off-ground subset (not enough memory)");
+        return results;
+    }
+    else
+    {
+        offgroundpoint->setName("off-ground points");
+        results.push_back(offgroundpoint);
+    }
+
+    return results;
+}
+
