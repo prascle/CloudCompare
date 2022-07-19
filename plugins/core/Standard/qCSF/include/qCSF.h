@@ -32,6 +32,8 @@
 // http://www.mathworks.com/matlabcentral/fileexchange/58139-csf--ground-filtering-of-point-cloud-based-on-cloth-simulation
 
 #include "ccStdPluginInterface.h"
+#include <ccHObject.h>
+#include <vector>
 
 //! A point-clouds filtering algorithm utilize cloth simulation process.
 class qCSF : public QObject, public ccStdPluginInterface
@@ -52,6 +54,14 @@ public:
 	virtual void onNewSelection(const ccHObject::Container& selectedEntities) override;
 	virtual QList<QAction *> getActions() override;
 	virtual void registerCommands(ccCommandLineInterface* cmd) override;
+
+	//! see CommandCSF
+	static std::vector<ccHObject*> computeCSF(ccPointCloud* pc,
+                                              int csfRigidness=2,
+                                              int maxIteration=500,
+                                              double clothResolution=2.0,
+                                              double classThreshold=0.5,
+                                              bool csfPostprocessing=false);
 
 protected:
 
