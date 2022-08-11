@@ -28,7 +28,7 @@
 
 //CloudComPy trace
 #ifdef _PYTHONAPI_DEBUG_
-bool ccLogTrace::_isTrace = false;
+bool ccLogTrace::_isTrace = true;
 
 void ccLogTrace::settrace()
 {
