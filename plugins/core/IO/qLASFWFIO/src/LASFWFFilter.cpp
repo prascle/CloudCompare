@@ -236,6 +236,7 @@ bool LASFWFFilter::canSave(CC_CLASS_ENUM type, bool& multiple, bool& exclusive) 
 
 CC_FILE_ERROR LASFWFFilter::saveToFile(ccHObject* entity, const QString& filename, const SaveParameters& parameters)
 {
+    CCTRACE("LASFWFFilter::saveToFile");
 	if (!entity || filename.isEmpty())
 	{
 		return CC_FERR_BAD_ARGUMENT;
@@ -542,7 +543,7 @@ CC_FILE_ERROR LASFWFFilter::saveToFile(ccHObject* entity, const QString& filenam
 				//we always use an external file for FWF data
 				lasheader.start_of_waveform_data_packet_record = 0;
 				lasheader.global_encoding |= ((U16)4); // set external bit
-
+                CCTRACE("lasheader.global_encoding: " << lasheader.global_encoding);
 				//if (!lasheader.vlr_wave_packet_descr)
 				//{
 				//	lasheader.vlr_wave_packet_descr = new LASvlr_wave_packet_descr*[256];
@@ -601,7 +602,6 @@ CC_FILE_ERROR LASFWFFilter::saveToFile(ccHObject* entity, const QString& filenam
 				for (ExtraLasField& f : extraFieldsToSave)
 				{
 					assert(f.sf);
-
 					LASattribute attribute(f.isShifted || sizeof(ScalarType) == 8 ? LAS_ATTRIBUTE_F64 : LAS_ATTRIBUTE_F32, qPrintable(f.sanitizedName), "additional attributes");
 					lasheader.point_data_record_length += (attribute.data_type == LAS_ATTRIBUTE_F32 + 1 ? 4 : 8); //strangely, LASlib shifts the official type indexes :|
 					I32 attributeIndex = lasheader.add_attribute(attribute);
@@ -632,6 +632,7 @@ CC_FILE_ERROR LASFWFFilter::saveToFile(ccHObject* entity, const QString& filenam
 			return CC_FERR_THIRD_PARTY_LIB_FAILURE;
 		}
 
+		lasheader.global_encoding = ((U16)17);
 		// open laswriter
 		LASwriterLAS  laswriter;
 		bool useLAZ = QFileInfo(filename).suffix().toUpper().endsWith('Z');
@@ -820,11 +821,11 @@ CC_FILE_ERROR LASFWFFilter::saveToFile(ccHObject* entity, const QString& filenam
 				if (f.isShifted)
 				{
 					double sd = s + f.sf->getGlobalShift();
-					laspoint.set_attribute(f.startIndex, sd);
+					laspoint.set_attribute(f.startIndex, (ScalarType)sd);
 				}
 				else
 				{
-					laspoint.set_attribute(f.startIndex, s);
+					laspoint.set_attribute(f.startIndex, (ScalarType)s);
 				}
 			}
 
@@ -1445,6 +1446,7 @@ CC_FILE_ERROR LASFWFFilter::loadFile(const QString& filename, ccHObject& contain
 			{
 				if (field->sf)
 				{
+
 					field->sf->computeMinAndMax();
 
 					if (	field->type == LAS_CLASSIFICATION
