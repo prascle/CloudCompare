@@ -1003,6 +1003,7 @@ struct ExtraDimDescriptor
 
 CC_FILE_ERROR LASFilter::loadFile(const QString& filename, ccHObject& container, LoadParameters& parameters)
 {
+    CCTRACE("LASFilter::loadFile");
 	try
 	{
 		Options las_opts;

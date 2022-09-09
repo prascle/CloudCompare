@@ -20,7 +20,7 @@
 //local
 #include "LASFWFFilter.h"
 #include "qLASFWFIOCommands.h"
-
+#include "ccLog.h"
 //Qt
 #include <QtPlugin>
 
@@ -28,6 +28,7 @@ qLASFWFIO::qLASFWFIO(QObject *parent)
     : QObject(parent)
     , ccIOPluginInterface(":/CC/plugin/qLASFWFIO/info.json")
 {
+    ccLogTrace::settrace();
 }
 
 ccIOPluginInterface::FilterList qLASFWFIO::getFilters()
