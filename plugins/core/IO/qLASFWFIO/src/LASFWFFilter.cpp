@@ -632,6 +632,7 @@ CC_FILE_ERROR LASFWFFilter::saveToFile(ccHObject* entity, const QString& filenam
 			return CC_FERR_THIRD_PARTY_LIB_FAILURE;
 		}
 
+		lasheader.global_encoding = ((U16)17); // fix for CloudComPy issue #54: las/laz files are not saved with a valid global encoding
 		// open laswriter
 		LASwriterLAS  laswriter;
 		bool useLAZ = QFileInfo(filename).suffix().toUpper().endsWith('Z');
@@ -841,11 +842,11 @@ CC_FILE_ERROR LASFWFFilter::saveToFile(ccHObject* entity, const QString& filenam
 				if (f.isShifted)
 				{
 					double sd = s + f.sf->getGlobalShift();
-					laspoint.set_attribute(f.startIndex, sd);
+					laspoint.set_attribute(f.startIndex, (ScalarType)sd); // fix for CloudComPy issue #54. scalar fields are not saved correctly (inconsistent data when loaded)
 				}
 				else
 				{
-					laspoint.set_attribute(f.startIndex, s);
+					laspoint.set_attribute(f.startIndex, (ScalarType)s); // fix for CloudComPy issue #54. scalar fields are not saved correctly (inconsistent data when loaded)
 				}
 			}
 
