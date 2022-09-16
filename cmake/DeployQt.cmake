@@ -118,7 +118,8 @@ function( DeployQt )
 					--no-compiler-runtime
 					--no-libraries
 					--no-system-d3d-compiler
-					--concurrent				
+					--concurrent
+					--no-translations				
 					--verbose=1
 				VERBATIM
 			)
