@@ -29,36 +29,38 @@ foreach( TRANSLATION_FILE ${TRANSLATION_FILES} )
 	unset( QT_LANG_FILES )
 	unset( TRANSLATION_FILES_QT_EXIST )
 	
-	# These are the Qt files we want to add if they exist
-	set( QT_LANG_FILES 
-		${QT_PATH}/translations/qtbase_${LANG_CODE}.qm
-		)
-	
-	# Now check that they exist	
-	foreach ( QT_LANG_FILE IN ITEMS ${QT_LANG_FILES} )
-		if ( EXISTS ${QT_LANG_FILE} )
-			list( APPEND TRANSLATION_FILES_QT_EXIST ${QT_LANG_FILE} )
-		endif()
-	endforeach()
-
-	if ( TRANSLATION_FILES_QT_EXIST )
-		# Finally, add a command to generate the qt language file for this language
-		set( QT_LANG_FILE qt_${LANG_CODE}.qm )
-		set( TRANSLATION_QM ${TRANSLATION_QM} ${CMAKE_CURRENT_BINARY_DIR}/${QT_LANG_FILE} )
-		
-		add_custom_command(
-			OUTPUT
-				${QT_LANG_FILE}
-			DEPENDS
-				${TRANSLATION_FILES_QT_EXIST}
-			COMMAND
-				"${QT_LCONVERT_EXE}" -o ${QT_LANG_FILE} ${TRANSLATION_FILES_QT_EXIST}
-			COMMENT
-				"Generating Qt language file for ${LANG_CODE}"
-			VERBATIM
+	if( NOT WIN32) # temporary fix: bug on translations on Qt 5.15.4 Conda Forge Windows package
+		# These are the Qt files we want to add if they exist
+		set( QT_LANG_FILES 
+			${QT_PATH}/translations/qtbase_${LANG_CODE}.qm
 			)
+	
+		# Now check that they exist	
+		foreach ( QT_LANG_FILE IN ITEMS ${QT_LANG_FILES} )
+			if ( EXISTS ${QT_LANG_FILE} )
+				list( APPEND TRANSLATION_FILES_QT_EXIST ${QT_LANG_FILE} )
+			endif()
+		endforeach()
+
+		if ( TRANSLATION_FILES_QT_EXIST )
+			# Finally, add a command to generate the qt language file for this language
+			set( QT_LANG_FILE qt_${LANG_CODE}.qm )
+			set( TRANSLATION_QM ${TRANSLATION_QM} ${CMAKE_CURRENT_BINARY_DIR}/${QT_LANG_FILE} )
 		
-		add_custom_target( translations_${LANG_CODE} ALL DEPENDS qt_${LANG_CODE}.qm )
+			add_custom_command(
+				OUTPUT
+					${QT_LANG_FILE}
+				DEPENDS
+					${TRANSLATION_FILES_QT_EXIST}
+				COMMAND
+					"${QT_LCONVERT_EXE}" -o ${QT_LANG_FILE} ${TRANSLATION_FILES_QT_EXIST}
+				COMMENT
+					"Generating Qt language file for ${LANG_CODE}"
+				VERBATIM
+				)
+		
+			add_custom_target( translations_${LANG_CODE} ALL DEPENDS qt_${LANG_CODE}.qm )
+		endif()
 	endif()
 endforeach()
 
