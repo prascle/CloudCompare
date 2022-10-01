@@ -46,6 +46,8 @@
 #include <QtConcurrentMap>
 #include <QMessageBox>
 
+M3C2Params qM3C2Process::s_M3C2Params;
+
 //! Default name for M3C2 scalar fields
 static const char M3C2_DIST_SF_NAME[]			= "M3C2 distance";
 static const char DIST_UNCERTAINTY_SF_NAME[]	= "distance uncertainty";
@@ -67,15 +69,6 @@ static void RemoveScalarField(ccPointCloud* cloud, const std::string& sfName)
 
 static ScalarType SCALAR_ZERO = 0;
 static ScalarType SCALAR_ONE = 1;
-
-// Precision maps (See "3D uncertainty-based topographic change detection with SfM photogrammetry: precision maps for ground control and directly georeferenced surveys" by James et al.)
-struct PrecisionMaps
-{
-	PrecisionMaps() : sX(nullptr), sY(nullptr), sZ(nullptr), scale(1.0) {}
-	bool valid() const { return (sX != nullptr && sY != nullptr && sZ != nullptr); }
-	CCCoreLib::ScalarField *sX, *sY, *sZ;
-	double scale;
-};
 
 // Computes the uncertainty based on 'precision maps' (as scattered scalar fields)
 static double ComputePMUncertainty(CCCoreLib::DgmOctree::NeighboursSet& set, const CCVector3& N, const PrecisionMaps& PM)
@@ -137,57 +130,8 @@ static double ComputePMUncertainty(CCCoreLib::DgmOctree::NeighboursSet& set, con
 	return NS.norm();
 }
 
-// Structure for parallel call to ComputeM3C2DistForPoint
-struct M3C2Params
-{
-	//input data
-	ccPointCloud* outputCloud = nullptr;
-	ccPointCloud* corePoints = nullptr;
-	NormsIndexesTableType* coreNormals = nullptr;
 
-	//main options
-	PointCoordinateType projectionRadius = 0;
-	PointCoordinateType projectionDepth = 0;
-	bool updateNormal = false;
-	bool exportNormal = false;
-	bool useMedian = false;
-	bool computeConfidence = false;
-	bool progressiveSearch = false;
-	bool onlyPositiveSearch = false;
-	unsigned minPoints4Stats = 3;
-	double registrationRms = 0;
-
-	//export
-	qM3C2Dialog::ExportOptions exportOption;
-	bool keepOriginalCloud = false;
-
-	//octrees
-	ccOctree::Shared cloud1Octree;
-	unsigned char level1 = 0;
-	ccOctree::Shared cloud2Octree;
-	unsigned char level2 = 0;
-
-	//scalar fields
-	ccScalarField* m3c2DistSF = nullptr;		//M3C2 distance
-	ccScalarField* distUncertaintySF = nullptr;	//distance uncertainty
-	ccScalarField* sigChangeSF = nullptr;		//significant change
-	ccScalarField* stdDevCloud1SF = nullptr;	//standard deviation information for cloud #1
-	ccScalarField* stdDevCloud2SF = nullptr;	//standard deviation information for cloud #2
-	ccScalarField* densityCloud1SF = nullptr;	//export point density at projection scale for cloud #1
-	ccScalarField* densityCloud2SF = nullptr;	//export point density at projection scale for cloud #2
-
-	//precision maps
-	PrecisionMaps cloud1PM, cloud2PM;
-	bool usePrecisionMaps = false;
-
-	//progress notification
-	CCCoreLib::NormalizedProgress* nProgress = nullptr;
-	bool processCanceled = false;
-	bool processFailed = false;
-};
-static M3C2Params s_M3C2Params;
-
-void ComputeM3C2DistForPoint(unsigned index)
+void qM3C2Process::ComputeM3C2DistForPoint(unsigned index)
 {
 	if (s_M3C2Params.processCanceled)
 		return;
