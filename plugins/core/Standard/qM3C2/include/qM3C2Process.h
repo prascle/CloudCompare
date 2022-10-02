@@ -99,6 +99,16 @@ struct QM3C2_PLUGIN_LIB_API M3C2Params
 class QM3C2_PLUGIN_LIB_API qM3C2Process
 {
 public:
+    static bool getM3C2Params(double& normalScale,
+                              double& projectionScale,
+                              qM3C2Normals::ComputationMode& normMode,
+                              double& samplingDist,
+                              ccScalarField*& normalScaleSF,
+                              int& maxThreadCount,
+                              bool allowDialogs,
+                              const qM3C2Dialog& dlg,
+                              QString& errorMessage,
+                              QWidget* parentWidget);
 	
 	static bool Compute(const qM3C2Dialog& dlg,
 						QString& errorMessage,
