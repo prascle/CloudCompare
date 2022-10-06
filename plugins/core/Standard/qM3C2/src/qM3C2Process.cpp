@@ -399,74 +399,73 @@ bool qM3C2Process::getM3C2Params(double& normalScale,
                                  QString& errorMessage,
                                  QWidget* parentWidget)
 {
+    //get the clouds in the right order
+    ccPointCloud* cloud1 = dlg.getCloud1(); // from dlg constructor
+    ccPointCloud* cloud2 = dlg.getCloud2(); // from dlg constructor
+
+    if (!cloud1 || !cloud2)
+    {
+        assert(false);
+        return false;
+    }
+
     if (allowDialogs)
     {
-        //get the clouds in the right order
-        ccPointCloud* cloud1 = dlg.getCloud1();
-        ccPointCloud* cloud2 = dlg.getCloud2();
-
-        if (!cloud1 || !cloud2)
-        {
-            assert(false);
-            return false;
-        }
-
-        //normals computation parameters
-        normalScale = dlg.normalScaleDoubleSpinBox->value();
-        projectionScale = dlg.cylDiameterDoubleSpinBox->value();
-        normMode = dlg.getNormalsComputationMode();
-        samplingDist = dlg.cpSubsamplingDoubleSpinBox->value();
-        normalScaleSF = nullptr; //normal scale (multi-scale mode only)
-        maxThreadCount = dlg.getMaxThreadCount();
-
-        //other parameters are stored in 's_M3C2Params' for parallel call
-        s_M3C2Params = M3C2Params();
-        s_M3C2Params.projectionRadius = static_cast<PointCoordinateType>(projectionScale / 2); //we want the radius in fact ;)
-        s_M3C2Params.projectionDepth = static_cast<PointCoordinateType>(dlg.cylHalfHeightDoubleSpinBox->value());
-        s_M3C2Params.corePoints = dlg.getCorePointsCloud();
-        s_M3C2Params.registrationRms = dlg.rmsCheckBox->isChecked() ? dlg.rmsDoubleSpinBox->value() : 0.0;
-        s_M3C2Params.exportOption = dlg.getExportOption();
-        s_M3C2Params.keepOriginalCloud = dlg.keepOriginalCloud();
-        s_M3C2Params.useMedian = dlg.useMedianCheckBox->isChecked();
-        s_M3C2Params.minPoints4Stats = dlg.getMinPointsForStats();
-        s_M3C2Params.progressiveSearch = !dlg.useSinglePass4DepthCheckBox->isChecked();
-        s_M3C2Params.onlyPositiveSearch = dlg.positiveSearchOnlyCheckBox->isChecked();
-
-        //precision maps
-        {
-            s_M3C2Params.usePrecisionMaps = dlg.precisionMapsGroupBox->isEnabled() && dlg.precisionMapsGroupBox->isChecked();
-            if (s_M3C2Params.usePrecisionMaps)
-            {
-                if (allowDialogs && QMessageBox::question(parentWidget, "Precision Maps", "Are you sure you want to compute the M3C2 distances with precision maps?", QMessageBox::Yes, QMessageBox::No) == QMessageBox::No)
-                {
-                    s_M3C2Params.usePrecisionMaps = false;
-                    dlg.precisionMapsGroupBox->setChecked(false);
-                }
-            }
-            if (s_M3C2Params.usePrecisionMaps)
-            {
-                s_M3C2Params.cloud1PM.sX = cloud1->getScalarField(dlg.c1SxComboBox->currentIndex());
-                s_M3C2Params.cloud1PM.sY = cloud1->getScalarField(dlg.c1SyComboBox->currentIndex());
-                s_M3C2Params.cloud1PM.sZ = cloud1->getScalarField(dlg.c1SzComboBox->currentIndex());
-                s_M3C2Params.cloud1PM.scale = dlg.pm1ScaleDoubleSpinBox->value();
-
-                s_M3C2Params.cloud2PM.sX = cloud2->getScalarField(dlg.c2SxComboBox->currentIndex());
-                s_M3C2Params.cloud2PM.sY = cloud2->getScalarField(dlg.c2SyComboBox->currentIndex());
-                s_M3C2Params.cloud2PM.sZ = cloud2->getScalarField(dlg.c2SzComboBox->currentIndex());
-                s_M3C2Params.cloud2PM.scale = dlg.pm2ScaleDoubleSpinBox->value();
-
-                if (!s_M3C2Params.cloud1PM.valid() || !s_M3C2Params.cloud2PM.valid())
-                {
-                    errorMessage = "Invalid 'Precision maps' settings!";
-                    return false;
-                }
-            }
-        }
+        s_M3C2Params = M3C2Params(); // else for CloudComPy: s_M3C2Params is already partially initialized with parameters not found in param file
     }
-    else
+    //normals computation parameters
+    normalScale = dlg.normalScaleDoubleSpinBox->value();       // from param file NormalScale
+    projectionScale = dlg.cylDiameterDoubleSpinBox->value();   // from param file SearchScale
+    normMode = dlg.getNormalsComputationMode();                // from param file NormalMode
+    samplingDist = dlg.cpSubsamplingDoubleSpinBox->value();    // from param file SubsampleRadius
+    normalScaleSF = nullptr; //normal scale (multi-scale mode only)
+    maxThreadCount = dlg.getMaxThreadCount();                  // from param file MaxThreadCount
+
+    //other parameters are stored in 's_M3C2Params' for parallel call
+    s_M3C2Params.projectionRadius = static_cast<PointCoordinateType>(projectionScale / 2); //we want the radius in fact ;)
+    s_M3C2Params.projectionDepth = static_cast<PointCoordinateType>(dlg.cylHalfHeightDoubleSpinBox->value()); // from param file SearchDepth
+    s_M3C2Params.corePoints = dlg.getCorePointsCloud();          // from dlg constructor
+    s_M3C2Params.registrationRms = dlg.rmsCheckBox->isChecked() ? dlg.rmsDoubleSpinBox->value() : 0.0; // from param file RegistrationError, RegistrationErrorEnabled
+    s_M3C2Params.exportOption = dlg.getExportOption();           // from param file ProjDestIndex
+    s_M3C2Params.keepOriginalCloud = dlg.keepOriginalCloud();    // from param file useOriginalCloudCheckBox
+    s_M3C2Params.useMedian = dlg.useMedianCheckBox->isChecked(); // from param file useMedianCheckBox
+    s_M3C2Params.minPoints4Stats = dlg.getMinPointsForStats();   // from param file UseMinPoints4Stat, MinPoints4Stat
+    s_M3C2Params.progressiveSearch = !dlg.useSinglePass4DepthCheckBox->isChecked(); // from param file UseSinglePass4Depth
+    s_M3C2Params.onlyPositiveSearch = dlg.positiveSearchOnlyCheckBox->isChecked();  // from param file PositiveSearchOnly
+
+    //precision maps
+
+    if (allowDialogs)
     {
+        s_M3C2Params.usePrecisionMaps = dlg.precisionMapsGroupBox->isEnabled() && dlg.precisionMapsGroupBox->isChecked(); // from param file UsePrecisionMaps
+        if (s_M3C2Params.usePrecisionMaps)
+        {
+            if (QMessageBox::question(parentWidget, "Precision Maps", "Are you sure you want to compute the M3C2 distances with precision maps?", QMessageBox::Yes, QMessageBox::No) == QMessageBox::No)
+            {
+                s_M3C2Params.usePrecisionMaps = false;
+                dlg.precisionMapsGroupBox->setChecked(false);
+            }
+        }
+        if (s_M3C2Params.usePrecisionMaps)
+        {
+            s_M3C2Params.cloud1PM.sX = cloud1->getScalarField(dlg.c1SxComboBox->currentIndex());
+            s_M3C2Params.cloud1PM.sY = cloud1->getScalarField(dlg.c1SyComboBox->currentIndex());
+            s_M3C2Params.cloud1PM.sZ = cloud1->getScalarField(dlg.c1SzComboBox->currentIndex());
+            s_M3C2Params.cloud1PM.scale = dlg.pm1ScaleDoubleSpinBox->value();
 
+            s_M3C2Params.cloud2PM.sX = cloud2->getScalarField(dlg.c2SxComboBox->currentIndex());
+            s_M3C2Params.cloud2PM.sY = cloud2->getScalarField(dlg.c2SyComboBox->currentIndex());
+            s_M3C2Params.cloud2PM.sZ = cloud2->getScalarField(dlg.c2SzComboBox->currentIndex());
+            s_M3C2Params.cloud2PM.scale = dlg.pm2ScaleDoubleSpinBox->value();
+
+            if (!s_M3C2Params.cloud1PM.valid() || !s_M3C2Params.cloud2PM.valid())
+            {
+                errorMessage = "Invalid 'Precision maps' settings!";
+                return false;
+            }
+        }
     }
+
     return true;
 }
 
