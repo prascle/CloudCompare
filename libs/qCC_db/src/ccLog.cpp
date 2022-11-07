@@ -28,7 +28,7 @@
 
 //CloudComPy trace
 #ifdef _PYTHONAPI_DEBUG_
-bool ccLogTrace::_isTrace = true;
+bool ccLogTrace::_isTrace = false;
 
 void ccLogTrace::settrace()
 {
@@ -50,7 +50,10 @@ void ccLogTrace::settrace()
     }
     else
     {
-        std::cerr << std::flush << __FILE__ << " [" << __LINE__ << "] : " << "trace OFF" << std::endl << std::flush;
+        if (ccLogTrace::_isTrace)
+        {
+            std::cerr << std::flush << __FILE__ << " [" << __LINE__ << "] : " << "trace OFF" << std::endl << std::flush;
+        }
         ccLogTrace::_isTrace = false;
     }
 }
