@@ -25,13 +25,40 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
+#include <stdlib.h>
 
 //CloudComPy trace
 #ifdef _PYTHONAPI_DEBUG_
 bool ccLogTrace::_isTrace = false;
 
-void ccLogTrace::settrace()
+/**
+ * set tracing system for CloudComPy.
+ * if isActive = -1 (default) trace is set following the environment variable _CCTRACE_ ("ON" or "OFF")
+ * if isActive = 0 deactivate the traces
+ * if isActive = 1 activate the traces
+ */
+void ccLogTrace::settrace(int isActive)
 {
+    switch (isActive)
+    {
+    case -1:
+        break;
+    case 0:
+#ifdef _WIN32
+        _putenv_s("_CCTRACE_", "OFF")
+#else
+        setenv("_CCTRACE_", "OFF", 1);
+#endif
+        break;
+    case 1:
+#ifdef _WIN32
+        _putenv_s("_CCTRACE_", "ON")
+#else
+        setenv("_CCTRACE_", "ON", 1);
+#endif
+        break;
+    }
+
     const char * cstr = std::getenv("_CCTRACE_");
     std::string var="unset";
     if (cstr != nullptr)
@@ -43,9 +70,13 @@ void ccLogTrace::settrace()
     {
         CCTRACE("CloudComPy C++ debug trace environment variable (_CCTRACE_) is unset, activations values are: ON \"ON\" ")
     }
+
     if ((var == "ON") || (var == "\"ON\""))
     {
-        std::cerr << std::flush << __FILE__ << " [" << __LINE__ << "] : " << "trace ON" << std::endl << std::flush;
+        if (!ccLogTrace::_isTrace)
+        {
+            std::cerr << std::flush << __FILE__ << " [" << __LINE__ << "] : " << "trace ON" << std::endl << std::flush;
+        }
         ccLogTrace::_isTrace = true;
     }
     else
