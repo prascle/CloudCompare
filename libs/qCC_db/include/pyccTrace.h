@@ -34,7 +34,7 @@
 struct QCC_DB_LIB_API ccLogTrace
 {
 static bool _isTrace;
-static void settrace();
+static void settrace(int isActive=-1);
 };
 
 #define CCTRACE(msg) {if (ccLogTrace::_isTrace) std::cerr<<std::flush<<__FILE__<<" ["<<__LINE__<<"] : "<<msg<<std::endl<<std::flush;}
