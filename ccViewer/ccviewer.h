@@ -63,6 +63,8 @@ public:
 	**/
 	void addToDB(QStringList filenames);
 
+    void doActionRenderToFile();
+
 protected:
 
 	//! Shows display parameters dialog
