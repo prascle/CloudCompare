@@ -147,6 +147,7 @@ ccViewer::ccViewer(QWidget *parent, Qt::WindowFlags flags)
 
 	//"Shaders" menu
 	connect(ui.actionNoFilter,						&QAction::triggered,					this,	&ccViewer::doDisableGLFilter);
+    connect(ui.actionRenderToFile,                  &QAction::triggered,                    this,   &ccViewer::doActionRenderToFile);
 
 	//"Help" menu
 	connect(ui.actionAbout,							&QAction::triggered,					this,	&ccViewer::doActionAbout);
@@ -575,6 +576,11 @@ void ccViewer::doActionEditCamera()
 		s_cpeDlg->linkWith(m_glWindow);
 	}
 	s_cpeDlg->show();
+}
+
+void ccViewer::doActionRenderToFile()
+{
+    m_glWindow->renderToFile("/tmp/capture.png");
 }
 
 void ccViewer::reflectPerspectiveState()
