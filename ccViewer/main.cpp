@@ -177,8 +177,8 @@ int main(int argc, char *argv[])
 #endif
 
 	w.checkForLoadedEntities();
-
-	int result = a.exec();
+    w.doActionRenderToFile();     // force the render to file and exit without event loop.
+	int result = 0;//a.exec();
 
 	//release global structures
 	FileIOFilter::UnregisterAll();
