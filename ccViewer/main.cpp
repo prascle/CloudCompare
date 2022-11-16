@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 	ccViewerApplication::InitOpenGL();
 	
 	// Convert the input arguments to QString before the application is initialized
-	// (as it will force utf8, which might prevent from properly reading filenmaes from the command line)
+	// (as it will force utf8, which might prevent from properly reading filenames from the command line)
 	QStringList argumentsLocal8Bit;
 	for (int i = 0; i < argc; ++i)
 	{
@@ -158,8 +158,9 @@ int main(int argc, char *argv[])
 #endif
 
 	w.checkForLoadedEntities();
-    w.doActionRenderToFile();     // force the render to file and exit without event loop.
-	int result = 0;//a.exec();
+    //w.doActionRenderToFile();     // force the render to file and exit without event loop.
+	//int result = 0;
+	int result = a.exec();
 
 	//release global structures
 	FileIOFilter::UnregisterAll();
