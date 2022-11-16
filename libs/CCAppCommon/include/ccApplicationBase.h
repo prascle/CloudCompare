@@ -20,6 +20,7 @@
 
 //Qt
 #include <QApplication>
+#include <QString>
 
 //! Mimic Qt's qApp for easy access to the application instance
 #define ccApp (static_cast<ccApplicationBase *>( QCoreApplication::instance() ))
@@ -31,7 +32,7 @@ public:
 	//! can setup OpenGL first.
 	static void	InitOpenGL();
 	
-	ccApplicationBase( int &argc, char **argv, bool isCommandLine, const QString &version );
+	ccApplicationBase( int &argc, char **argv, bool isCommandLine, const QString &version, QString appPath=QString() );
 	
 	inline bool isCommandLine() const { return m_isCommandLine; }
 	inline const QString& translationPath() const { return m_translationPath; }
@@ -42,7 +43,7 @@ public:
 	bool setAppStyle(QString styleKey);
 
 private:
-	void setupPaths();
+	void setupPaths(QString appPath=QString());
 		
 	const QString m_versionStr;
 	
