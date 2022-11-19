@@ -45,14 +45,14 @@ void ccLogTrace::settrace(int isActive)
         break;
     case 0:
 #ifdef _WIN32
-        _putenv_s("_CCTRACE_", "OFF")
+		_putenv_s("_CCTRACE_", "OFF");
 #else
         setenv("_CCTRACE_", "OFF", 1);
 #endif
         break;
     case 1:
 #ifdef _WIN32
-        _putenv_s("_CCTRACE_", "ON")
+		_putenv_s("_CCTRACE_", "ON");
 #else
         setenv("_CCTRACE_", "ON", 1);
 #endif
