@@ -100,12 +100,16 @@ public:
 		SaveParameters()
 			: alwaysDisplaySaveDialog(true)
 			, parentWidget(nullptr)
+		    , minorVersion(-1)
+		    , pointFormat(-1)
 		{}
 		
 		//! Wether to always display a dialog (if any), even if automatic guess is possible
 		bool alwaysDisplaySaveDialog;
 		//! Parent widget (if any)
 		QWidget* parentWidget;
+		int minorVersion; // for CloudComPyPython API, LAS plugin
+		int pointFormat;  // for CloudComPyPython API, LAS plugin
 	};
 	
 	//! Shared type
