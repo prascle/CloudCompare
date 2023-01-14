@@ -783,6 +783,15 @@ CC_FILE_ERROR LasIOFilter::saveToFile(ccHObject* entity, const QString& filename
 			}
 		}
 	}
+//	if (!parameters.alwaysDisplaySaveDialog)
+//        {
+//            CCTRACE("parameters.minorVersion: " << parameters.minorVersion);
+//            if (parameters.minorVersion >=0)
+//                params.versionMinor = parameters.minorVersion;
+//            if (parameters.pointFormat >=0)
+//                params.pointFormat = parameters.pointFormat;
+//        }
+//    CCTRACE("params.versionMinor: " << params.versionMinor);
 
 	LasSaver      saver(*pointCloud, params);
 	CC_FILE_ERROR error = saver.open(filename);
