@@ -52,7 +52,7 @@ protected:
 	//! Projects the cloud distances into a 2D grid
 	void projectCloudDistsInGrid() const;
 
-protected:
+public:
 
 	//! Projects the cloud distances into a 2D grid (needs the revolution profile)
 	void doProjectCloudDistsInGrid(ccPointCloud* cloud, ccPolyline* polyline) const;
@@ -60,6 +60,7 @@ protected:
 	//! Computes cloud-to-profile radial distances
 	bool doComputeRadialDists(ccPointCloud* cloud, ccPolyline* polyline) const;
 
+protected:
 	//! Associated action
 	QAction* m_doLoadProfile;
 	//! Associated action
