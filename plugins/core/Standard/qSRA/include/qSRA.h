@@ -18,13 +18,14 @@
 #ifndef Q_SRA_PLUGIN_HEADER
 #define Q_SRA_PLUGIN_HEADER
 
+#include "qSRAExport.h"
 #include "ccStdPluginInterface.h"
 
 class ccPointCloud;
 class ccPolyline;
 
 //! Surface of Revolution Analysis plugin
-class qSRA : public QObject, public ccStdPluginInterface
+class QSRA_PLUGIN_LIB_API qSRA : public QObject, public ccStdPluginInterface
 {
 	Q_OBJECT
 	Q_INTERFACES( ccPluginInterface ccStdPluginInterface )
