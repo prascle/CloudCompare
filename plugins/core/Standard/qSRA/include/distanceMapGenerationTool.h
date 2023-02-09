@@ -18,6 +18,8 @@
 #ifndef QSRA_DISTANCE_MAP_GENERATION_TOOL_HEADER
 #define QSRA_DISTANCE_MAP_GENERATION_TOOL_HEADER
 
+#include "qSRAExport.h"
+
 //Qt
 #include <QSharedPointer>
 #include <QImage>
@@ -44,11 +46,11 @@ const char RADIAL_DIST_SF_NAME[] = "Radial distance";
 const char RADII_SF_NAME[] = "Radius";
 
 //! Distance map generation tool (surface of revolution)
-class DistanceMapGenerationTool
+class QSRA_PLUGIN_LIB_API DistanceMapGenerationTool
 {
 public:
 
-	struct ProfileMetaData
+	struct QSRA_PLUGIN_LIB_API ProfileMetaData
 	{
 		ProfileMetaData()
 			: revolDim(2)
