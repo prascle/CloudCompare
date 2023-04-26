@@ -480,6 +480,7 @@ CC_FILE_ERROR LasIOFilter::saveToFile(ccHObject* entity, const QString& filename
 			bbMax = bbMin = CCVector3d(0.0, 0.0, 0.0);
 		}
 	}
+	CCTRACE("bbmax, bbmin " << bbMax[0] << " " << bbMax[1] << " " << bbMax[2] << " " << bbMin[0] << " " << bbMin[1] << " " << bbMin[2]);
 
 	// Determine the best LAS offset (required for determing the best LAS scale)
 	CCVector3d lasOffset;
@@ -491,6 +492,7 @@ CC_FILE_ERROR LasIOFilter::saveToFile(ccHObject* entity, const QString& filename
 	bool       globalShiftCanBeUsed = hasGlobalShift && !ccGlobalShiftManager::NeedShift(bbMax + globaShift); //'global shift' is the opposite of LAS offset ;)
 
 	bool minBBCornerCanBeUsed = !ccGlobalShiftManager::NeedShift(bbMax - bbMin);
+	CCTRACE("minBBCornerCanBeUsed " << minBBCornerCanBeUsed );
 
 	if (!lasOffsetCanBeUsed)
 	{
@@ -541,11 +543,12 @@ CC_FILE_ERROR LasIOFilter::saveToFile(ccHObject* entity, const QString& filename
 	}
 
 	// Uniformize the optimal scale to make it less disturbing to some lastools users ;)
+	double maxScale = std::max(optimalScale.x, std::max(optimalScale.y, optimalScale.z));
 	{
-		double maxScale = std::max(optimalScale.x, std::max(optimalScale.y, optimalScale.z));
 		double n        = ceil(log10(maxScale)); //ceil because n should be negative
 		maxScale        = pow(10.0, n);
 		optimalScale.x = optimalScale.y = optimalScale.z = maxScale;
+	    CCTRACE("optimalScale " << maxScale);
 	}
 	saveDialog.setOptimalScale(optimalScale);
 
@@ -591,14 +594,23 @@ CC_FILE_ERROR LasIOFilter::saveToFile(ccHObject* entity, const QString& filename
 
 		saveDialog.selectedVersion(params.versionMajor, params.versionMinor);
 		params.pointFormat = saveDialog.selectedPointFormat();
+		CCTRACE("params.pointFormat " << params.pointFormat);
 
 		params.lasScale  = saveDialog.chosenScale();
+		CCTRACE("params.lasScale " << params.lasScale[0] << " " << params.lasScale[1]  << " " << params.lasScale[2]);
 		params.lasOffset = lasOffset;
+        CCTRACE("params.lasOffset " << params.lasOffset[0] << " " << params.lasOffset[1]  << " " << params.lasOffset[2]);
 	}
 
 	// In case of command line call, add automatically all remaining scalar fields as extra scalar fields
 	if (!parameters.alwaysDisplaySaveDialog)
 	{
+	    for (int i : {0, 1, 2})
+	    {
+           if (!std::isfinite(params.lasScale[i])) params.lasScale[i] = maxScale;
+           if (!std::isfinite(params.lasOffset[i])) params.lasOffset[i] = 0;
+	    }
+
 		uint sfCount = pointCloud->getNumberOfScalarFields();
 		for (uint index = 0; index < sfCount; index++)
 		{
@@ -642,6 +654,8 @@ CC_FILE_ERROR LasIOFilter::saveToFile(ccHObject* entity, const QString& filename
             params.versionMinor = parameters.minorVersion;
         if (parameters.pointFormat >=0)
             params.pointFormat = parameters.pointFormat;
+        if ((parameters.minorVersion == 4) && (params.pointFormat == 0))
+            params.pointFormat = 6;
 	}
 
 	LasSaver      saver(*pointCloud, params);
