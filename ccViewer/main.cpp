@@ -172,8 +172,7 @@ int main(int argc, char *argv[])
 #endif
 
 	w.checkForLoadedEntities();
-    //w.doActionRenderToFile();     // force the render to file and exit without event loop.
-	//int result = 0;
+
 	int result = a.exec();
 
 	//release global structures
