@@ -99,8 +99,6 @@ public: // ccMainInterface compliance
 	void decreasePointSize() override;
 	ccUniqueIDGenerator::Shared getUniqueIDGenerator() override;
 
-    void doActionRenderToFile();
-
 protected:
 
 	//! Shows display parameters dialog
