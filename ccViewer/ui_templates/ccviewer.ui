@@ -83,7 +83,7 @@ QStatusBar
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOptions">
@@ -189,7 +189,6 @@ QStatusBar
     <addaction name="actionLockRotationVertAxis"/>
     <addaction name="separator"/>
     <addaction name="menuSelected"/>
-    <addaction name="actionRenderToFile"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -704,14 +703,6 @@ QStatusBar
    </property>
    <property name="shortcutContext">
     <enum>Qt::ApplicationShortcut</enum>
-   </property>
-  </action>
-  <action name="actionRenderToFile">
-   <property name="text">
-    <string>Render to file</string>
-   </property>
-   <property name="shortcut">
-    <string>Shift+F</string>
    </property>
   </action>
  </widget>
