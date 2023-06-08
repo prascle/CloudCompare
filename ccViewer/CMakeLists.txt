@@ -55,8 +55,13 @@ endif()
 
 target_link_libraries( ${PROJECT_NAME}
     CCAppCommon
-    "-static-libstdc++"
 )
+
+if( NOT APPLE )
+	target_link_libraries( ${PROJECT_NAME}
+	    "-static-libstdc++"
+	)
+endif()
 
 # Add custom preprocessor definitions
 target_compile_definitions( ${PROJECT_NAME} PUBLIC CC_VIEWER )
