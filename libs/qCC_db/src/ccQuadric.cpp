@@ -32,6 +32,8 @@
 //system
 #include <string.h>
 
+const unsigned ccQuadric::DEFAULT_DRAWING_PRECISION = 24;
+
 ccQuadric::ccQuadric(	CCVector2 minCorner,
 						CCVector2 maxCorner,
 						const PointCoordinateType eq[6],
