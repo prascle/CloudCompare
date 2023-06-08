@@ -13,8 +13,13 @@ if ( OPTION_USE_SHAPE_LIB )
     target_link_libraries( TestShpFilter
         QCC_IO_LIB
         Qt5::Test
-        "-static-libstdc++"
-    )
+	)
+	
+	if( NOT APPLE )
+		target_link_libraries( TestShpFilter
+		    "-static-libstdc++"
+		)
+	endif()
 
     if ( WIN32 )
         set_target_properties( TestShpFilter PROPERTIES

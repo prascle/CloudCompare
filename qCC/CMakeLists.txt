@@ -41,8 +41,12 @@ target_link_libraries( ${PROJECT_NAME}
     CCAppCommon
     QCustomPlot
     Qt5::PrintSupport
-    "-static-libstdc++"
 )
+if( NOT APPLE )
+	target_link_libraries( ${PROJECT_NAME}
+	    "-static-libstdc++"
+	)
+endif()
 
 if( CCCORELIB_USE_QT_CONCURRENT )
 	# We want *deployqt to handle this dependency, so instead of just copying the file
