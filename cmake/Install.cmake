@@ -65,15 +65,16 @@ function( InstallFiles )
 		return()
 	endif()
 	
-	message( STATUS "Install files: ${files} to ${INSTALL_DESTINATIONS}")
-	
 	if ( INSTALL_PREREQUISITE_LIBRARIES )
+	    message( STATUS "Install files: ${files} to ${INSTALL_DESTINATIONS}")
 		foreach( destination ${INSTALL_DESTINATIONS} )			
 			_InstallFiles(
 				FILES ${files}
 				DEST_PATH ${destination}
 			)		
 		endforeach()
+	else()
+		message( STATUS "DO NOT install files: ${files} to ${INSTALL_DESTINATIONS}")	
 	endif()
 endfunction()
 
