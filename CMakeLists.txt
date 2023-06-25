@@ -31,7 +31,8 @@ set( CMAKE_DEBUG_POSTFIX "d" )
 
 
 # Install prerequisite libraries
-option( INSTALL_PREREQUISITE_LIBRARIES "install the external prerequisite libraries (standalone install)" ON)
+option( INSTALL_PREREQUISITE_LIBRARIES "install the external prerequisite libraries (standalone install)" OFF)
+message( STATUS "INSTALL_PREREQUISITE_LIBRARIES: ${INSTALL_PREREQUISITE_LIBRARIES}" )
 
 # Define target folders
 # (now that ccViewer can have its own plugins, qCC and ccViewer must fall in separate folders!
