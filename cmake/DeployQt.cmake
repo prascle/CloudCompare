@@ -64,9 +64,16 @@ function( DeployQt )
 			COMMAND ${CMAKE_COMMAND} -E copy_directory ${app_path} ${temp_app_path}
 			COMMAND "${mac_deploy_qt}"
 				${temp_app_path}
-				-verbose=1
+				-verbose=2
 			VERBATIM
 		)
+#				-codesign "paul.rascle@openfields.fr"
+#				-hardened-runtime
+#				-timestamp
+#				-appstore-compliant
+#				-executable=${temp_app_path}/Contents/MacOS/${name}
+#				-no-plugins
+		
 
 		install(
 			DIRECTORY ${temp_app_path}
