@@ -22,7 +22,7 @@
 #ifndef CLOUDCOMPY_PYAPI_CCTRACE_H_
 #define CLOUDCOMPY_PYAPI_CCTRACE_H_
 
-#ifdef _PYTHONAPI_DEBUG_
+//#ifdef _PYTHONAPI_DEBUG_
 
 //Local
 #include "qCC_db.h"
@@ -39,9 +39,9 @@ static void settrace(int isActive=-1);
 
 #define CCTRACE(msg) {if (ccLogTrace::_isTrace) std::cerr<<std::flush<<__FILE__<<" ["<<__LINE__<<"] : "<<msg<<std::endl<<std::flush;}
 #define CCTRACF(msg) {if (ccLogTrace::_isTrace) std::cerr<<std::flush<<"[CloudCompare] "<<msg<<std::endl<<std::flush;}
-#else
-#define CCTRACE(msg)
-#define CCTRACF(msg)
-#endif
+//#else
+//#define CCTRACE(msg)
+//#define CCTRACF(msg)
+//#endif
 
 #endif /* CLOUDCOMPY_PYAPI_CCTRACE_H_ */
