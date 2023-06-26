@@ -29,7 +29,7 @@
 
 //CloudComPy trace
 #ifdef _PYTHONAPI_DEBUG_
-bool ccLogTrace::_isTrace = false;
+bool ccLogTrace::_isTrace = true;
 
 /**
  * set tracing system for CloudComPy.
@@ -153,7 +153,7 @@ void ccLog::SetVerbosityLevel(int level)
 
 void ccLog::LogMessage(const QString& message, int level)
 {
-    CCTRACF(message.toStdString());
+    CCTRACE(message.toStdString());
 	//skip messages below the current 'verbosity' level
 	if ((level & 7) < s_verbosityLevel)
 	{
