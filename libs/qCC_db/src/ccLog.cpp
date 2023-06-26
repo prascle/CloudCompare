@@ -29,7 +29,7 @@
 
 //CloudComPy trace
 #ifdef _PYTHONAPI_DEBUG_
-bool ccLogTrace::_isTrace = false;
+bool ccLogTrace::_isTrace = true;
 
 /**
  * set tracing system for CloudComPy.
@@ -135,7 +135,7 @@ void ccLog::EnableMessageBackup(bool state)
 
 void ccLog::LogMessage(const QString& message, int level)
 {
-    CCTRACF(message.toStdString());
+    CCTRACE(message.toStdString());
 
 #ifndef QT_DEBUG
 	//skip debug messages in release mode as soon as possible
