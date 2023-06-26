@@ -28,7 +28,7 @@
 #include <stdlib.h>
 
 //CloudComPy trace
-#ifdef _PYTHONAPI_DEBUG_
+//#ifdef _PYTHONAPI_DEBUG_
 bool ccLogTrace::_isTrace = true;
 
 /**
@@ -88,7 +88,7 @@ void ccLogTrace::settrace(int isActive)
         ccLogTrace::_isTrace = false;
     }
 }
-#endif
+//#endif
 
 
 #if !defined(CC_WINDOWS)
