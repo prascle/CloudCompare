@@ -65,7 +65,7 @@ target_sources( ${PROJECT_NAME}
 	    ${CMAKE_CURRENT_LIST_DIR}/ccWaveform.cpp
 )
 
-if( UNIX )
+if( LINUX )
 	target_sources( ${PROJECT_NAME}
 		PUBLIC
 			${CMAKE_CURRENT_LIST_DIR}/ccLog.cpp
