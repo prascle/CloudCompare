@@ -64,7 +64,7 @@ function( DeployQt )
 			COMMAND ${CMAKE_COMMAND} -E copy_directory ${app_path} ${temp_app_path}
 			COMMAND "${mac_deploy_qt}"
 				${temp_app_path}
-				-verbose=2
+				-verbose=1
 			VERBATIM
 		)
 #				-codesign "paul.rascle@openfields.fr"
