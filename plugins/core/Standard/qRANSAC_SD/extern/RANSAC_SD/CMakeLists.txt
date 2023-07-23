@@ -21,7 +21,7 @@ target_compile_definitions( ${PROJECT_NAME}
 
 # Apparently building with OpenMP is broken on Ubuntu
 # DGM: OpenMP doesn't work with MSVC (the process loops infinitely)
-#if( NOT WIN32 )
+#if( APPLE )
 #	find_package( OpenMP )
 #
 #	if( OpenMP_CXX_FOUND )

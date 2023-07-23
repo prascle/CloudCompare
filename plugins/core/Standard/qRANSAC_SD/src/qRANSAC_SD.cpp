@@ -111,10 +111,12 @@ static RansacShapeDetector* s_detector = 0;
 static PointCloud* s_cloud = 0;
 void doDetection()
 {
+	CCTRACE("doDetection start");
 	if (!s_detector || !s_cloud || !s_shapes)
 		return;
 
 	s_remainingPoints = s_detector->Detect(*s_cloud, 0, s_cloud->size(), s_shapes);
+	CCTRACE("doDetection end");
 }
 
 //for parameters persistence
@@ -502,6 +504,7 @@ ccHObject* qRansacSD::executeRANSAC(ccPointCloud* ccPC, const RansacParams& para
 		s_cloud = &cloud;
 		QElapsedTimer eTimer;
 		eTimer.start();
+		CCTRACE("before run");
 		QFuture<void> future = QtConcurrent::run(doDetection);
 
 		while (!future.isFinished())

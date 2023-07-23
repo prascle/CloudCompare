@@ -13,6 +13,9 @@
 #include "Octree.h"
 #include "ScorePrimitiveShapeVisitor.h"
 #include "FlatNormalThreshPointCompatibilityFunc.h"
+#include "ransacTrace.h"
+#include <thread>
+#include <chrono>
 #ifdef DOPARALLEL
 #include <omp.h>
 #endif
@@ -455,6 +458,15 @@ size_t
 RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 	MiscLib::Vector< std::pair< RefCountPtr< PrimitiveShape >, size_t > > *shapes)
 {
+	CCTRACE("RansacShapeDetector::Detect");
+	CCTRACE("m_epsilon: " << m_options.m_epsilon);
+	CCTRACE("m_normalThresh: " << m_options.m_normalThresh);
+	CCTRACE("m_minSupport: " << m_options.m_minSupport);
+	CCTRACE("m_bitmapEpsilon: " << m_options.m_bitmapEpsilon);
+	CCTRACE("m_fitting: " << m_options.m_fitting);
+	CCTRACE("m_probability: " << m_options.m_probability);
+	CCTRACE("m_allowSimplification: " << m_options.m_allowSimplification);
+
 	size_t pcSize = endIdx - beginIdx;
 	/*
 	 * Initialization part
@@ -524,6 +536,7 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 		globalOctreeIndices.end(), pc.begin());
 	globalOctree.Build(bcube);
 	size_t globalOctTreeMaxNodeDepth = globalOctree.MaxDepth();
+	CCTRACE("globalOctTreeMaxNodeDepth : " << globalOctTreeMaxNodeDepth);
 
 	MiscLib::Vector< double > sampleLevelProbability(
 		globalOctTreeMaxNodeDepth + 1);
@@ -578,7 +591,8 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 			&& CandidateFailureProbability(static_cast<float>(m_options.m_minSupport),
 				currentSize - numInvalid, drawnCandidates,
 				globalOctTreeMaxNodeDepth) > m_options.m_probability);
-		// find the best candidate:
+		// find the best candidate
+		CCTRACE("after do while");
 		float bestCandidateFailureProbability;
 		float failureProbability = std::numeric_limits< float >::infinity();
 		bool foundCandidate = false;
@@ -807,6 +821,7 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 				globalOctree.IndexedRange(globalOctreeIndices.begin(),
 					globalOctreeIndices.end());
 				globalOctTreeMaxNodeDepth = globalOctree.Rebuild();
+				CCTRACE("globalOctTreeMaxNodeDepth : " << globalOctTreeMaxNodeDepth);
 				if(globalOctree.Root()->Size() != globalOctreeIndices.size())
 					std::cout << "ERROR IN GLOBAL REBUILD!" << std::endl;
 				sampleLevelProbability.resize(globalOctTreeMaxNodeDepth + 1);
@@ -837,6 +852,7 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 					candidates[remainingCandidates++] = candidates[i];
 			candidates.resize(remainingCandidates);
 		} // Ende abgrasen
+		CCTRACE("after while");
 		if(foundCandidate)
 		{
 			std::sort(candidates.begin(), candidates.end(), std::greater< Candidate >());
@@ -858,10 +874,18 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 		{
 			numTries++;
 		}
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+		CCTRACE("currentSize: " << currentSize << " numInvalid: " << numInvalid << " ==> " << currentSize - numInvalid);
+		CCTRACE("drawnCandidates: " << drawnCandidates);
+		CCTRACE("globalOctTreeMaxNodeDepth: " << globalOctTreeMaxNodeDepth);
+		CCTRACE("(currentSize - numInvalid) - m_options.m_minSupport): " << (currentSize - numInvalid) - m_options.m_minSupport);
 	}
-	while(CandidateFailureProbability(static_cast<float>(m_options.m_minSupport), currentSize - numInvalid,
-		drawnCandidates, globalOctTreeMaxNodeDepth) > m_options.m_probability
-		&& (currentSize - numInvalid) >= m_options.m_minSupport);
+	while(CandidateFailureProbability(	static_cast<float>(m_options.m_minSupport),
+										currentSize - numInvalid,
+										drawnCandidates,
+										globalOctTreeMaxNodeDepth) > m_options.m_probability
+			&& (currentSize - numInvalid) >= m_options.m_minSupport);
+    CCTRACE("after while");
 
 	if(numInvalid)
 	{

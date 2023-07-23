@@ -10,6 +10,7 @@
 #include "Octree.h"
 #include <GfxTL/NullClass.h>
 #include <GfxTL/ImmediateTreeDataKernels.h>
+#include "ransacTrace.h"
 
 #ifndef DLL_LINKAGE
 #define DLL_LINKAGE
@@ -60,9 +61,18 @@ class DLL_LINKAGE RansacShapeDetector
 			MiscLib::Vector< size_t >::const_iterator begin,
 			MiscLib::Vector< size_t >::const_iterator end,
 			std::pair< size_t, float > *score) const;
-		float CandidateFailureProbability(float candidateSize,
-			size_t numberOfPoints, size_t drawnCandidates, size_t levels) const
+		float CandidateFailureProbability(	float candidateSize,
+											size_t numberOfPoints,
+											size_t drawnCandidates,
+											size_t levels) const
 		{
+			CCTRACE("m_reqSamples: " << m_reqSamples);
+			CCTRACE("static_cast<size_t>(1) << (m_reqSamples - 1) : " << static_cast<size_t>(1) << (m_reqSamples - 1));
+			CCTRACE("numberOfPoints * levels * (static_cast<size_t>(1) << (m_reqSamples - 1)): " << numberOfPoints * levels * (static_cast<size_t>(1) << (m_reqSamples - 1)));
+			double a = 1.f - candidateSize
+					/ (numberOfPoints * levels * (static_cast<size_t>(1) << (m_reqSamples - 1)));
+			double b = std::pow(a, static_cast<float>(drawnCandidates));
+			CCTRACE("CandidateFailureProbability pow: "<< a << " " << b);
 			return std::min(std::pow(1.f - candidateSize
 				/ (numberOfPoints * levels * (static_cast<size_t>(1) << (m_reqSamples - 1))),
 				static_cast<float>(drawnCandidates)), 1.f);
