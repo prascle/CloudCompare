@@ -2,6 +2,7 @@
 #define GfxTL_BASETREE_HEADER__
 #include <vector>
 #include <utility>
+#include "ransacTrace.h"
 
 namespace GfxTL
 {
@@ -39,6 +40,7 @@ namespace GfxTL
 	inline bool BaseTree< Cell >::IsLeaf(const CellType &cell) const
 	{
 		volatile const CellType* st = (&(cell[0]));
+		CCTRACE("st: " << st << " " << &(cell[0]) << " " << (&(cell[0])));
 		return st == nullptr;
 	}
 
@@ -46,6 +48,11 @@ namespace GfxTL
 	inline bool BaseTree< Cell >::ExistChild(const CellType &cell,
 		unsigned int i) const
 	{
+		CCTRACE("i: " << i  << " &(cell[0]): " << &(cell[0]) << " (&(cell[0])): " << (&(cell[0])));
+		CCTRACE("&(cell[i]): " << &(cell[i]));
+		volatile const CellType* st = (&(cell[i]));
+		CCTRACE("st: " << st);
+		CCTRACE("(CellType *)1 : " << (CellType *)1);
 		return &(cell[i]) > (CellType *)1;
 	}
 
@@ -146,10 +153,14 @@ namespace GfxTL
 	{
 		size_t maxLevel = 0;
 		if(!Root())
+		{
+			CCTRACE("not root");
 			return maxLevel;
+		}
 		typedef std::pair< const CellType *, size_t > Pair;
 		std::vector< Pair > stack;
 		stack.push_back(Pair(Root(), 0));
+		CCTRACE("stack.size():" << stack.size());
 		while(stack.size())
 		{
 			Pair p = stack.back();
@@ -157,11 +168,17 @@ namespace GfxTL
 			if(p.second > maxLevel)
 				maxLevel = p.second;
 			if(IsLeaf(*p.first))
+			{
+				CCTRACE("leaf");
 				continue;
+			}
 			else
+			{
+				CCTRACE("not leaf, nb children: " << CellType::NChildren);
 				for(unsigned int i = 0; i < CellType::NChildren; ++i)
 					if(ExistChild(*p.first, i))
 						stack.push_back(Pair(&((*p.first)[i]), p.second + 1));
+			}
 		}
 		return maxLevel;
 	}

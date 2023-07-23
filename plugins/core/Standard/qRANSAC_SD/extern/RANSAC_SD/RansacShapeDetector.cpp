@@ -524,6 +524,7 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 	}
 
 	pcSize = endIdx - beginIdx;
+	CCTRACE("pcSize: " << pcSize);
 
 	// construct one global octree
 	MiscLib::Vector< size_t > globalOctreeIndices(pcSize);
