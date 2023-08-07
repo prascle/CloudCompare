@@ -67,13 +67,6 @@ function( DeployQt )
 				-verbose=1
 			VERBATIM
 		)
-#				-codesign "paul.rascle@openfields.fr"
-#				-hardened-runtime
-#				-timestamp
-#				-appstore-compliant
-#				-executable=${temp_app_path}/Contents/MacOS/${name}
-#				-no-plugins
-		
 
 		install(
 			DIRECTORY ${temp_app_path}
