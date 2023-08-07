@@ -487,7 +487,8 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 	size_t subsets = std::max(int(std::floor(std::log((float)pcSize)/std::log(2.f)))-9, 2);
 	GfxTL::AACube< GfxTL::Vector3Df > bcube;
 	bcube.Bound(pc.begin() + beginIdx, pc.begin() + endIdx); 
-
+    CCTRACE("subsets: " << subsets);
+    CCTRACE("beginIdx: "<< beginIdx << " endIdx: " << endIdx);
 	// construct stratified subsets
 	MiscLib::Vector< ImmediateOctreeType * > octrees(subsets);
 	for(size_t i = octrees.size(); i;)

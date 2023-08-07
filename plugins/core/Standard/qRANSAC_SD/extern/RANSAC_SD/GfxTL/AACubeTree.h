@@ -7,6 +7,7 @@
 #include <GfxTL/VectorKernel.h>
 #include <GfxTL/NullClass.h>
 #include <iostream>
+#include "ransacTrace.h"
 
 namespace GfxTL
 {
@@ -304,6 +305,7 @@ namespace GfxTL
 
 		void Build(const AACube< VectorXD< DimT, ScalarType > > &bcube)
 		{
+			CCTRACE("Build")
 			typedef std::pair< CellType *, BuildInformation > Pair;
 			BaseType::Clear();
 			BaseType::Root() = new CellType;
