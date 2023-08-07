@@ -31,7 +31,11 @@ set( CMAKE_DEBUG_POSTFIX "d" )
 
 
 # Install prerequisite libraries
+if ( APPLE )
 option( INSTALL_PREREQUISITE_LIBRARIES "install the external prerequisite libraries (standalone install)" OFF)
+else()
+option( INSTALL_PREREQUISITE_LIBRARIES "install the external prerequisite libraries (standalone install)" ON)
+endif()
 message( STATUS "INSTALL_PREREQUISITE_LIBRARIES: ${INSTALL_PREREQUISITE_LIBRARIES}" )
 
 # Define target folders
