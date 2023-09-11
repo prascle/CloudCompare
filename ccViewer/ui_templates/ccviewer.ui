@@ -84,7 +84,7 @@ QStatusBar
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOptions">
@@ -190,6 +190,7 @@ QStatusBar
     <addaction name="actionLockRotationVertAxis"/>
     <addaction name="separator"/>
     <addaction name="menuSelected"/>
+    <addaction name="actionResume_Python"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -704,6 +705,17 @@ QStatusBar
    </property>
    <property name="shortcutContext">
     <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionResume_Python">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string> resume Python script</string>
+   </property>
+   <property name="toolTip">
+    <string>close window and resume Python script</string>
    </property>
   </action>
  </widget>
