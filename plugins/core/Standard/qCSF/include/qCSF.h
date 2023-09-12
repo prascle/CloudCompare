@@ -62,7 +62,8 @@ public:
                                               int maxIteration=500,
                                               double clothResolution=2.0,
                                               double classThreshold=0.5,
-                                              bool csfPostprocessing=false);
+                                              bool csfPostprocessing=false,
+                                              bool computeMesh=false);
 
 protected:
 
