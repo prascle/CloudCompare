@@ -260,7 +260,8 @@ std::vector<ccHObject*> qCSF::computeCSF( ccPointCloud* pc,
                                           int maxIteration,
                                           double clothResolution,
                                           double classThreshold,
-                                          bool csfPostprocessing)
+                                          bool csfPostprocessing,
+                                          bool computeMesh)
 {
     std::vector<ccHObject*> results;
 
@@ -282,7 +283,7 @@ std::vector<ccHObject*> qCSF::computeCSF( ccPointCloud* pc,
                         csfParams,
                         groundCloud,
                         offGroundCloud,
-                        false,
+                        computeMesh,
                         clothMesh,
                         nullptr))
         {
