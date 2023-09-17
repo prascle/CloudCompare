@@ -2266,7 +2266,7 @@ void ccRasterizeTool::generateASCIIMatrix() const
 		{
 			stream << (std::isfinite(row[i].h) ? row[i].h : emptyCellsHeight) << ' ';
 		}
-		stream << endl;
+		stream << Qt::endl;
 	}
 
 	//save current export path to persistent settings
