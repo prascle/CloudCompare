@@ -3065,8 +3065,8 @@ bool CommandComputeMeshVolume::process(ccCommandLineInterface& cmd)
 		
 		if (outFile.isOpen())
 		{
-			outStream << titleStr << endl;
-			outStream << volumeStr << endl;
+			outStream << titleStr << Qt::endl;
+			outStream << volumeStr << Qt::endl;
 		}
 	}
 	
@@ -3806,8 +3806,8 @@ bool CommandMatchBestFitPlane::process(ccCommandLineInterface& cmd)
 			makeZPosMatrix.applyRotation(Gt);
 			makeZPosMatrix.setTranslation(C - Gt);
 			
-			txtStream << "Orientation matrix:" << endl;
-			txtStream << makeZPosMatrix.toString(precision, ' ') << endl;
+			txtStream << "Orientation matrix:" << Qt::endl;
+			txtStream << makeZPosMatrix.toString(precision, ' ') << Qt::endl;
 			
 			//close the text file
 			txtFile.close();
@@ -6808,7 +6808,7 @@ bool CommandICP::process(ccCommandLineInterface& cmd)
 			QFile txtFile(txtFilename);
 			txtFile.open(QIODevice::WriteOnly | QIODevice::Text);
 			QTextStream txtStream(&txtFile);
-			txtStream << transMat.toString(cmd.numericalPrecision(), ' ') << endl;
+			txtStream << transMat.toString(cmd.numericalPrecision(), ' ') << Qt::endl;
 			txtFile.close();
 		}
 		
