@@ -1448,7 +1448,7 @@ struct LoadedScan
 	bool preserveCoordinateShift = false;
 };
 
-static LoadedScan LoadScan(const e57::Node& node, QString& guidStr, ccProgressDialog* progressDlg = nullptr)
+static LoadedScan LoadScan(const e57::Node& node, QString& guidStr, ccProgressDialog* progressDlg = nullptr, QRegExp extraData=QRegExp())
 {
 	if (node.type() != e57::E57_STRUCTURE)
 	{
@@ -1463,6 +1463,12 @@ static LoadedScan LoadScan(const e57::Node& node, QString& guidStr, ccProgressDi
 
 	//log
 	ccLog::Print(QString("[E57] Reading new scan node (%1) - %2").arg(scanNode.elementName().c_str()).arg(scanName));
+
+	if (!extraData.isEmpty() && !scanName.contains(extraData))
+	{
+	    CCTRACE("Scan node " << scanName.toStdString() << " skipped, extraData filter: " << extraData.pattern().toStdString());
+	    return {};
+	}
 
 	if (!scanNode.isDefined("points"))
 	{
@@ -2486,7 +2492,7 @@ CC_FILE_ERROR E57Filter::loadFile(const QString& filename, ccHObject& container,
 				const e57::Node scanNode = data3D.get(i);
 				QString scanGUID;
 				
-				LoadedScan scan = LoadScan(scanNode, scanGUID, showGlobalProgress ? nullptr : progressDlg.data());
+				LoadedScan scan = LoadScan(scanNode, scanGUID, showGlobalProgress ? nullptr : progressDlg.data(), parameters.extraData);
 				
 				if (scan.entity)
 				{
