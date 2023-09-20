@@ -304,7 +304,7 @@ CC_FILE_ERROR VTKFilter::loadFile(const QString& filename, ccHObject& container,
 
 		if (nextline.startsWith("POINTS"))
 		{
-			QStringList parts = nextline.split(" ", QString::SkipEmptyParts);
+			QStringList parts = nextline.split(" ", Qt::SkipEmptyParts);
 			if (parts.size() != 3)
 			{
 				error = CC_FERR_MALFORMED_FILE;
@@ -346,7 +346,7 @@ CC_FILE_ERROR VTKFilter::loadFile(const QString& filename, ccHObject& container,
 			while (iPt < ptsCount)
 			{
 				nextline = inFile.readLine();
-				parts = nextline.split(" ", QString::SkipEmptyParts);
+				parts = nextline.split(" ", Qt::SkipEmptyParts);
 
 				for (int i = 0; i < parts.size(); ++i)
 				{
@@ -391,7 +391,7 @@ CC_FILE_ERROR VTKFilter::loadFile(const QString& filename, ccHObject& container,
 		}
 		else if (nextline.startsWith("POLYGONS") || nextline.startsWith("TRIANGLE_STRIPS"))
 		{
-			QStringList parts = nextline.split(" ", QString::SkipEmptyParts);
+			QStringList parts = nextline.split(" ", Qt::SkipEmptyParts);
 			if (parts.size() != 3)
 			{
 				error = CC_FERR_MALFORMED_FILE;
@@ -427,7 +427,7 @@ CC_FILE_ERROR VTKFilter::loadFile(const QString& filename, ccHObject& container,
 			for (unsigned i = 0; i < elemCount; ++i)
 			{
 				nextline = inFile.readLine();
-				parts = nextline.split(" ", QString::SkipEmptyParts);
+				parts = nextline.split(" ", Qt::SkipEmptyParts);
 				if (parts.empty())
 				{
 					error = CC_FERR_MALFORMED_FILE;
@@ -537,7 +537,7 @@ CC_FILE_ERROR VTKFilter::loadFile(const QString& filename, ccHObject& container,
 			while (iNorm < lastDataSize)
 			{
 				nextline = inFile.readLine();
-				QStringList parts = nextline.split(" ", QString::SkipEmptyParts);
+				QStringList parts = nextline.split(" ", Qt::SkipEmptyParts);
 
 				for (int i = 0; i < parts.size(); ++i)
 				{
@@ -589,7 +589,7 @@ CC_FILE_ERROR VTKFilter::loadFile(const QString& filename, ccHObject& container,
 			while (iCol < lastDataSize)
 			{
 				nextline = inFile.readLine();
-				QStringList parts = nextline.split(" ", QString::SkipEmptyParts);
+				QStringList parts = nextline.split(" ", Qt::SkipEmptyParts);
 
 				for (int i = 0; i < parts.size(); ++i)
 				{
@@ -622,7 +622,7 @@ CC_FILE_ERROR VTKFilter::loadFile(const QString& filename, ccHObject& container,
 		}
 		else if (nextline.startsWith("SCALARS"))
 		{
-			QStringList parts = nextline.split(" ", QString::SkipEmptyParts);
+			QStringList parts = nextline.split(" ", Qt::SkipEmptyParts);
 			lastSfName = "ScalarField";
 			if (parts.size() > 1)
 				lastSfName = parts[1].replace("_", " ");
@@ -637,7 +637,7 @@ CC_FILE_ERROR VTKFilter::loadFile(const QString& filename, ccHObject& container,
 			bool expected = (lastDataSize != 0);
 			assert(!acceptLookupTables || expected); //i.e. lastDataSize shouldn't be 0 for 'accepted' lookup tables
 
-			QStringList parts = nextline.split(" ", QString::SkipEmptyParts);
+			QStringList parts = nextline.split(" ", Qt::SkipEmptyParts);
 			QString itemName = parts[0];
 			if (parts.size() > 2)
 			{
@@ -689,7 +689,7 @@ CC_FILE_ERROR VTKFilter::loadFile(const QString& filename, ccHObject& container,
 			while (iScal < lastDataSize)
 			{
 				nextline = inFile.readLine();
-				QStringList parts = nextline.split(" ", QString::SkipEmptyParts);
+				QStringList parts = nextline.split(" ", Qt::SkipEmptyParts);
 
 				if (expected)
 				{
@@ -738,7 +738,7 @@ CC_FILE_ERROR VTKFilter::loadFile(const QString& filename, ccHObject& container,
 		else if (nextline.startsWith("POINT_DATA"))
 		{
 			//check that the number of 'point_data' match the number of points
-			QStringList parts = nextline.split(" ", QString::SkipEmptyParts);
+			QStringList parts = nextline.split(" ", Qt::SkipEmptyParts);
 			acceptLookupTables = false;
 			if (parts.size() > 1)
 			{
@@ -749,7 +749,7 @@ CC_FILE_ERROR VTKFilter::loadFile(const QString& filename, ccHObject& container,
 		}
 		else if (nextline.startsWith("FIELD"))
 		{
-			QStringList parts = nextline.split(" ", QString::SkipEmptyParts);
+			QStringList parts = nextline.split(" ", Qt::SkipEmptyParts);
 			if (parts.size() < 2)
 			{
 				error = CC_FERR_MALFORMED_FILE;
@@ -774,7 +774,7 @@ CC_FILE_ERROR VTKFilter::loadFile(const QString& filename, ccHObject& container,
 		}
 		else //unhandled property (CELLS, CELL_TYPES, etc.)
 		{
-			QStringList parts = nextline.split(" ", QString::SkipEmptyParts);
+			QStringList parts = nextline.split(" ", Qt::SkipEmptyParts);
 			if (parts.size() < 2)
 			{
 				ccLog::Warning(QString("[VTK] Unhandled element: %1").arg(parts[0]));
