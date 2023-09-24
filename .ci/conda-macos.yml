@@ -8,6 +8,7 @@ dependencies:
   - boost=1.84.*
   - pcl=1.14.*
   - ffmpeg=6.1.*
+  - pdal=2.4.*
   - xerces-c=3.2.*
   - zlib=1.2.*
-  - laszip
+  - laszip=3.4.*
