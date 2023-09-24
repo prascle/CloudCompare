@@ -8,6 +8,7 @@ dependencies:
   - pcl=1.14.*
   - ffmpeg=6.1.*
   - qt=5.15.*
+  - pdal=2.4.*
   - xerces-c=3.2.*
   - zlib=1.2.*
-  - laszip
+  - laszip=3.4.*
