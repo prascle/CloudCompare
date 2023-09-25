@@ -153,7 +153,7 @@ void ccLog::SetVerbosityLevel(int level)
 
 void ccLog::LogMessage(const QString& message, int level)
 {
-    CCTRACE(message.toStdString());
+    CCTRACF(message.toStdString());
 	//skip messages below the current 'verbosity' level
 	if ((level & 7) < s_verbosityLevel)
 	{
