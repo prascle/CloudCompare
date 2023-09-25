@@ -135,7 +135,7 @@ void ccLog::EnableMessageBackup(bool state)
 
 void ccLog::LogMessage(const QString& message, int level)
 {
-    CCTRACE(message.toStdString());
+    CCTRACF(message.toStdString());
 
 #ifndef QT_DEBUG
 	//skip debug messages in release mode as soon as possible
