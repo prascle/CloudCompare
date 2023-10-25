@@ -1468,7 +1468,7 @@ static LoadedScan LoadScan(const e57::Node& node, QString& guidStr, ccProgressDi
 	//log
 	ccLog::Print(QString("[E57] Reading new scan node (%1) - %2").arg(scanNode.elementName().c_str()).arg(scanName));
 
-	if (!extraData.isEmpty() && !scanName.contains(extraData))
+	if (!extraData.isEmpty() && !extraData.exactMatch(scanName))
 	{
 	    CCTRACE("Scan node " << scanName.toStdString() << " skipped, extraData filter: " << extraData.pattern().toStdString());
 	    return {};
