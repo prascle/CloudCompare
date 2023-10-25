@@ -70,7 +70,7 @@ public:
 			, autoComputeNormals(false)
 			, parentWidget(nullptr)
 			, sessionStart(true)
-		    , extraData("Empty")
+		    , extraData()
 		{}
 		
 		//! How to handle big coordinates
