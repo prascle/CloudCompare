@@ -1153,7 +1153,7 @@ CC_FILE_ERROR PlyFilter::loadFile(const QString& filename, const QString& inputT
 					yIndex = i;
 				else if (zIndex == 0 && propName.endsWith("Z"))
 					zIndex = i;
-				else if (propName.contains(parameters.extraData))
+				else if (!parameters.extraData.isEmpty() && parameters.extraData.exactMatch(propName))
 				{
 	                //CCTRACE("propName: " << propName.toStdString() << " extradata: " << parameters.extraData.pattern().toStdString());
 	                sfPropIndexes.push_back(i);
