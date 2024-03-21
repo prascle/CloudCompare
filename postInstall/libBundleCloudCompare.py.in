@@ -7,7 +7,7 @@ import json
 
 rootdir= "/Users/paul/projets/CloudCompare"
 installPath = "@CMAKE_INSTALL_PREFIX@"      # "/Users/paul/projets/CloudCompare/installConda/CloudComPy310"
-condaPath = "@CONDA_LIBS@"                  # "/Users/paul/miniconda3/envs/CloudComPy310/lib"
+#condaPath = "@CONDA_LIBS@"                  # "/Users/paul/miniconda3/envs/CloudComPy310/lib"
 fbxPath = "@FBX_SDK_LIBRARY_DIR@"           # "/Applications/Autodesk/FBX SDK/2020.2.1/lib/clang/release"
 mainprg = installPath + "/CloudCompare/CloudCompare.app/Contents/MacOS/CloudCompare"
 CloudCompareApp = installPath + "/CloudCompare/CloudCompare.app"
@@ -237,8 +237,8 @@ if isGenPython == "ON":
         #print("   rpaths:", rpaths)
     
         absrpaths = convertRpaths(lib2check, rpaths)  # on convertit les rpath relatifs en absolus
-        if not condaPath in absrpaths:                # on a recopié des libs python (site-packages)
-            absrpaths.append(condaPath)
+        #if not condaPath in absrpaths:                # on a recopié des libs python (site-packages)
+        #    absrpaths.append(condaPath)
         #print("   absrpaths:", absrpaths)
         
         for lib in libs:                              # parcours des lib en dependance rpath
@@ -354,8 +354,8 @@ while len(libsToCheck):
     #print("   rpaths:", rpaths)
 
     absrpaths = convertRpaths(lib2check, rpaths)  # on convertit les rpath relatifs en absolus
-    if not condaPath in absrpaths:                # on a recopié des libs python (site-packages)
-        absrpaths.append(condaPath)
+    #if not condaPath in absrpaths:                # on a recopié des libs python (site-packages)
+    #    absrpaths.append(condaPath)
     if not fbxPath in absrpaths:                  # cas particulier
         absrpaths.append(fbxPath)
     #print("   absrpaths:", absrpaths)

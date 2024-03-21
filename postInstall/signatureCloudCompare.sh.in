@@ -113,6 +113,11 @@ else
     find "${CLOUDCOMPAREAPP}" -path "${PYTHONAPP}" -prune -o -name "*.dylib" -exec codesign -s ${SIGNATURE} -f --timestamp {} \;
     find "${CLOUDCOMPAREAPP}" -path "${PYTHONAPP}" -prune -o -name "*.so"    -exec codesign -s ${SIGNATURE} -f --timestamp {} \;
     
+    echo " --- signature frameworks Qt ---"
+    for QTLIB in QtPrintSupport QtGui QtDBus QtCore QtOpenGL QtWidgets QtSvg QtConcurrent; do
+        find "${CLOUDCOMPAREAPP}"  -path "${PYTHONAPP}" -prune -o -name "${QTLIB}" -print -exec codesign -s ${SIGNATURE} -f --timestamp {} \;
+    done
+
     echo "--- signature executables CloudCompare app ---"
     codesign -s ${SIGNATURE} -f --timestamp -i fr.openfields.CloudCompare -o runtime --entitlements "${WORKDIR}/hdapp.entitlements" "${CLOUDCOMPAREAPP}/Contents/MacOS/CloudCompare"
     # --- no entitlement: notarization error "The executable does not have the hardened runtime enabled."
