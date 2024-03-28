@@ -110,8 +110,8 @@ else
     # --- Inside CloudCompare app
 
     echo "--- signature dylib & so CloudCompare app ---"
-    find "${CLOUDCOMPAREAPP}" -path "${PYTHONAPP}" -prune -o -name "*.dylib" -exec codesign -s ${SIGNATURE} -f --timestamp {} \;
-    find "${CLOUDCOMPAREAPP}" -path "${PYTHONAPP}" -prune -o -name "*.so"    -exec codesign -s ${SIGNATURE} -f --timestamp {} \;
+    find "${CLOUDCOMPAREAPP}" -path "${PYTHONAPP}" -prune -o -name "*.dylib" -print -exec codesign -s ${SIGNATURE} -f --timestamp {} \;
+    find "${CLOUDCOMPAREAPP}" -path "${PYTHONAPP}" -prune -o -name "*.so"    -print -exec codesign -s ${SIGNATURE} -f --timestamp {} \;
     
     echo " --- signature frameworks Qt ---"
     for QTLIB in QtPrintSupport QtGui QtDBus QtCore QtOpenGL QtWidgets QtSvg QtConcurrent; do

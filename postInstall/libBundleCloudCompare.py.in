@@ -1,4 +1,6 @@
 
+print("=================== libBundleCloudCompare begin =============================")
+
 import os
 import sys
 import subprocess
@@ -50,18 +52,21 @@ def getlibs(mainlib):
                 libs.append(dirs[1])
             elif dirs[0] == '@executable_path':
                 libs.append(dirs[1])
-                print("mainlib: ", mainlib, " target: ", dirs[1])
+                #print("mainlib: ", mainlib, " target: ", dirs[1])
                 libex.append((os.path.basename(mainlib), dirs[1]))
                 libs2.append(dirs[1])
-            elif dirs[1] == 'opt':
+            elif (len(dirs) >1) and (dirs[1] == 'opt'):
                 libs.append(pathlib)
-                print("mainlib: ", mainlib, "lib from /opt", pathlib)
+                #print("mainlib: ", mainlib, "lib from /opt", pathlib)
             elif (len(dirs) >3) and (dirs[3] == 'miniconda3'):
                 libs.append(pathlib)
-                print("mainlib: ", mainlib, "lib from conda with absolute path", pathlib)
+                #print("mainlib: ", mainlib, "lib from conda with absolute path", pathlib)
+            elif (len(dirs) >1) and (dirs[1] != 'usr') and (dirs[1] != 'System'):
+                #print("mainlib: ", mainlib, dirs)
+                libs.append(pathlib)
             else:
-                if (dirs[1] != 'usr') and (dirs[1] != 'System'):
-                    print("mainlib: ", mainlib, dirs)
+                #print("mainlib: ", dirs[0])
+                pass
 
         dependancies[os.path.basename(mainlib)] = libs + libs2
     return libs, libex
@@ -107,6 +112,23 @@ def convertRpaths(lib, rpaths):
             absrp = os.path.abspath(rpath)
         absrpaths.append(absrp)
     return absrpaths
+
+def changeAbsoluteRpaths(mainlib):
+    print("changeAbsoluteRpaths: ", mainlib)
+    rpaths = []
+    with subprocess.Popen(['otool', '-L', mainlib], stdout=subprocess.PIPE) as proc:
+        lines = proc.stdout.readlines()
+        for l in lines:
+            res = l.decode()
+            vals = res.split()
+            p = vals[0]
+            if (absPrerequisitesPath in p) and (p not in rpaths):
+                rpaths.append(p)
+    for rpath in rpaths:
+        vals = rpath.split('/')
+        lib = vals[-1]
+        print("change rpath from", rpath, "to", "@rpath/"+lib)
+        subprocess.run(["install_name_tool", "-change", rpath, "@rpath/"+lib, mainlib])
 
 def buildPython(srcdir, builddir, installdir):
     """
@@ -180,6 +202,8 @@ embeddedPythonLibs = os.path.abspath(os.path.join(embeddedPythonLibPath, "python
 print(" --- embeddedPythonLibs: ", embeddedPythonLibs)         # .app/Contents/Resources/python/lib/python3.10
 embeddedPythonSiteLibs = os.path.abspath(os.path.join(embeddedPythonLibs, "site-packages"))
 print(" --- embeddedPythonSiteLibs: ", embeddedPythonSiteLibs) # .app/Contents/Resources/python/lib/python3.10/site-package
+absPrerequisitesPath = os.path.abspath(os.path.join(installPath, "../../.."))
+print(" --- absPrerequisitesPath: ", absPrerequisitesPath)     # /Users/paul/projets/cross
 
 print("isGenPython:", "@PLUGIN_PYTHON@")
 isGenPython = "@PLUGIN_PYTHON@"
@@ -315,11 +339,15 @@ libexfound = []
 libsInPlugins = []
 
 # --- inventaire des librairies du framework pour la recherche de dépendances
-libsInFrameworks = os.listdir(absFrameworksPath)
-for filename in libsInFrameworks:
+libsInFrameworks = []
+for filename in os.listdir(absFrameworksPath):
     f = os.path.join(absFrameworksPath, filename)
-    libsToCheck.append(f)
+    if os.path.isfile(f) and (os.path.splitext(f)[1] == '.dylib' or os.path.splitext(f)[1] == '.so'):
+        libsToCheck.append(f)
+        libsInFrameworks.append(f)
 print("number of libs in Frameworks: ", len(libsInFrameworks))
+#print("libs in Frameworks: ", libsInFrameworks)
+
 
 # --- inventaire des librairies dans plugins pour la recherche de dépendances
 for dir in os.listdir(absPluginPath):
@@ -332,6 +360,7 @@ for dir in os.listdir(absPluginPath):
                 libsToCheck.append(f)
                 libsInPlugins.append(f)
 print("number of libs in PlugIns: ", len(libsInPlugins))
+#print("libs in PlugIns: ", libsInPlugins)
 
 # --- parcours pour la recherche de dépendances
 while len(libsToCheck):
@@ -344,6 +373,7 @@ while len(libsToCheck):
         continue                          # lib déjà traitée
     
     # --- recherche des dépendances en @rpath et @executable_path
+    #print("lib2check: ", lib2check)
     libs, libex = getlibs(lib2check)
     #print("lib2check: ", lib2check, " libs:", libs, " libex:", libex)
     for maintar in libex:
@@ -382,7 +412,7 @@ for lib in libsfound:
     if lib == mainprg:
         continue
     base = os.path.basename(lib)
-    if (base not in libsInFrameworks) and (lib not in libsInPlugins):
+    if (lib not in libsInFrameworks) and (lib not in libsInPlugins):
         #print("copy:",lib)
         shutil.copy2(lib, absFrameworksPath)
         nbLibsAdded +=1
@@ -402,6 +432,7 @@ for filename in os.listdir(absFrameworksPath):
         nbFrameworksLibs += 1
         #print("fix rpath framework: ", f)
         subprocess.run(["install_name_tool", "-add_rpath", "@loader_path", f])
+        changeAbsoluteRpaths(f)
 print("number of Frameworks libs with rpath modified: ", nbFrameworksLibs)
 
 # --- ajout du rpath framework pour les librairies des Plugins
@@ -411,6 +442,7 @@ for f in libsInPlugins:
     if os.path.isfile(f):
         #print("fix rpath framework: ", f)        
         subprocess.run(["install_name_tool", "-add_rpath", "@loader_path/../../Frameworks", f])
+        changeAbsoluteRpaths(f)
 
 for maintar in libexfound:
     base = maintar[0]
