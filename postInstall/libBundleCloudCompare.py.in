@@ -51,10 +51,10 @@ def getlibs(mainlib):
             if dirs[0] == '@rpath':
                 libs.append(dirs[1])
             elif dirs[0] == '@executable_path':
-                libs.append(dirs[1])
+                libs.append(dirs[-1])
                 #print("mainlib: ", mainlib, " target: ", dirs[1])
-                libex.append((os.path.basename(mainlib), dirs[1]))
-                libs2.append(dirs[1])
+                libex.append((os.path.basename(mainlib), dirs[-1], pathlib))
+                libs2.append(dirs[-1])
             elif (len(dirs) >1) and (dirs[1] == 'opt'):
                 libs.append(pathlib)
                 #print("mainlib: ", mainlib, "lib from /opt", pathlib)
@@ -101,7 +101,7 @@ def convertRpaths(lib, rpaths):
     #libpath.replace(embeddedPythonLibs, condaPythonLibs)       #  repertoire site package copié de conda
     absrpaths = []
     for rpath in rpaths:
-        if "@loader_path" in rpath:
+        if ("@loader_path" in rpath) or ("@executable_path" in rpath):
             vals = rpath.split('/')
             absrp = libpath
             if len(vals) > 1:
@@ -386,8 +386,11 @@ while len(libsToCheck):
     absrpaths = convertRpaths(lib2check, rpaths)  # on convertit les rpath relatifs en absolus
     #if not condaPath in absrpaths:                # on a recopié des libs python (site-packages)
     #    absrpaths.append(condaPath)
-    if not fbxPath in absrpaths:                  # cas particulier
-        absrpaths.append(fbxPath)
+    # repertoires des lib prerequis
+    preqPaths = [fbxPath, absPrerequisitesPath+'/laszip/install/lib'] 
+    for preqPath in preqPaths:
+        if not preqPath in absrpaths:
+            absrpaths.append(preqPath)
     #print("   absrpaths:", absrpaths)
     
     for lib in libs:                              # parcours des lib en dependance rpath
@@ -447,12 +450,13 @@ for f in libsInPlugins:
 for maintar in libexfound:
     base = maintar[0]
     target = maintar[1]
+    fullpath = maintar[2]
     if os.path.isfile(os.path.join(absFrameworksPath, base)):
-       print("modify @executable_path en @rpath: ",os.path.join(absFrameworksPath, base))
-       subprocess.run(["install_name_tool", "-change", "@executable_path/"+target, "@rpath/"+target, os.path.join(absFrameworksPath, base)])
+       print("modify @executable_path en @rpath: ",os.path.join(absFrameworksPath, base), "target:", target, "fullpath:", fullpath)
+       subprocess.run(["install_name_tool", "-change", fullpath, "@rpath/"+target, os.path.join(absFrameworksPath, base)])
     elif os.path.isfile(os.path.join(absPluginPath+'/ccPlugins', base)):
-       print("modify @executable_path en @rpath: ",os.path.join(absPluginPath+'/ccPlugins', base))
-       subprocess.run(["install_name_tool", "-change", "@executable_path/"+target, "@rpath/"+target, os.path.join(absPluginPath+'/ccPlugins', base)])
+       print("modify @executable_path en @rpath: ",os.path.join(absPluginPath+'/ccPlugins', base), "target:", target, "fullpath:", fullpath)
+       subprocess.run(["install_name_tool", "-change", fullpath, "@rpath/"+target, os.path.join(absPluginPath+'/ccPlugins', base)])
 
 print("=================== CloudCompare app end   =============================")
 
