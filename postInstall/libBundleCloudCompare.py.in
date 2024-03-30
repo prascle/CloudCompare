@@ -291,7 +291,7 @@ if isGenPython == "ON":
             continue
         base = os.path.basename(lib)
         if base not in libsInFrameworks and lib not in PythonLibs:
-            #print("copy:",lib)
+            print("copy:",lib)
             shutil.copy2(lib, pythonFrameworks)
             nbPythonLibsAddedToFrameworks +=1
     print("libs added to Frameworks: ", nbPythonLibsAddedToFrameworks)
@@ -381,13 +381,17 @@ while len(libsToCheck):
             libexfound.append(maintar)            # ajout des dependances en @executable_path dans une liste séparée
 
     rpaths = getrpath(lib2check)                  # on récupere la liste des rpath utilisée par la lib
-    #print("   rpaths:", rpaths)
+    print("   rpaths:", rpaths)
 
     absrpaths = convertRpaths(lib2check, rpaths)  # on convertit les rpath relatifs en absolus
     #if not condaPath in absrpaths:                # on a recopié des libs python (site-packages)
     #    absrpaths.append(condaPath)
     # repertoires des lib prerequis
-    preqPaths = [fbxPath, absPrerequisitesPath+'/laszip/install/lib'] 
+    preqPaths = [fbxPath, 
+                 absPrerequisitesPath+'/laszip/install/lib', 
+                 absPrerequisitesPath+'/curl/install/lib', 
+                 absPrerequisitesPath+'/openssl/install/lib', 
+                 absPrerequisitesPath+'/xerces-c/install/lib' ] 
     for preqPath in preqPaths:
         if not preqPath in absrpaths:
             absrpaths.append(preqPath)
@@ -416,7 +420,7 @@ for lib in libsfound:
         continue
     base = os.path.basename(lib)
     if (lib not in libsInFrameworks) and (lib not in libsInPlugins):
-        #print("copy:",lib)
+        print("copy:",lib)
         shutil.copy2(lib, absFrameworksPath)
         nbLibsAdded +=1
 print("number of libs added to Frameworks: ", nbLibsAdded)
