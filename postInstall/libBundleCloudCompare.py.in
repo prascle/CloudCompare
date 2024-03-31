@@ -388,10 +388,16 @@ while len(libsToCheck):
     #    absrpaths.append(condaPath)
     # repertoires des lib prerequis
     preqPaths = [fbxPath, 
-                 absPrerequisitesPath+'/laszip/install/lib', 
+                 absPrerequisitesPath+'/boost/install/lib',
                  absPrerequisitesPath+'/curl/install/lib', 
-                 absPrerequisitesPath+'/openssl/install/lib', 
-                 absPrerequisitesPath+'/xerces-c/install/lib' ] 
+                 absPrerequisitesPath+'/gdal/install/lib',
+                 absPrerequisitesPath+'/gmp/install/lib',
+                 absPrerequisitesPath+'/laszip/install/lib', 
+                 absPrerequisitesPath+'/mpfr/install/lib',
+                 absPrerequisitesPath+'/openssl/install/lib',
+                 absPrerequisitesPath+'/proj/install/lib',
+                 absPrerequisitesPath+'/xerces-c/install/lib',
+                 absPrerequisitesPath+'/zlib/install/lib' ] 
     for preqPath in preqPaths:
         if not preqPath in absrpaths:
             absrpaths.append(preqPath)
