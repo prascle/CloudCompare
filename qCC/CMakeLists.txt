@@ -51,6 +51,15 @@ if( CCCORELIB_USE_QT_CONCURRENT )
 	)
 endif()
 
+if ( APPLE )
+	if ( PLUGIN_STANDARD_QJSONRPC )
+	    find_package(Qt5 COMPONENTS Network WebSockets REQUIRED)
+		target_link_libraries( ${PROJECT_NAME}
+			Qt5::WebSockets
+		)
+	endif()
+endif()
+
 # Add custom preprocessor definitions
 if( WIN32 )
 	if (MSVC)

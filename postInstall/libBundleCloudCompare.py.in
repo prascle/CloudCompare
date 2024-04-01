@@ -6,6 +6,7 @@ import sys
 import subprocess
 import shutil
 import json
+import stat
 
 rootdir= "/Users/paul/projets/CloudCompare"
 installPath = "@CMAKE_INSTALL_PREFIX@"      # "/Users/paul/projets/CloudCompare/installConda/CloudComPy310"
@@ -426,8 +427,12 @@ for lib in libsfound:
         continue
     base = os.path.basename(lib)
     if (lib not in libsInFrameworks) and (lib not in libsInPlugins):
-        print("copy:",lib)
+        print("copy:",lib, base, absFrameworksPath)
         shutil.copy2(lib, absFrameworksPath)
+        if base == 'libfbxsdk.dylib':
+            print("  libfbxsdk.dylib is read only")
+            pathname = os.path.join(absFrameworksPath, base)
+            subprocess.run(['chmod', '+w', pathname])
         nbLibsAdded +=1
 print("number of libs added to Frameworks: ", nbLibsAdded)
 

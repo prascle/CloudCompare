@@ -114,7 +114,7 @@ else
     find "${CLOUDCOMPAREAPP}" -path "${PYTHONAPP}" -prune -o -name "*.so"    -print -exec codesign -s ${SIGNATURE} -f --timestamp {} \;
     
     echo " --- signature frameworks Qt ---"
-    for QTLIB in QtPrintSupport QtGui QtDBus QtCore QtOpenGL QtWidgets QtSvg QtConcurrent; do
+    for QTLIB in QtPrintSupport QtGui QtDBus QtCore QtOpenGL QtWidgets QtSvg QtConcurrent QtNetwork QtWebSockets ; do
         find "${CLOUDCOMPAREAPP}"  -path "${PYTHONAPP}" -prune -o -name "${QTLIB}" -print -exec codesign -s ${SIGNATURE} -f --timestamp {} \;
     done
 
