@@ -49,7 +49,7 @@ def getlibs(mainlib):
             pathlib = vals[0].decode()
             #print("     ", pathlib)
             dirs = pathlib.split("/")
-            if dirs[0] == '@rpath':
+            if (dirs[0] == '@rpath') or (dirs[0] == '@loader_path'):
                 libs.append(dirs[1])
             elif dirs[0] == '@executable_path':
                 libs.append(dirs[-1])
@@ -376,7 +376,7 @@ while len(libsToCheck):
     # --- recherche des dépendances en @rpath et @executable_path
     #print("lib2check: ", lib2check)
     libs, libex = getlibs(lib2check)
-    #print("lib2check: ", lib2check, " libs:", libs, " libex:", libex)
+    print("lib2check: ", lib2check, " libs:", libs, " libex:", libex)
     for maintar in libex:
         if not maintar in libexfound:
             libexfound.append(maintar)            # ajout des dependances en @executable_path dans une liste séparée
@@ -395,6 +395,7 @@ while len(libsToCheck):
                  absPrerequisitesPath+'/gmp/install/lib',
                  absPrerequisitesPath+'/laszip/install/lib', 
                  absPrerequisitesPath+'/mpfr/install/lib',
+                 absPrerequisitesPath+'/opencv/install/lib',
                  absPrerequisitesPath+'/openssl/install/lib',
                  absPrerequisitesPath+'/proj/install/lib',
                  absPrerequisitesPath+'/xerces-c/install/lib',
