@@ -390,6 +390,7 @@ while len(libsToCheck):
     # repertoires des lib prerequis
     preqPaths = [fbxPath, 
                  absPrerequisitesPath+'/boost/install/lib',
+                 absPrerequisitesPath+'/cork/install/lib', 
                  absPrerequisitesPath+'/curl/install/lib', 
                  absPrerequisitesPath+'/gdal/install/lib',
                  absPrerequisitesPath+'/gmp/install/lib',
