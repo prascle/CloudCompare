@@ -101,6 +101,7 @@ public:
 			, parentWidget(nullptr)
 		    , minorVersion(-1)
 		    , pointFormat(-1)
+		    , isAscii(false)
 		{}
 		
 		//! Wether to always display a dialog (if any), even if automatic guess is possible
@@ -109,6 +110,7 @@ public:
 		QWidget* parentWidget;
 		int minorVersion; // for CloudComPyPython API, LAS plugin
 		int pointFormat;  // for CloudComPyPython API, LAS plugin
+		bool isAscii;     // for CloudComPyPython API, PLY plugin
 	};
 	
 	//! Shared type
