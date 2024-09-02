@@ -93,6 +93,10 @@ void PlyFilter::SetDefaultOutputFormat(e_ply_storage_mode format)
 
 CC_FILE_ERROR PlyFilter::saveToFile(ccHObject* entity, const QString& filename, const SaveParameters& parameters)
 {
+    if (parameters.isAscii)
+    {
+        s_defaultOutputFormat = PLY_ASCII;
+    }
 	e_ply_storage_mode outputFormat = s_defaultOutputFormat;
 
 	//ask for output format
