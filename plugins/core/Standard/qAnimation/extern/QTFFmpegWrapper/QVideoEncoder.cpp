@@ -187,10 +187,10 @@ bool QVideoEncoder::open(QString formatShortName, QStringList& errors)
 		return false;
 	}
 
-	const AVOutputFormat* outputFormat = nullptr;
+	AVOutputFormat *outputFormat = nullptr;
 	if (!formatShortName.isEmpty())
 	{
-		outputFormat = av_guess_format(qPrintable(formatShortName), nullptr, nullptr);
+		outputFormat = (AVOutputFormat*)av_guess_format(qPrintable(formatShortName), nullptr, nullptr);
 		if (!outputFormat)
 		{
 			errors << "Could not find output format from short name: " + formatShortName;
