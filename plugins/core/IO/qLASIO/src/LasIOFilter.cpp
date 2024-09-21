@@ -639,24 +639,10 @@ CC_FILE_ERROR LasIOFilter::saveToFile(ccHObject* entity, const QString& filename
 		params.pointFormat = saveDialog.selectedPointFormat();
 		CCTRACE("params.pointFormat " << params.pointFormat);
 
-<<<<<<< HEAD
-		params.lasScale  = saveDialog.chosenScale();
-		params.lasOffset = lasOffset;
-=======
 		params.lasScale = saveDialog.chosenScale();
         CCTRACE("params.lasScale " << params.lasScale[0] << " " << params.lasScale[1]  << " " << params.lasScale[2]);
-
-		LasSaveDialog::Offset offsetType;
-		params.lasOffset = saveDialog.chosenOffset(offsetType);
+        params.lasOffset = lasOffset;
         CCTRACE("params.lasOffset " << params.lasOffset[0] << " " << params.lasOffset[1]  << " " << params.lasOffset[2]);
-
-		// Remember any custom offset input by the user
-		if (offsetType == LasSaveDialog::CUSTOM_LAS_OFFSET)
-		{
-			s_customLASOffset                  = params.lasOffset;
-			s_customLASOffsetWasUsedPreviously = true;
-		}
->>>>>>> acd1892e5... fix behavior of LAS IO filter write, from CloudComPy
 	}
 
 	// In case of command line call, add automatically all remaining scalar fields as extra scalar fields
