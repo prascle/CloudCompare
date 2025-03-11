@@ -21,6 +21,10 @@
 //qCC_db
 #include <ccLog.h>
 
+#ifdef Q_OS_MAC
+#include <ccFilterActionDelete.h>
+#endif
+
 ////Qt
 #include <QFileDialog>
 #include <QImageWriter>
@@ -119,11 +123,18 @@ void ccRenderToFileDlg::saveSettings()
 
 void ccRenderToFileDlg::chooseFile()
 {
+#ifdef Q_OS_MAC
+	filterActionDelete* instFAD =filterActionDelete::getFilterActionDelete();
+	instFAD->disableActionDelete();
+#endif
 	QString selectedFileName = QFileDialog::getSaveFileName(this,
 															tr("Save Image"),
 															m_ui->filenameLineEdit->text(),
 															filters,
 															&selectedFilter);
+#ifdef Q_OS_MAC
+	instFAD->enableActionDelete();
+#endif
 
 	//if operation is canceled, selectedFileName is empty
 	if (selectedFileName.size() < 1)

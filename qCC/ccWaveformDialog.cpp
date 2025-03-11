@@ -29,6 +29,10 @@
 #include <ccPointCloud.h>
 #include <ccProgressDialog.h>
 
+#ifdef Q_OS_MAC
+#include <ccFilterActionDelete.h>
+#endif
+
 //Qt
 #include <QCloseEvent>
 #include <QSettings>
@@ -535,7 +539,14 @@ void ccWaveDialog::onExportWaveAsCSV()
 	currentPath += QString("/") + QString("waveform_%1.csv").arg(pointIndex);
 
 	//ask for a filename
+#ifdef Q_OS_MAC
+	filterActionDelete* instFAD =filterActionDelete::getFilterActionDelete();
+	instFAD->disableActionDelete();
+#endif
 	QString filename = QFileDialog::getSaveFileName(this, "Select output file", currentPath, "*.csv");
+#ifdef Q_OS_MAC
+	instFAD->enableActionDelete();
+#endif
 	if (filename.isEmpty())
 	{
 		//process cancelled by user

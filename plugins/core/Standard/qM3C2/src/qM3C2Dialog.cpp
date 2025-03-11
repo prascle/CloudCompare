@@ -32,6 +32,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QThread>
+#include <QAction>
 
 static bool s_firstTimeInit = true;
 
@@ -675,7 +676,14 @@ void qM3C2Dialog::saveParamsToFile()
 		QSettings settings("qM3C2");
 		QString currentPath = settings.value("currentPath", ccFileUtils::defaultDocPath()).toString();
 
+#ifdef Q_OS_MAC
+		// on macos, <Fn> <Backspace> deletes the selected entities instead of the current character
+		m_app->getActionDelete()->setEnabled(false);
+#endif
 		filename = QFileDialog::getSaveFileName(this, "Save M3C2 parameters", currentPath + QString("/m3c2_params.txt"), "*.txt");
+#ifdef Q_OS_MAC
+		m_app->getActionDelete()->setEnabled(true);
+#endif
 		if (filename.isEmpty())
 			return;
 

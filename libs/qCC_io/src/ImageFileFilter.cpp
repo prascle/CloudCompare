@@ -21,6 +21,10 @@
 //qCC_db
 #include <ccHObjectCaster.h>
 #include <ccImage.h>
+#ifdef Q_OS_MAC
+#include <ccFilterActionDelete.h>
+#endif
+
 
 //Qt
 #include <QFileDialog>
@@ -110,12 +114,18 @@ QString ImageFileFilter::GetSaveFilename(const QString& dialogTitle, const QStri
 			pngFilter = filter;
 		}
 	}
-
+#ifdef Q_OS_MAC
+	filterActionDelete* instFAD =filterActionDelete::getFilterActionDelete();
+	instFAD->disableActionDelete();
+#endif
 	QString outputFilename = QFileDialog::getSaveFileName(	parentWidget,
 															dialogTitle,
 															imageSavePath + QString("/%1.%2").arg(baseName, pngFilter.isEmpty() ? QString(formats[0].data()) : QString("png")),
 															filters,
 															pngFilter.isEmpty() ? nullptr : &pngFilter);
+#ifdef Q_OS_MAC
+	instFAD->enableActionDelete();
+#endif
 
 	return outputFilename;
 }

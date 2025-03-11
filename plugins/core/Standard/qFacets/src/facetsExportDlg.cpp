@@ -17,6 +17,10 @@
 
 #include "facetsExportDlg.h"
 
+#ifdef Q_OS_MAC
+#include <ccFilterActionDelete.h>
+#endif
+
 //Qt
 #include <QFileDialog>
 
@@ -50,7 +54,14 @@ void FacetsExportDlg::browseDestination()
 	}
 
 	//open file saving dialog
+#ifdef Q_OS_MAC
+	filterActionDelete* instFAD =filterActionDelete::getFilterActionDelete();
+	instFAD->disableActionDelete();
+#endif
 	QString outputFilename = QFileDialog::getSaveFileName(nullptr, "Select destination", destinationPathLineEdit->text(), saveFileFilter);
+#ifdef Q_OS_MAC
+	instFAD->enableActionDelete();
+#endif
 
 	if (outputFilename.isEmpty())
 		return;

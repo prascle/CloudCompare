@@ -19,6 +19,10 @@
 
 #include "dxfProfilesExportDlg.h"
 
+#ifdef Q_OS_MAC
+#include <ccFilterActionDelete.h>
+#endif
+
 //Qt
 #include <QFileDialog>
 #include <QSettings>
@@ -114,7 +118,14 @@ void DxfProfilesExportDlg::browseVertFile()
 	QString filter("Vertical profiles (*.dxf)");
 
 	//open file loading dialog
+#ifdef Q_OS_MAC
+	filterActionDelete* instFAD =filterActionDelete::getFilterActionDelete();
+	instFAD->disableActionDelete();
+#endif
 	QString filename = QFileDialog::getSaveFileName(nullptr,"Select output file",vertOutputFileLineEdit->text(),filter);
+#ifdef Q_OS_MAC
+	instFAD->enableActionDelete();
+#endif
 
 	if (filename.isEmpty())
 		return;
@@ -132,7 +143,14 @@ void DxfProfilesExportDlg::browseHorizFile()
 	QString filter("Horizontal profiles (*.dxf)");
 
 	//open file loading dialog
+#ifdef Q_OS_MAC
+	filterActionDelete* instFAD =filterActionDelete::getFilterActionDelete();
+	instFAD->disableActionDelete();
+#endif
 	QString filename = QFileDialog::getSaveFileName(nullptr,"Select output file",horizOutputFileLineEdit->text(),filter);
+#ifdef Q_OS_MAC
+	instFAD->enableActionDelete();
+#endif
 
 	if (filename.isEmpty())
 		return;

@@ -41,6 +41,7 @@
 #include <QPlainTextEdit>
 #include <QSettings>
 #include <QUuid>
+#include <QAction>
 
 //System
 #include <cassert>
@@ -822,7 +823,14 @@ void ccColorScaleEditorDialog::exportCurrentScale()
 	QString currentPath = settings.value(ccPS::CurrentPath(), ccFileUtils::defaultDocPath()).toString();
 
 	//ask for a filename
+#ifdef Q_OS_MAC
+	// on macos, <Fn> <Backspace> deletes the selected entities instead of the current character
+	m_mainApp->getActionDelete()->setEnabled(false);
+#endif
 	QString filename = QFileDialog::getSaveFileName(this,"Select output file",currentPath,"*.xml");
+#ifdef Q_OS_MAC
+	m_mainApp->getActionDelete()->setEnabled(true);
+#endif
 	if (filename.isEmpty())
 	{
 		//process cancelled by user

@@ -31,6 +31,10 @@
 //qCC_gl
 #include <ccGLWindowInterface.h>
 
+#ifdef Q_OS_MAC
+#include <ccFilterActionDelete.h>
+#endif
+
 //Qt
 #include <QSettings>
 #include <QMainWindow>
@@ -397,7 +401,14 @@ void qCanupo2DViewDialog::saveClassifier()
 	settings.beginGroup("Classif");
 	QString currentPath = settings.value("MscCurrentPath",QApplication::applicationDirPath()).toString();
 
+#ifdef Q_OS_MAC
+	filterActionDelete* instFAD =filterActionDelete::getFilterActionDelete();
+	instFAD->disableActionDelete();
+#endif
 	QString filename = QFileDialog::getSaveFileName(this,"Save Classifier",currentPath,"*.prm");
+#ifdef Q_OS_MAC
+	instFAD->enableActionDelete();
+#endif
 	if (filename.isEmpty())
 		return;
 

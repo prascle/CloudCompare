@@ -40,6 +40,10 @@
 //qCC_gl
 #include <ccGLWindowInterface.h>
 
+#ifdef Q_OS_MAC
+#include <ccFilterActionDelete.h>
+#endif
+
 //local
 #include "mainwindow.h"
 #include "db_tree/ccDBRoot.h"
@@ -423,10 +427,17 @@ void ccPointListPickingDlg::exportToASCII(ExportFormat format)
 	QString filename = settings.value("filename", "picking_list.txt").toString();
 	settings.endGroup();
 
+#ifdef Q_OS_MAC
+	filterActionDelete* instFAD =filterActionDelete::getFilterActionDelete();
+	instFAD->disableActionDelete();
+#endif
 	filename = QFileDialog::getSaveFileName(this,
 	                                        "Export to ASCII",
 	                                        filename,
 	                                        AsciiFilter::GetFileFilter());
+#ifdef Q_OS_MAC
+	instFAD->enableActionDelete();
+#endif
 
 	if (filename.isEmpty())
 		return;

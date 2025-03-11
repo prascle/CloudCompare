@@ -27,6 +27,10 @@
 //qCC_gl
 #include <ccGLWindowInterface.h>
 
+#ifdef Q_OS_MAC
+#include <ccFilterActionDelete.h>
+#endif
+
 //Qt
 #include <QtGui>
 #include <QApplication>
@@ -926,9 +930,16 @@ void qAnimationDlg::onCodecChanged(int index)
 void qAnimationDlg::onBrowseButtonClicked()
 {
 #ifdef QFFMPEG_SUPPORT
+#ifdef Q_OS_MAC
+	filterActionDelete* instFAD =filterActionDelete::getFilterActionDelete();
+	instFAD->disableActionDelete();
+#endif
 	QString filename = QFileDialog::getSaveFileName(	this,
 														tr("Output animation file"),
 														outputFileLineEdit->text() );
+#ifdef Q_OS_MAC
+	instFAD->enableActionDelete();
+#endif
 #else
 	QString filename = QFileDialog::getExistingDirectory(	this,
 															tr("Open Directory"),

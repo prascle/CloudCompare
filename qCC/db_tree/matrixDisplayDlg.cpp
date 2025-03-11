@@ -29,6 +29,10 @@
 // qCC_db
 #include "ccFileUtils.h"
 
+#ifdef Q_OS_MAC
+#include <ccFilterActionDelete.h>
+#endif
+
 //Qt
 #include <QClipboard>
 #include <QFileDialog>
@@ -121,7 +125,14 @@ void MatrixDisplayDlg::exportToASCII()
 	settings.beginGroup(ccPS::LoadFile()); //use the same folder as the load one
 	QString currentPath = settings.value(ccPS::CurrentPath(), ccFileUtils::defaultDocPath()).toString();
 
+#ifdef Q_OS_MAC
+	filterActionDelete* instFAD =filterActionDelete::getFilterActionDelete();
+	instFAD->disableActionDelete();
+#endif
 	QString outputFilename = QFileDialog::getSaveFileName(this, "Select output file", currentPath, "*.mat.txt");
+#ifdef Q_OS_MAC
+	instFAD->enableActionDelete();
+#endif
 	if (outputFilename.isEmpty())
 		return;
 

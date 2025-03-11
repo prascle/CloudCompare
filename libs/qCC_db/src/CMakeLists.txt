@@ -65,3 +65,12 @@ target_sources( ${PROJECT_NAME}
 	    ${CMAKE_CURRENT_LIST_DIR}/ccViewportParameters.cpp
 	    ${CMAKE_CURRENT_LIST_DIR}/ccWaveform.cpp
 )
+
+if (APPLE)
+target_sources( ${PROJECT_NAME}
+	PUBLIC
+		${CMAKE_CURRENT_LIST_DIR}/ccFilterActionDelete.cpp
+)
+
+endif()
+

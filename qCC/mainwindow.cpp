@@ -51,6 +51,9 @@
 #include <ccQuadric.h>
 #include <ccSphere.h>
 #include <ccSubMesh.h>
+#ifdef Q_OS_MAC
+#include <ccFilterActionDelete.h>
+#endif
 
 //qCC_io
 #include <ccShiftAndScaleCloudDlg.h>
@@ -147,6 +150,7 @@
 //Qt
 #include <QClipboard>
 #include <QGLShader>
+#include <QAction>
 
 //Qt UI files
 #include <ui_distanceMapDlg.h>
@@ -222,6 +226,8 @@ MainWindow::MainWindow()
 
 	m_UI->actionFullScreen->setText( tr( "Enter Full Screen" ) );
 	m_UI->actionFullScreen->setShortcut( QKeySequence( Qt::CTRL + Qt::META + Qt::Key_F ) );
+	QEvent::registerEventType(static_cast<QEvent::Type>(QEvent::User + indexDAD));
+	QEvent::registerEventType(static_cast<QEvent::Type>(QEvent::User + indexEAD));
 #endif
 
 	// Set up dynamic menus
@@ -424,6 +430,13 @@ void MainWindow::decreasePointSize()
 		win->redraw();
 	}
 }
+
+#ifdef Q_OS_MAC
+QAction* MainWindow::getActionDelete()
+{
+	return m_UI->actionDelete;
+}
+#endif
 
 void MainWindow::setupInputDevices()
 {
@@ -2556,13 +2569,19 @@ void MainWindow::doActionExportDepthBuffer()
 	settings.beginGroup(ccPS::SaveFile());
 	QString currentPath = settings.value(ccPS::CurrentPath(), ccFileUtils::defaultDocPath()).toString();
 
+#ifdef Q_OS_MAC
+	// on macos, <Fn> <Backspace> deletes the selected entities instead of the current character
+	m_UI->actionDelete->setEnabled(false);
+#endif
 	QString filename = QFileDialog::getSaveFileName(this,
 													tr("Select output file"),
 													currentPath,
 													DepthMapFileFilter::GetFileFilter(),
 													nullptr,
-													CCFileDialogOptions()
-	);
+													CCFileDialogOptions());
+#ifdef Q_OS_MAC
+	m_UI->actionDelete->setEnabled(true);
+#endif
 	if (filename.isEmpty())
 	{
 		//process cancelled by user
@@ -6436,6 +6455,15 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 	case QEvent::Move:
 		updateOverlayDialogsPlacement();
 		break;
+#ifdef Q_OS_MAC
+	// on macos, <Fn> <Backspace> deletes the selected entities instead of the current character
+	case QEvent::User + indexDAD:
+		m_UI->actionDelete->setEnabled(false);
+		break;
+	case QEvent::User + indexEAD:
+		m_UI->actionDelete->setEnabled(true);
+		break;
+#endif
 	default:
 		//nothing to do
 		break;
@@ -9011,12 +9039,19 @@ void MainWindow::doActionComputeBestICPRmsMatrix()
 		settings.beginGroup(ccPS::SaveFile());
 		QString currentPath = settings.value(ccPS::CurrentPath(), ccFileUtils::defaultDocPath()).toString();
 
+#ifdef Q_OS_MAC
+	// on macos, <Fn> <Backspace> deletes the selected entities instead of the current character
+	m_UI->actionDelete->setEnabled(false);
+#endif
 		QString outputFilename = QFileDialog::getSaveFileName(	this,
 																tr("Select output file"),
 																currentPath,
 																"*.csv",
 																nullptr,
 																CCFileDialogOptions());
+#ifdef Q_OS_MAC
+	m_UI->actionDelete->setEnabled(true);
+#endif
 
 		if (outputFilename.isEmpty())
 			return;
@@ -9091,12 +9126,19 @@ void MainWindow::doActionExportPlaneInfo()
 	settings.beginGroup(ccPS::SaveFile());
 	QString currentPath = settings.value(ccPS::CurrentPath(), ccFileUtils::defaultDocPath()).toString();
 
+#ifdef Q_OS_MAC
+	// on macos, <Fn> <Backspace> deletes the selected entities instead of the current character
+	m_UI->actionDelete->setEnabled(false);
+#endif
 	QString outputFilename = QFileDialog::getSaveFileName(	this,
 															tr("Select output file"),
 															currentPath,
 															"*.csv",
 															nullptr,
 															CCFileDialogOptions());
+#ifdef Q_OS_MAC
+	m_UI->actionDelete->setEnabled(true);
+#endif
 
 	if (outputFilename.isEmpty())
 	{
@@ -9205,12 +9247,19 @@ void MainWindow::doActionExportCloudInfo()
 	settings.beginGroup(ccPS::SaveFile());
 	QString currentPath = settings.value(ccPS::CurrentPath(), ccFileUtils::defaultDocPath()).toString();
 
+#ifdef Q_OS_MAC
+	// on macos, <Fn> <Backspace> deletes the selected entities instead of the current character
+	m_UI->actionDelete->setEnabled(false);
+#endif
 	QString outputFilename = QFileDialog::getSaveFileName(	this,
 															tr("Select output file"),
 															currentPath,
 															"*.csv",
 															nullptr,
 															CCFileDialogOptions());
+#ifdef Q_OS_MAC
+	m_UI->actionDelete->setEnabled(true);
+#endif
 	if (outputFilename.isEmpty())
 	{
 		//process cancelled by the user
@@ -10733,12 +10782,19 @@ void MainWindow::doActionSaveFile()
 	}
 
 	//ask the user for the output filename
+#ifdef Q_OS_MAC
+	// on macos, <Fn> <Backspace> deletes the selected entities instead of the current character
+	m_UI->actionDelete->setEnabled(false);
+#endif
 	QString selectedFilename = QFileDialog::getSaveFileName(this,
 															tr("Save file"),
 															fullPathName,
 															fileFilters.join(s_fileFilterSeparator),
 															&selectedFilter,
 															CCFileDialogOptions());
+#ifdef Q_OS_MAC
+	m_UI->actionDelete->setEnabled(true);
+#endif
 
 	if (selectedFilename.isEmpty())
 	{
@@ -10889,12 +10945,19 @@ void MainWindow::doActionSaveProject()
 	QString binFilter = BinFilter::GetFileFilter();
 
 	//ask the user for the output filename
+#ifdef Q_OS_MAC
+	// on macos, <Fn> <Backspace> deletes the selected entities instead of the current character
+	m_UI->actionDelete->setEnabled(false);
+#endif
 	QString selectedFilename = QFileDialog::getSaveFileName(this,
 		tr("Save file"),
 		fullPathName,
 		binFilter,
 		&binFilter,
 		CCFileDialogOptions());
+#ifdef Q_OS_MAC
+	m_UI->actionDelete->setEnabled(true);
+#endif
 
 	if (selectedFilename.isEmpty())
 	{

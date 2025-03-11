@@ -226,6 +226,7 @@ private:
 	
 	void increasePointSize() override;
 	void decreasePointSize() override;
+	QAction* getActionDelete() override;
 	
 	void toggleLockRotationAxis();
 	void doActionEnableBubbleViewMode();

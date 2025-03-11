@@ -24,6 +24,10 @@
 //CCCoreLib
 #include <Neighbourhood.h>
 
+#ifdef Q_OS_MAC
+#include <ccFilterActionDelete.h>
+#endif
+
 //system
 #include <array>
 #include <random>
@@ -3465,7 +3469,14 @@ void ccCompass::exportToSVG()
 	constexpr float zoom = 2.0f; //TODO: create popup box
 
 	//get filename for the svg file
+#ifdef Q_OS_MAC
+	filterActionDelete* instFAD =filterActionDelete::getFilterActionDelete();
+	instFAD->disableActionDelete();
+#endif
 	QString filename = QFileDialog::getSaveFileName(m_dlg, tr("SVG Output file"), "", tr("SVG files (*.svg)"));
+#ifdef Q_OS_MAC
+	instFAD->enableActionDelete();
+#endif
 	if (filename.isEmpty())
 	{
 		//process cancelled by the user
@@ -3484,7 +3495,14 @@ void ccCompass::exportToSVG()
 void ccCompass::onSave()
 {
 	//get output file path
+#ifdef Q_OS_MAC
+	filterActionDelete* instFAD =filterActionDelete::getFilterActionDelete();
+	instFAD->disableActionDelete();
+#endif
 	QString filename = QFileDialog::getSaveFileName(m_dlg, tr("Output file"), "", tr("CSV files (*.csv *.txt);;XML (*.xml)"));
+#ifdef Q_OS_MAC
+	instFAD->enableActionDelete();
+#endif
 	if (filename.isEmpty())
 	{
 		//process cancelled by the user

@@ -28,6 +28,11 @@
 
 class QMainWindow;
 class QWidget;
+
+#ifdef Q_OS_MAC
+class QAction;
+#endif
+
 class ccGLWindowInterface;
 class ccColorScalesManager;
 class ccOverlayDialog;
@@ -213,4 +218,7 @@ public:
 
 	virtual void increasePointSize() = 0;
 	virtual void decreasePointSize() = 0;
+#ifdef Q_OS_MAC
+	virtual QAction* getActionDelete() { return nullptr; }
+#endif
 };

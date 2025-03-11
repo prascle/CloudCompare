@@ -29,6 +29,10 @@
 //qCC_io
 #include <ImageFileFilter.h>
 
+#ifdef Q_OS_MAC
+#include <ccFilterActionDelete.h>
+#endif
+
 //Qt
 #include <QCloseEvent>
 #include <QFile>
@@ -1078,7 +1082,14 @@ void ccHistogramWindowDlg::onExportToCSV()
 	currentPath += QString("/") + m_win->windowTitle() + ".csv";
 
 	//ask for a filename
+#ifdef Q_OS_MAC
+	filterActionDelete* instFAD =filterActionDelete::getFilterActionDelete();
+	instFAD->disableActionDelete();
+#endif
 	QString filename = QFileDialog::getSaveFileName(this, "Select output file", currentPath, "*.csv");
+#ifdef Q_OS_MAC
+	instFAD->enableActionDelete();
+#endif
 	if (filename.isEmpty())
 	{
 		//process cancelled by user

@@ -41,6 +41,10 @@
 //qCC_io
 #include <ImageFileFilter.h>
 
+#ifdef Q_OS_MAC
+#include <ccFilterActionDelete.h>
+#endif
+
 //Qt
 #include <QFileDialog>
 #include <QMap>
@@ -1171,11 +1175,18 @@ void ccRasterizeTool::generateRaster() const
 		QSettings settings;
 		settings.beginGroup(ccPS::HeightGridGeneration());
 		QString imageSavePath = settings.value("savePathImage", ccFileUtils::defaultDocPath()).toString();
+#ifdef Q_OS_MAC
+		filterActionDelete* instFAD =filterActionDelete::getFilterActionDelete();
+		instFAD->disableActionDelete();
+#endif
 		outputFilename = QFileDialog::getSaveFileName(	const_cast<ccRasterizeTool*>(this),
 														"Save height grid raster",
 														imageSavePath + QString("/raster.tif"),
 														"geotiff (*.tif)");
 
+#ifdef Q_OS_MAC
+		instFAD->enableActionDelete();
+#endif
 		if (outputFilename.isNull())
 		{
 			return;
@@ -2199,11 +2210,18 @@ void ccRasterizeTool::generateImage() const
 			settings.beginGroup(ccPS::HeightGridGeneration());
 			QString imageSavePath = settings.value("savePathImage", ccFileUtils::defaultDocPath()).toString();
 
+#ifdef Q_OS_MAC
+			filterActionDelete* instFAD =filterActionDelete::getFilterActionDelete();
+			instFAD->disableActionDelete();
+#endif
 			QString outputFilename = ImageFileFilter::GetSaveFilename(	"Save raster as image",
 																		"image",
 																		imageSavePath,
 																		const_cast<ccRasterizeTool*>(this));
 
+#ifdef Q_OS_MAC
+			instFAD->enableActionDelete();
+#endif
 			if (!outputFilename.isNull())
 			{
 				//save current export path to persistent settings
@@ -2238,7 +2256,14 @@ void ccRasterizeTool::generateASCIIMatrix() const
 
 	//open file saving dialog
 	QString filter("ASCII file (*.txt)");
+#ifdef Q_OS_MAC
+	filterActionDelete* instFAD =filterActionDelete::getFilterActionDelete();
+	instFAD->disableActionDelete();
+#endif
 	QString outputFilename = QFileDialog::getSaveFileName(nullptr, "Save grid as ASCII file", asciiGridSavePath + QString("/raster_matrix.txt"), filter);
+#ifdef Q_OS_MAC
+	instFAD->enableActionDelete();
+#endif
 	if (outputFilename.isNull())
 		return;
 

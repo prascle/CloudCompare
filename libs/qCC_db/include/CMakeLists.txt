@@ -81,10 +81,19 @@ target_sources( ${PROJECT_NAME}
 		${CMAKE_CURRENT_LIST_DIR}/ccSubMesh.h
 		${CMAKE_CURRENT_LIST_DIR}/ccTorus.h
 		${CMAKE_CURRENT_LIST_DIR}/ccViewportParameters.h
-		${CMAKE_CURRENT_LIST_DIR}/qCC_db.h
+		${CMAKE_CURRENT_LIST_DIR}/qCC_db.h	
 )
 
 target_include_directories( ${PROJECT_NAME}
 	PUBLIC
 	    ${CMAKE_CURRENT_LIST_DIR}
 )
+
+if (APPLE)
+	target_sources( ${PROJECT_NAME}
+	PRIVATE
+		${CMAKE_CURRENT_LIST_DIR}/ccFilterActionDelete.h
+)
+endif()
+
+          

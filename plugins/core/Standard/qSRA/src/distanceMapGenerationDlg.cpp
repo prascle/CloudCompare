@@ -43,6 +43,10 @@
 #include <ccPolyline.h>
 #include <ccMaterialSet.h>
 
+#ifdef Q_OS_MAC
+#include <ccFilterActionDelete.h>
+#endif
+
 //Qt
 #include <QColorDialog>
 #include <QCloseEvent>
@@ -1304,7 +1308,14 @@ void DistanceMapGenerationDlg::exportMapAsGrid()
 	QString filter("Grid file (*.csv)");
 
 	//open file saving dialog
+#ifdef Q_OS_MAC
+	filterActionDelete* instFAD =filterActionDelete::getFilterActionDelete();
+	instFAD->disableActionDelete();
+#endif
 	QString filename = QFileDialog::getSaveFileName(nullptr, "Select output file", path, filter);
+#ifdef Q_OS_MAC
+	instFAD->enableActionDelete();
+#endif
 	if (filename.isEmpty())
 		return;
 
