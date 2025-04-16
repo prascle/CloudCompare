@@ -694,7 +694,12 @@ void qM3C2Dialog::getParamsFromFile()
 		QSettings settings("qM3C2");
 		QString currentPath = settings.value("currentPath", ccFileUtils::defaultDocPath()).toString();
 
+#ifdef Q_OS_MAC
+		filename = QFileDialog::getOpenFileName(this, "Load M3C2 parameters", currentPath, "*.txt",
+ 						 	 	 	 	 	 	nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 		filename = QFileDialog::getOpenFileName(this, "Load M3C2 parameters", currentPath, "*.txt");
+#endif
 		if (filename.isEmpty())
 			return;
 
@@ -733,7 +738,12 @@ void qM3C2Dialog::saveParamsToFile()
 		QSettings settings("qM3C2");
 		QString currentPath = settings.value("currentPath", ccFileUtils::defaultDocPath()).toString();
 
+#ifdef Q_OS_MAC
+		filename = QFileDialog::getSaveFileName(this, "Save M3C2 parameters", currentPath + QString("/m3c2_params.txt"), "*.txt",
+ 						 	 	 	 	 	 	nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 		filename = QFileDialog::getSaveFileName(this, "Save M3C2 parameters", currentPath + QString("/m3c2_params.txt"), "*.txt");
+#endif
 		if (filename.isEmpty())
 			return;
 

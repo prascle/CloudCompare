@@ -58,7 +58,11 @@ ccOptions::ccOptions()
 void ccOptions::reset()
 {
 	normalsDisplayedByDefault = false;
+#ifdef Q_OS_MAC
+	useNativeDialogs = false; // on macos 15.4, native dialogs does -not work anymore...
+#else
 	useNativeDialogs = true;
+#endif
 	confirmQuit = true;
 }
 
@@ -68,7 +72,11 @@ void ccOptions::fromPersistentSettings()
 	settings.beginGroup(ccPS::Options());
 	{
 		normalsDisplayedByDefault = settings.value("normalsDisplayedByDefault", false).toBool();
+#ifdef Q_OS_MAC
+		useNativeDialogs = settings.value("useNativeDialogs", false).toBool();
+#else
 		useNativeDialogs = settings.value("useNativeDialogs", true).toBool();
+#endif
 		confirmQuit = settings.value("confirmQuit", true).toBool();
 	}
 	settings.endGroup();

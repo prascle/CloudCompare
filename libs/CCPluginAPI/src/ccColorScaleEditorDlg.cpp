@@ -822,7 +822,12 @@ void ccColorScaleEditorDialog::exportCurrentScale()
 	QString currentPath = settings.value(ccPS::CurrentPath(), ccFileUtils::defaultDocPath()).toString();
 
 	//ask for a filename
+#ifdef Q_OS_MAC
+	QString filename = QFileDialog::getSaveFileName(this,"Select output file",currentPath,"*.xml",
+					                                nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	QString filename = QFileDialog::getSaveFileName(this,"Select output file",currentPath,"*.xml");
+#endif
 	if (filename.isEmpty())
 	{
 		//process cancelled by user
@@ -848,7 +853,12 @@ void ccColorScaleEditorDialog::importScale()
 	QString currentPath = settings.value(ccPS::CurrentPath(), ccFileUtils::defaultDocPath()).toString();
 
 	//ask for a filename
+#ifdef Q_OS_MAC
+	QString filename = QFileDialog::getOpenFileName(this,"Select color scale file",currentPath,"*.xml",
+					                                nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	QString filename = QFileDialog::getOpenFileName(this,"Select color scale file",currentPath,"*.xml");
+#endif
 	if (filename.isEmpty())
 	{
 		//process cancelled by user
