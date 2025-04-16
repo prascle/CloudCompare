@@ -324,7 +324,7 @@ class CCBundler:
                     self.config.frameworks_path,
                 )  # copy libs that are not in framework yet
                 added_to_framework_count = added_to_framework_count + 1
-        logger.info("libs added to Frameworks: %i", {added_to_framework_count})
+        logger.info("libs added to Frameworks: %i", added_to_framework_count)
 
         logger.info(" --- Python libs: set rpath to Frameworks, nb libs: %i", len(python_libs))
 
@@ -409,6 +409,10 @@ class CCBundler:
             if self.config.extra_pathlib not in abs_search_paths:
                 abs_search_paths.append(self.config.extra_pathlib)
 
+            fbxPath="/Applications/Autodesk/FBX SDK/2020.2.1/lib/clang/release"
+            if fbxPath not in abs_search_paths:
+                abs_search_paths.append(fbxPath)
+
             # TODO: check if exists, else throw and exception
             for dependency in lib_deps:
                 for abs_rp in abs_search_paths:
@@ -457,6 +461,7 @@ class CCBundler:
                 shutil.copy2(lib, self.config.frameworks_path)
                 nb_libs_added += 1
         logger.info("number of libs added to Frameworks: %i", {nb_libs_added})
+        shutil.copy2("/Applications/Autodesk/FBX SDK/2020.2.1/lib/clang/release/libfbxsdk.dylib",  self.config.frameworks_path)
 
         # --- ajout des rpath pour les libraries du framework : framework et ccPlugins
         logger.info(" --- Frameworks libs: add rpath to Frameworks")
