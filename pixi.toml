@@ -35,6 +35,7 @@ occt = ">=7.7.1,<7.8"       # Opencascade, >=7.8 needs cmake adjustements
 tbb = ">=2022.0.0,<2023"
 cgal = ">5.6,<6"
 llvm-openmp = ">=19.0,<22.0"
+libgfortran5 = "==14.2.0"   # solves duplicate LC_RPATH '@loader_path' with macos 15.4 https://github.com/prefix-dev/pixi/issues/3479
 
 [feature.build.tasks.configure]
 # Configures CMake
