@@ -138,6 +138,7 @@ qM3C2Dialog::qM3C2Dialog(ccPointCloud* cloud1, ccPointCloud* cloud2, ccMainAppIn
 			cpOtherCloudComboBox->addItem(GetEntityName(m_corePointsCloud), QVariant(m_corePointsCloud->getUniqueID()));
 			normOriCloudComboBox->addItem(GetEntityName(m_corePointsCloud), QVariant(m_corePointsCloud->getUniqueID()));
 		}
+	    updateNormalComboBox();
 	}
 
 	if (m_corePointsCloud)
