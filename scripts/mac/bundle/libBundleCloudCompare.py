@@ -460,7 +460,7 @@ class CCBundler:
             if (base not in libs_in_frameworks) and (lib not in libs_in_plugins):
                 shutil.copy2(lib, self.config.frameworks_path)
                 nb_libs_added += 1
-        logger.info("number of libs added to Frameworks: %i", {nb_libs_added})
+        logger.info("number of libs added to Frameworks: %i", nb_libs_added)
         shutil.copy2("/Applications/Autodesk/FBX SDK/2020.2.1/lib/clang/release/libfbxsdk.dylib",  self.config.frameworks_path)
 
         # --- ajout des rpath pour les libraries du framework : framework et ccPlugins
@@ -476,6 +476,13 @@ class CCBundler:
                     stdout=subprocess.PIPE,
                     check=False,
                 )
+                # --- add rpath to ccPlugins for .so files (Python pybind11)
+                if file.suffix in (".so"):
+                    subprocess.run(
+                        ["install_name_tool", "-add_rpath", "@loader_path/../Plugins/ccPlugins", str(file)],
+                        stdout=subprocess.PIPE,
+                        check=False,
+                    )
         logger.info("number of Frameworks libs with rpath modified: %i", nb_frameworks_libs)
         logger.info(" --- PlugIns libs: add rpath to Frameworks, number of libs: %i", len(libs_in_plugins))
         for file in libs_in_plugins:
