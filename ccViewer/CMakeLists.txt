@@ -119,8 +119,8 @@ if( APPLE )
 elseif( UNIX )
 	InstallPlugins(
 		TYPES "gl;io"
-		DEST_PATH "${CMAKE_INSTALL_LIBDIR}/cloudcompare/plugins"
-		SHADER_DEST_PATH share/cloudcompare/shaders
+		DEST_PATH "${CMAKE_INSTALL_PREFIX}/cloudComPy"
+		SHADER_DEST_PATH "${CMAKE_INSTALL_PREFIX}/cloudComPy/share/shaders"
 	)
 else()
 	InstallPlugins(

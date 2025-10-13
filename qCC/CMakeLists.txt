@@ -123,7 +123,7 @@ if( WIN32 OR APPLE )
 	endforeach()
 else( UNIX )
 	foreach( filename ${auxFiles} )
-		install_ext( FILES ${filename} share/cloudcompare "" )
+		install_ext( FILES ${filename} "${CMAKE_INSTALL_PREFIX}/cloudComPy/share" "" )
 	endforeach()
 endif()
 
@@ -149,12 +149,12 @@ if( APPLE )
 	install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/DrawNormals/DrawNormals.gs DESTINATION ${CLOUDCOMPARE_MAC_BASE_DIR}/Contents/Shaders/DrawNormals )
 	install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/DrawNormals/DrawNormals.fs DESTINATION ${CLOUDCOMPARE_MAC_BASE_DIR}/Contents/Shaders/DrawNormals )
 elseif( UNIX )
-	install( FILES ${CC_FBO_LIB_SOURCE_DIR}/shaders/Bilateral/bilateral.frag DESTINATION share/cloudcompare/shaders/Bilateral )
-	install( FILES ${CC_FBO_LIB_SOURCE_DIR}/shaders/Bilateral/bilateral.vert DESTINATION share/cloudcompare/shaders/Bilateral )
-	install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/ColorRamp/color_ramp.frag DESTINATION share/cloudcompare/shaders/ColorRamp )
-	install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/DrawNormals/DrawNormals.vs DESTINATION share/cloudcompare/shaders/DrawNormals )
-	install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/DrawNormals/DrawNormals.gs DESTINATION share/cloudcompare/shaders/DrawNormals )
-	install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/DrawNormals/DrawNormals.fs DESTINATION share/cloudcompare/shaders/DrawNormals )
+	install( FILES ${CC_FBO_LIB_SOURCE_DIR}/shaders/Bilateral/bilateral.frag DESTINATION cloudComPy/share/shaders/Bilateral )
+	install( FILES ${CC_FBO_LIB_SOURCE_DIR}/shaders/Bilateral/bilateral.vert DESTINATION cloudComPy/share/shaders/Bilateral )
+	install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/ColorRamp/color_ramp.frag DESTINATION cloudComPy/share/shaders/ColorRamp )
+	install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/DrawNormals/DrawNormals.vs DESTINATION cloudComPy/share/shaders/DrawNormals )
+	install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/DrawNormals/DrawNormals.gs DESTINATION cloudComPy/share/shaders/DrawNormals )
+	install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/DrawNormals/DrawNormals.fs DESTINATION cloudComPy/share/shaders/DrawNormals )
 
 else()
 	install_ext( FILES ${CC_FBO_LIB_SOURCE_DIR}/shaders/Bilateral/bilateral.frag ${CLOUDCOMPARE_DEST_FOLDER} /shaders/Bilateral )
@@ -173,8 +173,8 @@ if( APPLE )
 	)
 elseif( UNIX )
 	InstallPlugins(
-		DEST_PATH "${CMAKE_INSTALL_LIBDIR}/cloudcompare/plugins"
-		SHADER_DEST_PATH share/cloudcompare/shaders
+		DEST_PATH "${CMAKE_INSTALL_PREFIX}/cloudComPy"
+		SHADER_DEST_PATH "${CMAKE_INSTALL_PREFIX}/cloudComPy/share/shaders"
 	)
 else()
 	InstallPlugins(
