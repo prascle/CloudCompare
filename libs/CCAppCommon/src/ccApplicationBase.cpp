@@ -231,6 +231,14 @@ void ccApplicationBase::setupPaths(QString appPath)
 		m_shaderPath = (theDir.absolutePath() + "/share/cloudcompare/shaders");
 		m_translationPath = (theDir.absolutePath() + "/share/cloudcompare/translations");
 	}
+    else if ( theDir.dirName() == "cloudComPy" ) // PyPI
+    {
+        CCTRACE("cloudComPy PyPI: " << theDir.absolutePath().toStdString());
+		theDir.cdUp();
+        m_pluginPaths << (theDir.absolutePath() + "/cloudComPy");
+        m_shaderPath = (theDir.absolutePath() + "/cloudComPy/share/shaders");
+        m_translationPath = (theDir.absolutePath() + "/cloudComPy/share/translations");
+    }
 	else
 	{
 		// Choose a reasonable default to look in
