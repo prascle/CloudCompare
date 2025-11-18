@@ -173,7 +173,7 @@ if( APPLE )
 	)
 elseif( UNIX )
 	InstallPlugins(
-		DEST_PATH "${CMAKE_INSTALL_PREFIX}/cloudComPy"
+		DEST_PATH "${CMAKE_INSTALL_PREFIX}/cloudComPy/plugins/CC"
 		SHADER_DEST_PATH "${CMAKE_INSTALL_PREFIX}/cloudComPy/share/shaders"
 	)
 else()

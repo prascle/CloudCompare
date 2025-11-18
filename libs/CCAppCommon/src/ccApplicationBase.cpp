@@ -235,7 +235,7 @@ void ccApplicationBase::setupPaths(QString appPath)
     {
         CCTRACE("cloudComPy PyPI: " << theDir.absolutePath().toStdString());
 		theDir.cdUp();
-        m_pluginPaths << (theDir.absolutePath() + "/cloudComPy");
+        m_pluginPaths << (theDir.absolutePath() + "/cloudComPy/plugins/CC");
         m_shaderPath = (theDir.absolutePath() + "/cloudComPy/share/shaders");
         m_translationPath = (theDir.absolutePath() + "/cloudComPy/share/translations");
     }
