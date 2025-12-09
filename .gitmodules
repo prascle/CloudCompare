@@ -35,9 +35,7 @@
 	url = https://github.com/ColinDuquesnoy/QDarkStyleSheet
 [submodule "plugins/core/Standard/qVoxFall"]
 	path = plugins/core/Standard/qVoxFall
-	url = ../../farmakis/qVoxFall.git
+	url = git@github.com:prascle/qVoxFall.git
 [submodule "plugins/core/Standard/qG3Point"]
 	path = plugins/core/Standard/qG3Point
 	url = https://github.com/p-leroy/qG3Point
-[submodule "plugins/core/Standard/qVoxFall/"]
-	url = git@github.com:prascle/qVoxFall.git
