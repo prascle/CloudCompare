@@ -33,6 +33,7 @@ occt = ">=7.8,<7.9" # Opencascade
 tbb = ">=2022.2.0,<2023"
 cgal-cpp = ">=6.1,<7"
 libgdal-core = ">=3.12.0,<4"
+llvm-openmp = ">=19.0,<22.0"
 
 [feature.build.tasks.configure]
 # Configures CMake
@@ -43,6 +44,11 @@ cmd = [
 	# We want build in the .build directory
 	"-B.build",
 	"-DCMAKE_BUILD_TYPE=Release",
+	"-DCMAKE_C_FLAGS=-mmacosx-version-min=13.0",
+	"-DCMAKE_CXX_FLAGS=-mmacosx-version-min=13.0",
+	"-DCMAKE_LD_FLAGS=-mmacosx-version-min=13.0",
+	"-DCMAKE_C_FLAGS=-I$CONDA_PREFIX/include",       # for llvm-openmp detection
+	"-DCMAKE_CXX_FLAGS=-I$CONDA_PREFIX/include",     # for llvm-openmp detection
 	"-DCMAKE_INSTALL_PREFIX=.build/install",
 	"-DBUILD_SHARED_LIBS=OFF",
 	"-DCMAKE_PREFIX_PATH=$CONDA_PREFIX/lib",
@@ -58,6 +64,11 @@ cmd = [
 	"-DPLUGIN_STANDARD_QANIMATION=ON",
 	"-DQANIMATION_WITH_FFMPEG_SUPPORT=ON",
 	"-DPLUGIN_STANDARD_QBROOM=ON",
+	"-DPLUGIN_STANDARD_QCORK=ON",
+	"-DCORK_INCLUDE_DIR:PATH=$HOME/projets/CloudComPy/Cork/cork/src",
+	"-DCORK_RELEASE_LIBRARY_FILE:FILEPATH=$HOME/projets/CloudComPy/Cork/cork/lib/libcork.a",
+	"-DMPIR_INCLUDE_DIR=$CONDA_PREFIX/include",
+	"-DMPIR_RELEASE_LIBRARY_FILE=$CONDA_PREFIX/lib/libgmp.dylib",
 	"-DPLUGIN_STANDARD_QCSF=ON",
 	"-DPLUGIN_STANDARD_QCANUPO=ON",
 	"-DPLUGIN_STANDARD_QCLOUDLAYERS=ON",
@@ -66,9 +77,12 @@ cmd = [
 	"-DPLUGIN_STANDARD_QFACETS=ON",
 	"-DPLUGIN_STANDARD_QHPR=ON",
 	"-DPLUGIN_STANDARD_QHOUGH_NORMALS=ON",
+	"-DPLUGIN_STANDARD_QJSONRPC=ON",
 	"-DPLUGIN_STANDARD_QM3C2=ON",
 	"-DPLUGIN_STANDARD_QMPLANE=ON",
-	"-DPLUGIN_STANDARD_QMESH_BOOLEAN=OFF", # TODO: need libigl for osx-arm64
+	"-DPLUGIN_STANDARD_QMESH_BOOLEAN=OFF", 	#TODO: need libigl for osx-arm64
+	#"-DLIBIGL_INCLUDE_DIR:PATH=$HOME/projets/CloudComPy/libigl/libigl/include",
+	#"-DLIBIGL_RELEASE_LIBRARY_FILE:FILEPATH=$HOME/projets/CloudComPy/libigl/install/lib/libigl.a",
 	"-DPLUGIN_STANDARD_QPCL=ON",
 	"-DPLUGIN_STANDARD_QPCV=ON",
 	"-DPLUGIN_STANDARD_QPOISSON_RECON=ON",
@@ -79,10 +93,18 @@ cmd = [
 	#--IO PLUGINS--
 	"-DPLUGIN_IO_QADDITIONAL=ON",
 	"-DPLUGIN_IO_QCORE=ON",
-	"-DPLUGIN_IO_QDRACO=OFF", # TODO: improve compatibility
+	"-DPLUGIN_IO_QCSV_MATRIX=ON",
+	"-DPLUGIN_IO_QDRACO=ON", #TODO
+	"-DDRACO_INCLUDE_DIR=$CONDA_PREFIX/include",
+	"-DDRACO_LIB_DIR=$CONDA_PREFIX/lib",
+	"-DDRACO_LIBRARIES=$CONDA_PREFIX/lib/libdraco.a",
 	"-DPLUGIN_IO_QE57=ON",
 	"-DE57_RELEASE_LTO=OFF", # TODO: Needed else it won't find the AR/Ranlib binary
-	"-DPLUGIN_IO_QFBX=OFF", # Possible, but it needs a proprietary SDK
+	"-DPLUGIN_IO_QFBX=ON", 					# Possible, but it needs a proprietary SDK
+	"-DFBX_SDK_INCLUDE_DIR:PATH=/Applications/Autodesk/FBX SDK/2020.2.1/include",
+	"-DFBX_SDK_LIBRARY_DIR:PATH=/Applications/Autodesk/FBX SDK/2020.2.1/lib/clang/release",
+	"-DFBX_SDK_LIBRARY_FILE:FILEPATH=/Applications/Autodesk/FBX SDK/2020.2.1/lib/clang/release/libfbxsdk.dylib",
+	"-DPLUGIN_IO_QLAS=ON",
 	"-DPLUGIN_IO_QPHOTOSCAN=ON",
 	"-DQUAZIP_INSTALL=OFF",
 	"-DPLUGIN_IO_QRDB=OFF", # Needs a proprietary lib. The lib is not available for osx-arm64
@@ -100,13 +122,13 @@ outputs = [".build/CMakeFiles/"]
 
 [feature.build.tasks.build]
 cmd = ["cmake", "--build", ".build"]
-depends-on = ["configure"]
 inputs = ["CMakeLists.txt", "qCC/"]
 outputs = [".build/qCC/CloudCompare"]
+depends-on = ["configure"]
 
 [feature.build.tasks.install]
 cmd = ["cmake", "--install", ".build", "--config", "Release"]
-depends-on = ["configure"]
+depends-on = ["build"]
 
 #TODO: macos only
 # This will embed dependencies and fix rpath accordingly
@@ -119,7 +141,7 @@ cmd = [
 ]
 depends-on = ["install"]
 
-# Bundel signature
+# Bundle signature
 [feature.build.tasks.sign_bundle]
 cmd = [
 	"python",
@@ -127,7 +149,7 @@ cmd = [
 	".build/install",
 	"--embed_python",
 ]
-depends-on = ["install"]
+depends-on = ["bundle"]
 
 [environments]
 build = ["build"]

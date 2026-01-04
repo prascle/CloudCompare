@@ -123,6 +123,8 @@ class CCSignBundle:
                 "--timestamp",
                 "-i",
                 self.config.identifier,
+                "-o",
+                "runtime",
                 "--entitlements",
                 str(entitlements),
                 str(path),
@@ -149,6 +151,8 @@ class CCSignBundle:
         if self.config.embed_python:
             python_libs = set(filter(lambda p: p.is_relative_to(self.config.embedded_python_rootpath), all_libs))
             cc_app_libs = all_libs - python_libs
+        else:
+            cc_app_libs = all_libs
 
         logger.info("--- Total # lib in the bundle %i", len(all_libs))
 
