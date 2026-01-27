@@ -15,6 +15,12 @@ if ( OPTION_USE_SHAPE_LIB )
             QCC_IO_LIB
             Qt6::Test
     )
+	
+	if( NOT APPLE )
+		target_link_libraries( TestShpFilter
+		    "-static-libstdc++"
+		)
+	endif()
 
     if ( WIN32 )
         set_target_properties( TestShpFilter PROPERTIES

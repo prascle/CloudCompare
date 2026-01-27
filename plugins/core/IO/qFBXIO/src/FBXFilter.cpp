@@ -442,7 +442,7 @@ static bool SaveScene(FbxManager* pManager, FbxDocument* pScene, const char* pFi
 	return lStatus;
 }
 
-static QString s_defaultOutputFormat;
+static QString s_defaultOutputFormat = "FBX_ascii";
 
 void FBXFilter::SetDefaultOutputFormat(QString format)
 {

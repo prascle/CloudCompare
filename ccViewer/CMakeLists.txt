@@ -67,6 +67,12 @@ target_link_libraries( ${PROJECT_NAME}
     	CCAppCommon
 )
 
+if( NOT APPLE )
+	target_link_libraries( ${PROJECT_NAME}
+	    "-static-libstdc++"
+	)
+endif()
+
 # Add custom preprocessor definitions
 target_compile_definitions( ${PROJECT_NAME} PUBLIC CC_VIEWER )
 
@@ -123,8 +129,8 @@ if( APPLE )
 elseif( UNIX )
 	InstallPlugins(
 		TYPES "gl;io"
-		DEST_PATH "${CMAKE_INSTALL_LIBDIR}/cloudcompare/plugins"
-		SHADER_DEST_PATH share/cloudcompare/shaders
+		DEST_PATH "${CMAKE_INSTALL_PREFIX}/cloudComPy/plugins/CC"
+		SHADER_DEST_PATH "${CMAKE_INSTALL_PREFIX}/cloudComPy/share/shaders"
 	)
 else()
 	InstallPlugins(

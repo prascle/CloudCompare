@@ -36,7 +36,6 @@ target_sources( ${PROJECT_NAME}
 	    ${CMAKE_CURRENT_LIST_DIR}/ccIndexedTransformation.cpp
 	    ${CMAKE_CURRENT_LIST_DIR}/ccIndexedTransformationBuffer.cpp
 	    ${CMAKE_CURRENT_LIST_DIR}/ccKdTree.cpp
-	    ${CMAKE_CURRENT_LIST_DIR}/ccLog.cpp
 	    ${CMAKE_CURRENT_LIST_DIR}/ccMaterial.cpp
 	    ${CMAKE_CURRENT_LIST_DIR}/ccMaterialSet.cpp
 	    ${CMAKE_CURRENT_LIST_DIR}/ccMesh.cpp
@@ -66,3 +65,15 @@ target_sources( ${PROJECT_NAME}
 	    ${CMAKE_CURRENT_LIST_DIR}/ccViewportParameters.cpp
 	    ${CMAKE_CURRENT_LIST_DIR}/ccWaveform.cpp
 )
+
+if( LINUX )
+	target_sources( ${PROJECT_NAME}
+		PUBLIC
+			${CMAKE_CURRENT_LIST_DIR}/ccLog.cpp
+	)
+else()
+	target_sources( ${PROJECT_NAME}
+		PRIVATE
+			${CMAKE_CURRENT_LIST_DIR}/ccLog.cpp
+	)
+endif()
