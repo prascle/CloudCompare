@@ -10,11 +10,23 @@ function( copy_files )	# 2 (or 3) arguments:
 						#         1 for both release and debug install (if available)
 						#         2 for debug only install (if available)
 
-	if ( WIN32 AND ${ARGC} LESS_EQUAL 2)
+	if( NOT INSTALL_PREREQUISITE_LIBRARIES )
+		message( STATUS "Files: ${ARGV0} will NOT be installed in ${ARGV1}")
+		return()
+	endif()
+	
+    if ( WIN32 AND ${ARGC} LESS_EQUAL 2)
 		message(WARNING "For Windows configurations, it's better to specify whether the file should be copied for both release only (0), release and debug (1) or debug only (2)")
 	endif()
 
-	if ( ${ARGC} LESS_EQUAL 2 OR NOT ${ARGV2} EQUAL 2)
+	message(STATUS "Files: ${ARGV0} will be installed in ${ARGV1}" )
+
+	if( APPLE )
+		install( FILES ${ARGV0} DESTINATION ${ARGV1} )
+		return()
+	endif()
+
+    if ( ${ARGC} LESS_EQUAL 2 OR NOT ${ARGV2} EQUAL 2)
 
 		message(STATUS "Files: ${ARGV0} will be installed in ${ARGV1}" )
 		

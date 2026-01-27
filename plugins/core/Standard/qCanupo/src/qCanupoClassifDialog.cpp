@@ -223,7 +223,12 @@ void qCanupoClassifDialog::browseMscFile()
 	settings.beginGroup("Classif");
 	QString currentPath = settings.value("MscCurrentPath", mscFileLineEdit->text()).toString();
 
+#ifdef Q_OS_MAC
+	QString filename = QFileDialog::getOpenFileName(this, "Load MSC file", currentPath, "*.msc",
+													nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	QString filename = QFileDialog::getOpenFileName(this, "Load MSC file", currentPath, "*.msc");
+#endif
 	if (filename.isEmpty())
 		return;
 
@@ -241,7 +246,12 @@ void qCanupoClassifDialog::browseClassifierFile()
 	settings.beginGroup("Classif");
 	QString currentPath = settings.value("CurrentPath", classifFileLineEdit->text()).toString();
 
+#ifdef Q_OS_MAC
+	filename = QFileDialog::getOpenFileName(this, "Load classifier file", currentPath, "*.prm",
+											nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	filename = QFileDialog::getOpenFileName(this, "Load classifier file", currentPath, "*.prm");
+#endif
 	if (filename.isEmpty())
 		return;
 

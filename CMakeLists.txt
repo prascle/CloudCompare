@@ -29,14 +29,22 @@ endif()
 # Default debug suffix for libraries.
 set( CMAKE_DEBUG_POSTFIX "d" )
 
+# Install prerequisite libraries
+if ( APPLE )
+option( INSTALL_PREREQUISITE_LIBRARIES "install the external prerequisite libraries (standalone install)" OFF)
+else()
+option( INSTALL_PREREQUISITE_LIBRARIES "install the external prerequisite libraries (standalone install)" ON)
+endif()
+message( STATUS "INSTALL_PREREQUISITE_LIBRARIES: ${INSTALL_PREREQUISITE_LIBRARIES}" )
+
 # Define target folders
 # (now that ccViewer can have its own plugins, qCC and ccViewer must fall in separate folders!
 if(WIN32 OR APPLE)
 	set( CLOUDCOMPARE_DEST_FOLDER CloudCompare )
 	set( CCVIEWER_DEST_FOLDER ccViewer )
 else()
-	set( CLOUDCOMPARE_DEST_FOLDER bin )
-	set( CCVIEWER_DEST_FOLDER bin )
+	set( CLOUDCOMPARE_DEST_FOLDER "${CMAKE_INSTALL_PREFIX}/cloudComPy" )
+	set( CCVIEWER_DEST_FOLDER "${CMAKE_INSTALL_PREFIX}/cloudComPy" )
 endif()
 
 if( WIN32 )
@@ -49,9 +57,9 @@ elseif( UNIX AND NOT APPLE )
 	# RPATH Linux/Unix: (dynamic) libs are put in $prefix/$lib/cloudcompare,
 	# since they are only used by qCC/ccViewer
 	include( GNUInstallDirs )
-	set( LINUX_INSTALL_SHARED_DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}/cloudcompare" )
+	set( LINUX_INSTALL_SHARED_DESTINATION "${CMAKE_INSTALL_PREFIX}/cloudComPy" )
 	set( CMAKE_INSTALL_RPATH ${LINUX_INSTALL_SHARED_DESTINATION} )
-	set( INSTALL_DESTINATIONS ${CMAKE_INSTALL_PREFIX})
+	set( INSTALL_DESTINATIONS "${CMAKE_INSTALL_PREFIX}/cloudComPy" )
 endif()
 
 # Load advanced scripts

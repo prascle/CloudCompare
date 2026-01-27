@@ -183,10 +183,14 @@ static QFileDialog::Options CCFileDialogOptions()
 	// dialog options
 	QFileDialog::Options dialogOptions = QFileDialog::Options();
 	dialogOptions |= QFileDialog::DontResolveSymlinks;
+#ifdef Q_OS_MAC
+	dialogOptions |= QFileDialog::DontUseNativeDialog;
+#else
 	if (!ccOptions::Instance().useNativeDialogs)
 	{
 		dialogOptions |= QFileDialog::DontUseNativeDialog;
 	}
+#endif
 	return dialogOptions;
 }
 

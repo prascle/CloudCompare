@@ -18,6 +18,8 @@
 #ifndef CC_POINT_DESCRIPTOR_HEADER
 #define CC_POINT_DESCRIPTOR_HEADER
 
+#include "qCanupoExport.h"
+
 //Qt
 #include <QByteArray>
 #include <QString>
@@ -102,7 +104,7 @@ struct CorePointDesc
 class ccPointCloud;
 
 //! Set of (core) point descriptors
-class CorePointDescSet : public std::vector<CorePointDesc>
+class QCANUPO_PLUGIN_LIB_API CorePointDescSet : public std::vector<CorePointDesc>
 {
 public:
 

@@ -43,8 +43,8 @@ void ProfileImportDlg::browseFile()
 
 	//open file loading dialog
 	QString filename = QFileDialog::getOpenFileName(nullptr,"Select profile file",getFilename(),filter
-#if defined( Q_OS_WIN ) && defined( _DEBUG )
-																,0,QFileDialog::DontUseNativeDialog
+#if defined ( Q_OS_MAC ) || (defined( Q_OS_WIN ) && defined( _DEBUG ))
+													,nullptr, QFileDialog::DontUseNativeDialog
 #endif
 		
 		);

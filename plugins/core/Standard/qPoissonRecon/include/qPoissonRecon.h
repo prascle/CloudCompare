@@ -18,6 +18,8 @@
 #ifndef Q_POISSON_RECON_PLUGIN_HEADER
 #define Q_POISSON_RECON_PLUGIN_HEADER
 
+#include <qPoissonReconExport.h>
+
 #include "ccStdPluginInterface.h"
 
 //! Wrapper to the "Poisson Surface Reconstruction (Version 9)" algorithm
@@ -25,7 +27,7 @@
 	Symposium on Geometry Processing (June 2006), pages 61--70
 	http://www.cs.jhu.edu/~misha/Code/PoissonRecon/
 **/
-class qPoissonRecon : public QObject, public ccStdPluginInterface
+class QPOISSON_RECON_PLUGIN_LIB_API qPoissonRecon : public QObject, public ccStdPluginInterface
 {
 	Q_OBJECT
 	Q_INTERFACES( ccPluginInterface ccStdPluginInterface )

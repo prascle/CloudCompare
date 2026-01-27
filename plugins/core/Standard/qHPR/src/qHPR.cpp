@@ -17,6 +17,7 @@
 
 #include "qHPR.h"
 #include "ccHprDlg.h"
+#include "optdefineshpr.h"
 
 //Qt
 #include <QtGui>
@@ -38,7 +39,11 @@
 //Qhull
 extern "C"
 {
-#include <qhull_a.h>
+#ifdef USE_EXTERNAL_QHULL_FOR_QHPR
+    #include <qhull/qhull_a.h>
+#else
+    #include <qhull_a.h>
+#endif
 }
 
 qHPR::qHPR(QObject* parent)
