@@ -17,13 +17,15 @@
 //#                                                                        #
 //##########################################################################
 
+
+#include "qSRAExport.h"
 #include "ccStdPluginInterface.h"
 
 class ccPointCloud;
 class ccPolyline;
 
 //! Surface of Revolution Analysis plugin
-class qSRA : public QObject, public ccStdPluginInterface
+class QSRA_PLUGIN_LIB_API qSRA : public QObject, public ccStdPluginInterface
 {
 	Q_OBJECT
 	Q_INTERFACES( ccPluginInterface ccStdPluginInterface )
@@ -52,7 +54,7 @@ protected:
 	//! Projects the cloud distances into a 2D grid
 	void projectCloudDistsInGrid() const;
 
-protected:
+public:
 
 	//! Projects the cloud distances into a 2D grid (needs the revolution profile)
 	void doProjectCloudDistsInGrid(ccPointCloud* cloud, ccPolyline* polyline) const;
@@ -60,6 +62,7 @@ protected:
 	//! Computes cloud-to-profile radial distances
 	bool doComputeRadialDists(ccPointCloud* cloud, ccPolyline* polyline) const;
 
+protected:
 	//! Associated action
 	QAction* m_doLoadProfile;
 	//! Associated action

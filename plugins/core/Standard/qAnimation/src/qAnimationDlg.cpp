@@ -925,6 +925,21 @@ void qAnimationDlg::onCodecChanged(int index)
 
 void qAnimationDlg::onBrowseButtonClicked()
 {
+#ifdef Q_OS_MAC
+#ifdef QFFMPEG_SUPPORT
+	QString filename = QFileDialog::getSaveFileName(this,
+													tr("Output animation file"),
+													outputFileLineEdit->text(),
+													QString(),
+													nullptr,
+													QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
+	QString filename = QFileDialog::getExistingDirectory(this,
+														tr("Open Directory"),
+														outputFileLineEdit->text(),
+														QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks | QFileDialog::DontUseNativeDialog );
+#endif
+#else // Q_OS_MAC
 #ifdef QFFMPEG_SUPPORT
 	QString filename = QFileDialog::getSaveFileName(	this,
 														tr("Output animation file"),
@@ -935,6 +950,7 @@ void qAnimationDlg::onBrowseButtonClicked()
 															outputFileLineEdit->text(),
 															QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
 #endif
+#endif // Q_OS_MAC
 
 	if (filename.isEmpty())
 	{

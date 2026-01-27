@@ -23,6 +23,7 @@ qPDALIO::qPDALIO(QObject* parent)
     : QObject(parent)
     , ccIOPluginInterface(":/CC/plugin/qPDALIO/info.json")
 {
+    ccLogTrace::settrace();
 }
 
 void qPDALIO::registerCommands(ccCommandLineInterface* cmd)
