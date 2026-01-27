@@ -57,6 +57,8 @@
 #include <vld.h>
 #endif
 
+#include "ccLog.h"
+
 static bool IsCommandLine(int argc, char **argv)
 {
 #ifdef Q_OS_MAC
@@ -93,6 +95,8 @@ int main(int argc, char **argv)
 		}
 	}
 #endif
+
+	ccLogTrace::settrace(); // activate the terminal trace following the environment variable _CCTRACE_ ("ON" or "OFF")
 
     bool commandLine = IsCommandLine(argc, argv);
 

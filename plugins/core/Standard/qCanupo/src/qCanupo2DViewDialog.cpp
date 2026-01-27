@@ -397,7 +397,12 @@ void qCanupo2DViewDialog::saveClassifier()
 	settings.beginGroup("Classif");
 	QString currentPath = settings.value("MscCurrentPath",QApplication::applicationDirPath()).toString();
 
+#ifdef Q_OS_MAC
+	QString filename = QFileDialog::getSaveFileName(this,"Save Classifier",currentPath,"*.prm",
+													nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	QString filename = QFileDialog::getSaveFileName(this,"Save Classifier",currentPath,"*.prm");
+#endif
 	if (filename.isEmpty())
 		return;
 

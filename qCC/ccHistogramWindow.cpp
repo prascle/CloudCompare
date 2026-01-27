@@ -1033,7 +1033,7 @@ bool ccHistogramWindowDlg::exportToCSV(QString filename) const
 	stream.setRealNumberNotation(QTextStream::FixedNotation);
 
 	//header
-	stream << "Class; Value; Class start; Class end;" << endl;
+	stream << "Class; Value; Class start; Class end;" << Qt::endl;
 
 	//data
 	{
@@ -1051,7 +1051,7 @@ bool ccHistogramWindowDlg::exportToCSV(QString filename) const
 			stream << s_csvSep;
 			stream << minVal + step;	//max value
 			stream << s_csvSep;
-			stream << endl;
+			stream << Qt::endl;
 		}
 	}
 
@@ -1078,7 +1078,12 @@ void ccHistogramWindowDlg::onExportToCSV()
 	currentPath += QString("/") + m_win->windowTitle() + ".csv";
 
 	//ask for a filename
+#ifdef Q_OS_MAC
+	QString filename = QFileDialog::getSaveFileName(this, "Select output file", currentPath, "*.csv",
+				  	  	  	  	  	  	  	  	  	nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	QString filename = QFileDialog::getSaveFileName(this, "Select output file", currentPath, "*.csv");
+#endif
 	if (filename.isEmpty())
 	{
 		//process cancelled by user

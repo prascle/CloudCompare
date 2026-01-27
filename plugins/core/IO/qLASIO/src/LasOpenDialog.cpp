@@ -439,7 +439,12 @@ LasTilingOptions LasOpenDialog::tilingOptions() const
 
 void LasOpenDialog::onBrowseTilingOutputDir()
 {
+#ifdef Q_OS_MAC
+	const QString outputDir = QFileDialog::getExistingDirectory(this, "Select output directory for tiles",
+																QString(), QFileDialog::ShowDirsOnly | QFileDialog::DontUseNativeDialog);
+#else
 	const QString outputDir = QFileDialog::getExistingDirectory(this, "Select output directory for tiles");
+#endif
 	if (outputDir.isEmpty())
 	{
 		return;

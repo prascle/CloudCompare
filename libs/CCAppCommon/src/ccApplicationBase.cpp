@@ -88,14 +88,14 @@ void ccApplicationBase::InitOpenGL()
 	QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 }
 
-ccApplicationBase::ccApplicationBase(int& argc, char** argv, bool isCommandLine, const QString& version)
+ccApplicationBase::ccApplicationBase(int& argc, char** argv, bool isCommandLine, const QString& version, QString appPath)
 	: QApplication(argc, argv)
 	, m_versionStr(version)
 	, m_isCommandLine(isCommandLine)
 {
 	setOrganizationName("CCCorp");
 
-	setupPaths();
+	setupPaths(appPath);
 
 #ifdef Q_OS_MAC
 	// Mac OS X apps don't show icons in menus
@@ -180,10 +180,16 @@ QString ccApplicationBase::versionLongStr(bool includeOS) const
 	return verStr;
 }
 
-void ccApplicationBase::setupPaths()
+void ccApplicationBase::setupPaths(QString appPath)
 {
 	QDir appDir = QCoreApplication::applicationDirPath();
-
+	if (!appPath.isEmpty())
+	{
+		appDir = appPath;
+	}
+	ccLog::Print(tr("applicationDirPath: %1").arg(appDir.absolutePath()));
+	QString appliPath=QCoreApplication::applicationFilePath();
+	ccLog::Print(tr("applicationFilePath: %1").arg(appliPath));
 	// Set up our shader and plugin paths
 #if defined(Q_OS_MAC)
 	QDir bundleDir = appDir;
@@ -225,6 +231,14 @@ void ccApplicationBase::setupPaths()
 		m_shaderPath = (theDir.absolutePath() + "/share/cloudcompare/shaders");
 		m_translationPath = (theDir.absolutePath() + "/share/cloudcompare/translations");
 	}
+    else if ( theDir.dirName() == "cloudComPy" ) // PyPI
+    {
+        CCTRACE("cloudComPy PyPI: " << theDir.absolutePath().toStdString());
+		theDir.cdUp();
+        m_pluginPaths << (theDir.absolutePath() + "/cloudComPy/plugins/CC");
+        m_shaderPath = (theDir.absolutePath() + "/cloudComPy/share/shaders");
+        m_translationPath = (theDir.absolutePath() + "/cloudComPy/share/translations");
+    }
 	else
 	{
 		// Choose a reasonable default to look in

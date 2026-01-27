@@ -423,11 +423,19 @@ void ccPointListPickingDlg::exportToASCII(ExportFormat format)
 	QString filename = settings.value("filename", "picking_list.txt").toString();
 	settings.endGroup();
 
+#ifdef Q_OS_MAC
+	filename = QFileDialog::getSaveFileName(this,
+	                                        "Export to ASCII",
+	                                        filename,
+	                                        AsciiFilter::GetFileFilter(),
+  	  	  	  								nullptr,
+											QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	filename = QFileDialog::getSaveFileName(this,
 	                                        "Export to ASCII",
 	                                        filename,
 	                                        AsciiFilter::GetFileFilter());
-
+#endif
 	if (filename.isEmpty())
 		return;
 
@@ -495,7 +503,7 @@ void ccPointListPickingDlg::exportToASCII(ExportFormat format)
 
 		stream	<< static_cast<double>(P.x) / scale - shift.x << ','
 				<< static_cast<double>(P.y) / scale - shift.y << ','
-				<< static_cast<double>(P.z) / scale - shift.z << endl;
+				<< static_cast<double>(P.z) / scale - shift.z << Qt::endl;
 	}
 
 	ccLog::Print(QString("[I/O] File '%1' saved successfully").arg(filename));

@@ -111,12 +111,20 @@ QString ImageFileFilter::GetSaveFilename(const QString& dialogTitle, const QStri
 		}
 	}
 
+#ifdef Q_OS_MAC
+	QString outputFilename = QFileDialog::getSaveFileName(	parentWidget,
+															dialogTitle,
+															imageSavePath + QString("/%1.%2").arg(baseName, pngFilter.isEmpty() ? QString(formats[0].data()) : QString("png")),
+															filters,
+															pngFilter.isEmpty() ? nullptr : &pngFilter,
+															QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	QString outputFilename = QFileDialog::getSaveFileName(	parentWidget,
 															dialogTitle,
 															imageSavePath + QString("/%1.%2").arg(baseName, pngFilter.isEmpty() ? QString(formats[0].data()) : QString("png")),
 															filters,
 															pngFilter.isEmpty() ? nullptr : &pngFilter);
-
+#endif
 	return outputFilename;
 }
 
@@ -132,10 +140,19 @@ QString ImageFileFilter::GetLoadFilename(const QString& dialogTitle, const QStri
 	//we convert this list into a proper "filters" string
 	QString imageFilter = QString("Image (%1)").arg(imageExts.join(" "));
 
+#ifdef Q_OS_MAC
+	return QFileDialog::getOpenFileName(	parentWidget,
+											dialogTitle,
+											imageLoadPath,
+											imageFilter,
+											nullptr,
+											QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	return QFileDialog::getOpenFileName(	parentWidget,
 											dialogTitle,
 											imageLoadPath,
 											imageFilter);
+#endif
 }
 
 bool ImageFileFilter::canSave(CC_CLASS_ENUM type, bool& multiple, bool& exclusive) const

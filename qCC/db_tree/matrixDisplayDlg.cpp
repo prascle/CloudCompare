@@ -121,7 +121,12 @@ void MatrixDisplayDlg::exportToASCII()
 	settings.beginGroup(ccPS::LoadFile()); //use the same folder as the load one
 	QString currentPath = settings.value(ccPS::CurrentPath(), ccFileUtils::defaultDocPath()).toString();
 
+#ifdef Q_OS_MAC
+	QString outputFilename = QFileDialog::getSaveFileName(this, "Select output file", currentPath, "*.mat.txt",
+  	  	  	  	  										  nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	QString outputFilename = QFileDialog::getSaveFileName(this, "Select output file", currentPath, "*.mat.txt");
+#endif
 	if (outputFilename.isEmpty())
 		return;
 

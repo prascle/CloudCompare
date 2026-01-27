@@ -550,7 +550,7 @@ void DistanceMapGenerationDlg::updateZoom(ccBBox& box)
 
 			if (sfDisplayed)
 			{
-				scaleWidth = m_window->getDisplayParameters().colorScaleRampWidth + fm.width("123.456789");
+				scaleWidth = m_window->getDisplayParameters().colorScaleRampWidth + fm.horizontalAdvance("123.456789");
 				scaleWidth += scaleWidth / 10; // add 10% of margin
 			}
 			if (yLabelDisplayed)
@@ -562,7 +562,7 @@ void DistanceMapGenerationDlg::updateZoom(ccBBox& box)
 					QString label = m_yLabels->getLabel(i);
 					if (!label.isNull())
 					{
-						int width = fm.width(label);
+						int width = fm.horizontalAdvance(label);
 						maxWidth = std::max(maxWidth, width);
 					}
 				}
@@ -1304,7 +1304,12 @@ void DistanceMapGenerationDlg::exportMapAsGrid()
 	QString filter("Grid file (*.csv)");
 
 	//open file saving dialog
+#ifdef Q_OS_MAC
+	QString filename = QFileDialog::getSaveFileName(nullptr, "Select output file", path, filter,
+													nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	QString filename = QFileDialog::getSaveFileName(nullptr, "Select output file", path, filter);
+#endif
 	if (filename.isEmpty())
 		return;
 
@@ -1463,7 +1468,12 @@ void DistanceMapGenerationDlg::loadOverlaySymbols()
 	QString filter("Symbols (*.txt)");
 
 	//open file loading dialog
+#ifdef Q_OS_MAC
+	QString filename = QFileDialog::getOpenFileName(nullptr, "Select symbols file", path, filter,
+													nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	QString filename = QFileDialog::getOpenFileName(nullptr, "Select symbols file", path, filter);
+#endif
 	if (filename.isEmpty())
 		return;
 
@@ -1497,7 +1507,7 @@ void DistanceMapGenerationDlg::loadOverlaySymbols()
 		bool error = false;
 		while (!currentLine.isNull())
 		{
-			QStringList tokens = currentLine.simplified().split(QChar(' '), QString::SkipEmptyParts);
+			QStringList tokens = currentLine.simplified().split(QChar(' '), Qt::SkipEmptyParts);
 			if (tokens.size() == 4)
 			{
 				bool okX = false;

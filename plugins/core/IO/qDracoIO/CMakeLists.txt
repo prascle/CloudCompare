@@ -10,7 +10,13 @@ if( PLUGIN_IO_QDRACO )
 	if( MSVC )
 
 		target_include_directories( ${PROJECT_NAME} PRIVATE ${DRACO_INCLUDE_DIRS} )
-		target_link_libraries( ${PROJECT_NAME} ${Draco_DIR}/../../lib/${DRACO_LIBRARIES}.lib )
+
+		if ( USE_CONDA_PACKAGES )
+			target_link_libraries( ${PROJECT_NAME} ${DRACO_LIBRARIES} )
+		else()
+			target_link_libraries( ${PROJECT_NAME} ${DRACO_LIBRARIES} )
+			#target_link_libraries( ${PROJECT_NAME} ${Draco_DIR}/../../lib/${DRACO_LIBRARIES}.lib )
+		endif()
 
 	elseif( UNIX )
 
@@ -32,6 +38,9 @@ if( PLUGIN_IO_QDRACO )
 		target_link_libraries( ${PROJECT_NAME} ${DRACO_LIBRARIES} )
 
 	endif()
+    message("link ${PROJECT_NAME} with ${DRACO_LIBRARIES}")
+
+	message (STATUS "DRACO_INCLUDE_DIR ${DRACO_INCLUDE_DIR}")
 
 	add_subdirectory( include )
 	add_subdirectory( src )

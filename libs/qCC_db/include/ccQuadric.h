@@ -31,7 +31,7 @@ public:
 	//! Default drawing precision
 	/** \warning Never pass a 'constant initializer' by reference
 	**/
-	static const unsigned DEFAULT_DRAWING_PRECISION = 24;
+	static const unsigned DEFAULT_DRAWING_PRECISION;
 
 	//! Default constructor
 	/** Quadric orthogonal dimension is 'Z' by default

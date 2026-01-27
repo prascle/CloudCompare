@@ -145,8 +145,8 @@ CC_FILE_ERROR ObjFilter::saveToFile(ccHObject* entity, const QString& filename, 
 	stream.setRealNumberNotation(QTextStream::FixedNotation);
 	stream.setRealNumberPrecision(sizeof(PointCoordinateType) == 4 && !vertices->isShifted() ? 8 : 12);
 
-	stream << "# " << FileIO::createdBy() << endl;
-	stream << "# " << FileIO::createdDateTime() << endl;
+	stream << "# " << FileIO::createdBy() << Qt::endl;
+	stream << "# " << FileIO::createdDateTime() << Qt::endl;
 	
 	if (file.error() != QFile::NoError)
 	{
@@ -157,7 +157,7 @@ CC_FILE_ERROR ObjFilter::saveToFile(ccHObject* entity, const QString& filename, 
 	{
 		const CCVector3* P = vertices->getPoint(i);
 		CCVector3d Pglobal = vertices->toGlobal3d<PointCoordinateType>(*P);
-		stream << "v " << Pglobal.x << " " << Pglobal.y << " " << Pglobal.z << endl;
+		stream << "v " << Pglobal.x << " " << Pglobal.y << " " << Pglobal.z << Qt::endl;
 		if (file.error() != QFile::NoError)
 			return CC_FERR_WRITING;
 		if (pDlg && !nprogress.oneStep()) //update progress bar, check cancel requested
@@ -189,7 +189,7 @@ CC_FILE_ERROR ObjFilter::saveToFile(ccHObject* entity, const QString& filename, 
 				for (unsigned i = 0; i < numTriangleNormals; ++i)
 				{
 					const CCVector3& normalVec = ccNormalVectors::GetNormal(normsTable->getValue(i));
-					stream << "vn " << normalVec.x << " " << normalVec.y << " " << normalVec.z << endl;
+					stream << "vn " << normalVec.x << " " << normalVec.y << " " << normalVec.z << Qt::endl;
 					if (file.error() != QFile::NoError)
 					{
 						return CC_FERR_WRITING;
@@ -223,7 +223,7 @@ CC_FILE_ERROR ObjFilter::saveToFile(ccHObject* entity, const QString& filename, 
 			for (unsigned i = 0; i < nbPoints; ++i)
 			{
 				const CCVector3& normalVec = vertices->getPointNormal(i);
-				stream << "vn " << normalVec.x << " " << normalVec.y << " " << normalVec.z << endl;
+				stream << "vn " << normalVec.x << " " << normalVec.y << " " << normalVec.z << Qt::endl;
 				if (file.error() != QFile::NoError)
 				{
 					return CC_FERR_WRITING;
@@ -258,7 +258,7 @@ CC_FILE_ERROR ObjFilter::saveToFile(ccHObject* entity, const QString& filename, 
 			QString baseName = QFileInfo(filename).baseName();
 			if (materials->saveAsMTL(QFileInfo(filename).absolutePath(), baseName, errors))
 			{
-				stream << "mtllib " << baseName << ".mtl" << endl;
+				stream << "mtllib " << baseName << ".mtl" << Qt::endl;
 				if (file.error() != QFile::NoError)
 				{
 					return CC_FERR_WRITING;
@@ -352,7 +352,7 @@ CC_FILE_ERROR ObjFilter::saveToFile(ccHObject* entity, const QString& filename, 
 		{
 			ccGenericMesh* st = static_cast<ccGenericMesh*>(*it);
 
-			stream << "g " << (st->getName().isNull() ? "mesh" : st->getName()) << endl;
+			stream << "g " << (st->getName().isNull() ? "mesh" : st->getName()) << Qt::endl;
 			if (file.error() != QFile::NoError)
 			{
 				return CC_FERR_WRITING;
@@ -376,11 +376,11 @@ CC_FILE_ERROR ObjFilter::saveToFile(ccHObject* entity, const QString& filename, 
 						if (mtlIndex >= 0 && mtlIndex < static_cast<int>(materials->size()))
 						{
 							ccMaterial::CShared mat = materials->at(mtlIndex);
-							stream << "usemtl " << mat->getName() << endl;
+							stream << "usemtl " << mat->getName() << Qt::endl;
 						}
 						else
 						{
-							stream << "usemtl " << endl;
+							stream << "usemtl " << Qt::endl;
 						}
 						if (file.error() != QFile::NoError)
 						{
@@ -652,7 +652,7 @@ CC_FILE_ERROR ObjFilter::loadFile(const QString& filename, ccHObject& container,
 				}
 			}
 
-			const QStringList tokens = currentLine.simplified().split(QChar(' '), QString::SkipEmptyParts );
+			const QStringList tokens = currentLine.simplified().split(QChar(' '), Qt::SkipEmptyParts );
 
 			//skip comments & empty lines
 			if (tokens.empty() || tokens.front().startsWith('/', Qt::CaseInsensitive) || tokens.front().startsWith('#', Qt::CaseInsensitive))

@@ -131,7 +131,7 @@ CC_FILE_ERROR BundlerFilter::loadFileExtended(	const QString& filename,
 
 	//second header line (should be <num_cameras> <num_points>)
 	currentLine = stream.readLine();
-	QStringList list = currentLine.simplified().split(QChar(' '),QString::SkipEmptyParts);
+	QStringList list = currentLine.simplified().split(QChar(' '),Qt::SkipEmptyParts);
 	if (list.size() != 2)
 	{
 		ccLog::Error("[Bundler] Second line should be <num_cameras> <num_points>!");
@@ -245,7 +245,7 @@ CC_FILE_ERROR BundlerFilter::loadFileExtended(	const QString& filename,
 				return CC_FERR_READING;
 			if (importImages)
 			{
-				QStringList tokens = currentLine.simplified().split(QChar(' '), QString::SkipEmptyParts);
+				QStringList tokens = currentLine.simplified().split(QChar(' '), Qt::SkipEmptyParts);
 				if (tokens.size() < 3)
 					return CC_FERR_MALFORMED_FILE;
 				bool ok[3] = { true, true, true };
@@ -265,7 +265,7 @@ CC_FILE_ERROR BundlerFilter::loadFileExtended(	const QString& filename,
 					return CC_FERR_READING;
 				if (importImages)
 				{
-					QStringList tokens = currentLine.simplified().split(QChar(' '), QString::SkipEmptyParts);
+					QStringList tokens = currentLine.simplified().split(QChar(' '), Qt::SkipEmptyParts);
 					if (tokens.size() < 3)
 						return CC_FERR_MALFORMED_FILE;
 					bool ok[3] = { true, true, true };
@@ -289,7 +289,7 @@ CC_FILE_ERROR BundlerFilter::loadFileExtended(	const QString& filename,
 				return CC_FERR_READING;
 			if (importImages)
 			{
-				QStringList tokens = currentLine.simplified().split(QChar(' '), QString::SkipEmptyParts);
+				QStringList tokens = currentLine.simplified().split(QChar(' '), Qt::SkipEmptyParts);
 				if (tokens.size() < 3)
 					return CC_FERR_MALFORMED_FILE;
 				bool ok[3] = { true, true, true };
@@ -357,7 +357,7 @@ CC_FILE_ERROR BundlerFilter::loadFileExtended(	const QString& filename,
 				//read point coordinates (as strings)
 				CCVector3d Pd(0, 0, 0);
 				{
-					QStringList tokens = currentLine.simplified().split(QChar(' '), QString::SkipEmptyParts);
+					QStringList tokens = currentLine.simplified().split(QChar(' '), Qt::SkipEmptyParts);
 					if (tokens.size() < 3)
 					{
 						delete keypointsCloud;
@@ -405,12 +405,12 @@ CC_FILE_ERROR BundlerFilter::loadFileExtended(	const QString& filename,
 					delete keypointsCloud;
 					return CC_FERR_READING;
 				}
-				QStringList colorParts = currentLine.split(" ", QString::SkipEmptyParts);
+				QStringList colorParts = currentLine.split(" ", Qt::SkipEmptyParts);
 				if (colorParts.size() == 3)
 				{
 					if (hasColors)
 					{
-						QStringList tokens = currentLine.simplified().split(QChar(' '), QString::SkipEmptyParts);
+						QStringList tokens = currentLine.simplified().split(QChar(' '), Qt::SkipEmptyParts);
 						if (tokens.size() < 3)
 						{
 							delete keypointsCloud;
@@ -451,7 +451,7 @@ CC_FILE_ERROR BundlerFilter::loadFileExtended(	const QString& filename,
 
 				if (storeKeypoints || !camUsage.empty())
 				{
-					QStringList parts = currentLine.split(" ", QString::SkipEmptyParts);
+					QStringList parts = currentLine.split(" ", Qt::SkipEmptyParts);
 					if (!parts.isEmpty())
 					{
 						bool ok = false;
@@ -597,7 +597,7 @@ CC_FILE_ERROR BundlerFilter::loadFileExtended(	const QString& filename,
 			if (nextLine.isEmpty())
 				break;
 
-			QStringList parts = nextLine.simplified().split(QChar(' '),QString::SkipEmptyParts);
+			QStringList parts = nextLine.simplified().split(QChar(' '),Qt::SkipEmptyParts);
 			if (!parts.empty())
 			{
 				imageFilenames << parts[0];
@@ -1129,11 +1129,11 @@ CC_FILE_ERROR BundlerFilter::loadFileExtended(	const QString& filename,
 			QTextStream stream(&f);
 			stream.setRealNumberNotation(QTextStream::FixedNotation);
 			stream.setRealNumberPrecision(12);
-			stream << "PixelSize" << ' ' << OR_pixelSize << endl;
-			stream << "Global3DBBox" << ' ' << OR_globalCorners[0] << ' ' << OR_globalCorners[1] << ' ' << OR_globalCorners[2] << ' ' << OR_globalCorners[3] << endl;
+			stream << "PixelSize" << ' ' << OR_pixelSize << Qt::endl;
+			stream << "Global3DBBox" << ' ' << OR_globalCorners[0] << ' ' << OR_globalCorners[1] << ' ' << OR_globalCorners[2] << ' ' << OR_globalCorners[3] << Qt::endl;
 			int globalWidth = static_cast<int>((OR_globalCorners[2]-OR_globalCorners[0])/OR_pixelSize);
 			int globalHeight = static_cast<int>((OR_globalCorners[3]-OR_globalCorners[1])/OR_pixelSize);
-			stream << "Global2DBBox" << ' ' << 0 << ' ' << 0 << ' ' << globalWidth-1 << ' ' << globalHeight-1 << endl;
+			stream << "Global2DBBox" << ' ' << 0 << ' ' << 0 << ' ' << globalWidth-1 << ' ' << globalHeight-1 << Qt::endl;
 
 			for (unsigned i=0; i<OR_infos.size(); ++i)
 			{
@@ -1141,7 +1141,7 @@ CC_FILE_ERROR BundlerFilter::loadFileExtended(	const QString& filename,
 				stream << "Local3DBBox" << ' ' << OR_infos[i].minC[0] << ' ' << OR_infos[i].minC[1] << ' ' << OR_infos[i].maxC[0] << ' ' << OR_infos[i].maxC[1] << ' ';
 				int xShiftGlobal = static_cast<int>((OR_infos[i].minC[0]-OR_globalCorners[0])/OR_pixelSize);
 				int yShiftGlobal = static_cast<int>((OR_globalCorners[3]-OR_infos[i].maxC[1])/OR_pixelSize);
-				stream << "Local2DBBox" << ' ' << xShiftGlobal << ' ' << yShiftGlobal <<  ' ' << xShiftGlobal+(static_cast<int>(OR_infos[i].w)-1) << ' ' << yShiftGlobal+(static_cast<int>(OR_infos[i].h)-1) << endl;
+				stream << "Local2DBBox" << ' ' << xShiftGlobal << ' ' << yShiftGlobal <<  ' ' << xShiftGlobal+(static_cast<int>(OR_infos[i].w)-1) << ' ' << yShiftGlobal+(static_cast<int>(OR_infos[i].h)-1) << Qt::endl;
 			}
 		}
 		else

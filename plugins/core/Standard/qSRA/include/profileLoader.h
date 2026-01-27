@@ -18,6 +18,8 @@
 #ifndef PROFILE_LOADER_HEADER
 #define PROFILE_LOADER_HEADER
 
+#include "qSRAExport.h"
+
 class ccPolyline;
 class ccMainAppInterface;
 
@@ -28,7 +30,7 @@ class ccMainAppInterface;
 #include <CCGeom.h>
 
 //! Loads a 2D profile form a custom (ASCII) file
-class ProfileLoader
+class QSRA_PLUGIN_LIB_API ProfileLoader
 {
 public:
 

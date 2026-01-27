@@ -1171,10 +1171,19 @@ void ccRasterizeTool::generateRaster() const
 		QSettings settings;
 		settings.beginGroup(ccPS::HeightGridGeneration());
 		QString imageSavePath = settings.value("savePathImage", ccFileUtils::defaultDocPath()).toString();
+#ifdef Q_OS_MAC
+		outputFilename = QFileDialog::getSaveFileName(	const_cast<ccRasterizeTool*>(this),
+														"Save height grid raster",
+														imageSavePath + QString("/raster.tif"),
+														"geotiff (*.tif)",
+				 	 	 	 	 	 	 	 	 	 	nullptr,
+														QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 		outputFilename = QFileDialog::getSaveFileName(	const_cast<ccRasterizeTool*>(this),
 														"Save height grid raster",
 														imageSavePath + QString("/raster.tif"),
 														"geotiff (*.tif)");
+#endif
 
 		if (outputFilename.isNull())
 		{
@@ -2238,7 +2247,12 @@ void ccRasterizeTool::generateASCIIMatrix() const
 
 	//open file saving dialog
 	QString filter("ASCII file (*.txt)");
+#ifdef Q_OS_MAC
+	QString outputFilename = QFileDialog::getSaveFileName(nullptr, "Save grid as ASCII file", asciiGridSavePath + QString("/raster_matrix.txt"), filter,
+	 	 	 	 										  nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	QString outputFilename = QFileDialog::getSaveFileName(nullptr, "Save grid as ASCII file", asciiGridSavePath + QString("/raster_matrix.txt"), filter);
+#endif
 	if (outputFilename.isNull())
 		return;
 
@@ -2263,7 +2277,7 @@ void ccRasterizeTool::generateASCIIMatrix() const
 		{
 			stream << (std::isfinite(row[i].h) ? row[i].h : emptyCellsHeight) << ' ';
 		}
-		stream << endl;
+		stream << Qt::endl;
 	}
 
 	//save current export path to persistent settings

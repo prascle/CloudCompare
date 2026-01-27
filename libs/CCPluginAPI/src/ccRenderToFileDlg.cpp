@@ -125,12 +125,20 @@ void ccRenderToFileDlg::saveSettings()
 
 void ccRenderToFileDlg::chooseFile()
 {
+#ifdef Q_OS_MAC
+	QString selectedFileName = QFileDialog::getSaveFileName(this,
+															tr("Save Image"),
+															m_ui->filenameLineEdit->text(),
+															m_filters,
+															&m_selectedFilter,
+															QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	QString selectedFileName = QFileDialog::getSaveFileName(this,
 															tr("Save Image"),
 															m_ui->filenameLineEdit->text(),
 															m_filters,
 															&m_selectedFilter);
-
+#endif
 	//if operation is canceled, selectedFileName is empty
 	if (selectedFileName.size() < 1)
 		return;

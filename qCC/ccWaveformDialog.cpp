@@ -535,7 +535,12 @@ void ccWaveDialog::onExportWaveAsCSV()
 	currentPath += QString("/") + QString("waveform_%1.csv").arg(pointIndex);
 
 	//ask for a filename
+#ifdef Q_OS_MAC
+	QString filename = QFileDialog::getSaveFileName(this, "Select output file", currentPath, "*.csv",
+			 	 	 	 	 	 	 	 	 	 	nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	QString filename = QFileDialog::getSaveFileName(this, "Select output file", currentPath, "*.csv");
+#endif
 	if (filename.isEmpty())
 	{
 		//process cancelled by user

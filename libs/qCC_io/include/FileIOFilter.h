@@ -70,6 +70,7 @@ public:
 			, autoComputeNormals(false)
 			, parentWidget(nullptr)
 			, sessionStart(true)
+		    , extraData()
 		{}
 		
 		//! How to handle big coordinates
@@ -90,6 +91,8 @@ public:
 		QWidget* parentWidget;
 		//! Session start (whether the load action is the first of a session)
 		bool sessionStart;
+		//! regular expression to select extra fields (e.g. for .ply) from Python
+		QRegExp extraData;
 	};
 	
 	//! Generic saving parameters
@@ -99,12 +102,18 @@ public:
 		SaveParameters()
 			: alwaysDisplaySaveDialog(true)
 			, parentWidget(nullptr)
+		    , minorVersion(-1)
+		    , pointFormat(-1)
+		    , isAscii(false)
 		{}
 		
 		//! Wether to always display a dialog (if any), even if automatic guess is possible
 		bool alwaysDisplaySaveDialog;
 		//! Parent widget (if any)
 		QWidget* parentWidget;
+		int minorVersion; // for CloudComPyPython API, LAS plugin
+		int pointFormat;  // for CloudComPyPython API, LAS plugin
+		bool isAscii;     // for CloudComPyPython API, PLY plugin
 	};
 	
 	//! Shared type

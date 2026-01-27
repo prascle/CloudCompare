@@ -274,7 +274,6 @@ int FastGlobalRegistrationFilter::compute()
 			return NotEnoughMemory;
 		}
 
-		ccGLMatrix ccTrans;
 		try
 		{
 			fgr::CApp fgrProcess;
@@ -292,7 +291,7 @@ int FastGlobalRegistrationFilter::compute()
 			for (int i = 0; i < 16; ++i)
 			{
 				// both ccGLMatrix and Eigen::Matrix4f should use column-major storage
-				ccTrans.data()[i] = trans.data()[i];
+				m_ccTrans.data()[i] = trans.data()[i];
 			}
 		}
 		catch (...)
@@ -301,10 +300,10 @@ int FastGlobalRegistrationFilter::compute()
 			return ComputationError;
 		}
 
-		alignedCloud->applyRigidTransformation(ccTrans);
+		alignedCloud->applyRigidTransformation(m_ccTrans);
 
 		ccLog::Print(tr("[Fast Global Registration] Resulting matrix for cloud %1").arg(alignedCloud->getName()));
-		ccLog::Print(ccTrans.toString(12, ' ')); //full precision
+		ccLog::Print(m_ccTrans.toString(12, ' ')); //full precision
 		ccLog::Print(tr("Hint: copy it (CTRL+C) and apply it - or its inverse - on any entity with the 'Edit > Apply transformation' tool"));
 
 		Q_EMIT entityHasChanged(alignedCloud);
@@ -312,3 +311,38 @@ int FastGlobalRegistrationFilter::compute()
 
 	return Success;
 }
+
+void FastGlobalRegistrationFilter::setParameters(ccPointCloud* refCloud, std::vector<ccPointCloud*> alignClouds, double radius)
+{
+    ccOctree::BestRadiusParams params;
+    {
+        params.aimedPopulationPerCell = 64;
+        params.aimedPopulationRange = 16;
+        params.minCellPopulation = 48;
+        params.minAboveMinRatio = 0.97;
+    }
+
+    if (radius == 0)
+    {
+        PointCoordinateType largestRadius = 0.0;
+        std::vector<ccPointCloud*> clouds = alignClouds;
+        clouds.push_back(refCloud);
+        for (ccPointCloud* cloud : clouds)
+        {
+            PointCoordinateType radius = ccOctree::GuessBestRadiusAutoComputeOctree(cloud, params, nullptr);
+            if (radius < 0)
+            {
+                ccLog::Error(tr("Failed to estimate the radius for cloud %1").arg(cloud->getName()));
+                return;
+            }
+            largestRadius = std::max(largestRadius, radius);
+        }
+        radius = largestRadius;
+    }
+
+    m_referenceCloud = refCloud;
+    m_alignedClouds = alignClouds;
+    m_featureRadius = radius;
+}
+
+

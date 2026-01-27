@@ -292,7 +292,7 @@ public:
 	**/
 	static ccGLMatrixTpl<T> FromString(const QString& matText, bool& success)
 	{
-		QStringList valuesStr = matText.simplified().split(QChar(' '), QString::SkipEmptyParts);
+		QStringList valuesStr = matText.simplified().split(QChar(' '), Qt::SkipEmptyParts);
 		if (valuesStr.size() != OPENGL_MATRIX_SIZE)
 		{
 			success = false;
@@ -351,7 +351,7 @@ public:
 		stream.setRealNumberNotation(QTextStream::FixedNotation);
 		for (unsigned i = 0; i < 4; ++i)
 		{
-			stream << m_mat[i] << " " << m_mat[i + 4] << " " << m_mat[i + 8] << " " << m_mat[i + 12] << endl;
+			stream << m_mat[i] << " " << m_mat[i + 4] << " " << m_mat[i + 8] << " " << m_mat[i + 12] << Qt::endl;
 		}
 
 		return (fp.error() == QFile::NoError);
