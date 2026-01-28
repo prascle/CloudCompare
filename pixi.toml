@@ -44,9 +44,7 @@ cmd = [
 	# We want build in the .build directory
 	"-B.build",
 	"-DCMAKE_BUILD_TYPE=Release",
-	"-DCMAKE_C_FLAGS=-mmacosx-version-min=13.0",
-	"-DCMAKE_CXX_FLAGS=-mmacosx-version-min=13.0",
-	"-DCMAKE_LD_FLAGS=-mmacosx-version-min=13.0",
+	"-DCMAKE_OSX_DEPLOYMENT_TARGET=13.0",
 	"-DCMAKE_C_FLAGS=-I$CONDA_PREFIX/include",       # for llvm-openmp detection
 	"-DCMAKE_CXX_FLAGS=-I$CONDA_PREFIX/include",     # for llvm-openmp detection
 	"-DCMAKE_INSTALL_PREFIX=.build/install",
