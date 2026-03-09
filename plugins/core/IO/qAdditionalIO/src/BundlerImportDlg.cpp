@@ -220,15 +220,6 @@ QString BundlerImportDlg::getAltKeypointsFilename() const
 
 void BundlerImportDlg::browseImageListFilename()
 {
-#ifdef Q_OS_MAC
-	QString imageListFilename =
-		QFileDialog::getOpenFileName(	this,
-										"Open image list file",
-										imageListFilePathLineEdit->text(),
-										"Image list (*.txt)",
-										nullptr,
-										QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
-#else
 	QString imageListFilename =
 	    QFileDialog::getOpenFileName(this,
 	                                 "Open image list file",
@@ -241,21 +232,11 @@ void BundlerImportDlg::browseImageListFilename()
 
 void BundlerImportDlg::browseAltKeypointsFilename()
 {
-#ifdef Q_OS_MAC
-	QString altKeypointsFilename =
-		QFileDialog::getOpenFileName(	this,
-										"Open alternative keypoints file",
-										altKeypointsFilePathLineEdit->text(),
-										"Cloud/mesh (*.*)",
-										nullptr,
-										QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
-#else
 	QString altKeypointsFilename =
 	    QFileDialog::getOpenFileName(this,
 	                                 "Open alternative keypoints file",
 	                                 altKeypointsFilePathLineEdit->text(),
 	                                 "Cloud/mesh (*.*)");
-
 	if (!altKeypointsFilename.isEmpty())
 		altKeypointsFilePathLineEdit->setText(altKeypointsFilename);
 }
