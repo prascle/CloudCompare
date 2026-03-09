@@ -23,6 +23,8 @@
 // local
 #include "ccGlobalShiftManager.h"
 
+#include<QRegularExpression>
+
 class QWidget;
 
 //! Typical I/O filter errors
@@ -95,7 +97,7 @@ class FileIOFilter
 		//! Session start (whether the load action is the first of a session)
 		bool sessionStart;
 		//! regular expression to select extra fields (e.g. for .ply) from Python
-		QRegExp extraData;
+		QRegularExpression extraData;
 	};
 
 	//! Generic saving parameters

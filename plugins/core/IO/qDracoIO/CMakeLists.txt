@@ -18,10 +18,6 @@ if( PLUGIN_IO_QDRACO )
 			#target_link_libraries( ${PROJECT_NAME} ${Draco_DIR}/../../lib/${DRACO_LIBRARIES}.lib )
 		endif()
 
-	elseif( UNIX )
-
-		target_link_libraries( ${PROJECT_NAME} draco )
-
 	else()
 
 		target_link_libraries( ${PROJECT_NAME} ${DRACO_LIBRARIES} )
