@@ -69,6 +69,7 @@ target_link_libraries( ${PROJECT_NAME}
 
 if( NOT APPLE )
 	target_link_libraries( ${PROJECT_NAME}
+		PRIVATE
 	    "-static-libstdc++"
 	)
 endif()
