@@ -1708,7 +1708,7 @@ struct LoadedScan
 	bool          preserveCoordinateShift = false;
 };
 
-static LoadedScan LoadScan(const e57::Node& node, QString& guidStr, ccProgressDialog* progressDlg = nullptr, QRegExp extraData=QRegExp())
+static LoadedScan LoadScan(const e57::Node& node, QString& guidStr, ccProgressDialog* progressDlg = nullptr, QRegularExpression extraData=QRegularExpression())
 {
 	if (node.type() != e57::E57_STRUCTURE)
 	{
@@ -1722,7 +1722,7 @@ static LoadedScan LoadScan(const e57::Node& node, QString& guidStr, ccProgressDi
 	// log
 	ccLog::Print(QString("[E57] Reading new scan node (%1) - %2").arg(scanNode.elementName().c_str()).arg(scanName));
 
-	if (!extraData.isEmpty() && !extraData.exactMatch(scanName))
+	if (!extraData.pattern().isEmpty() && !extraData.match(scanName).hasMatch())
 	{
 	    CCTRACE("Scan node " << scanName.toStdString() << " skipped, extraData filter: " << extraData.pattern().toStdString());
 	    return {};

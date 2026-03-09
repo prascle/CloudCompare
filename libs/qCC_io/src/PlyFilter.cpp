@@ -27,6 +27,7 @@
 #include <QImage>
 #include <QMessageBox>
 #include <QPushButton>
+#include<QRegularExpression>
 
 // qCC_db
 #include <ccHObjectCaster.h>
@@ -1212,7 +1213,7 @@ CC_FILE_ERROR PlyFilter::loadFile(const QString& filename, const QString& inputT
 					yIndex = i;
 				else if (zIndex == 0 && propName.endsWith("Z"))
 					zIndex = i;
-				else if (!parameters.extraData.isEmpty() && parameters.extraData.exactMatch(propName))
+				else if (!parameters.extraData.pattern().isEmpty() && parameters.extraData.match(propName).hasMatch())
 				{
 	                //CCTRACE("propName: " << propName.toStdString() << " extradata: " << parameters.extraData.pattern().toStdString());
 	                sfPropIndexes.push_back(i);
