@@ -48,18 +48,26 @@ else()
 	add_executable( ${PROJECT_NAME} ${header_list} ${source_list} ${generated_ui_list} ${generated_qrc_list} ${rc_list} ${txt_list} )
 endif()
 
-target_link_libraries( ${PROJECT_NAME}
-	PRIVATE
-		CCAppCommon
-		QCustomPlot
-		Qt6::PrintSupport
-		Qt6::Widgets
-		Qt6::OpenGLWidgets
-		Qt6::OpenGL
-)
 if( NOT APPLE )
 	target_link_libraries( ${PROJECT_NAME}
-	    "-static-libstdc++"
+		PRIVATE
+			CCAppCommon
+			QCustomPlot
+			Qt6::PrintSupport
+			Qt6::Widgets
+			Qt6::OpenGLWidgets
+			Qt6::OpenGL
+		    "-static-libstdc++"
+	)
+else()
+	target_link_libraries( ${PROJECT_NAME}
+		PRIVATE
+			CCAppCommon
+			QCustomPlot
+			Qt6::PrintSupport
+			Qt6::Widgets
+			Qt6::OpenGLWidgets
+			Qt6::OpenGL
 	)
 endif()
 
@@ -126,9 +134,15 @@ if( WIN32 OR APPLE )
 		install_ext( FILES ${filename} ${CLOUDCOMPARE_DEST_FOLDER} "" )
 	endforeach()
 else( UNIX )
-	foreach( filename ${auxFiles} )
-		install_ext( FILES ${filename} "${CMAKE_INSTALL_PREFIX}/cloudComPy/share" "" )
-	endforeach()
+	if ( BUILD_PYPI_PACKAGE )
+		foreach( filename ${auxFiles} )
+			install_ext( FILES ${filename} "${CMAKE_INSTALL_PREFIX}/cloudComPy/share" "" )
+		endforeach()
+	else()
+		foreach( filename ${auxFiles} )
+			install_ext( FILES ${filename} share/cloudcompare "" )
+		endforeach()
+	endif()
 endif()
 
 # Put together our Application bundle on macOS
@@ -153,13 +167,21 @@ if( APPLE )
 	install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/DrawNormals/DrawNormals.gs DESTINATION ${CLOUDCOMPARE_MAC_BASE_DIR}/Contents/Shaders/DrawNormals )
 	install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/DrawNormals/DrawNormals.fs DESTINATION ${CLOUDCOMPARE_MAC_BASE_DIR}/Contents/Shaders/DrawNormals )
 elseif( UNIX )
-	install( FILES ${CC_FBO_LIB_SOURCE_DIR}/shaders/Bilateral/bilateral.frag DESTINATION cloudComPy/share/shaders/Bilateral )
-	install( FILES ${CC_FBO_LIB_SOURCE_DIR}/shaders/Bilateral/bilateral.vert DESTINATION cloudComPy/share/shaders/Bilateral )
-	install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/ColorRamp/color_ramp.frag DESTINATION cloudComPy/share/shaders/ColorRamp )
-	install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/DrawNormals/DrawNormals.vs DESTINATION cloudComPy/share/shaders/DrawNormals )
-	install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/DrawNormals/DrawNormals.gs DESTINATION cloudComPy/share/shaders/DrawNormals )
-	install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/DrawNormals/DrawNormals.fs DESTINATION cloudComPy/share/shaders/DrawNormals )
-
+	if ( BUILD_PYPI_PACKAGE )
+		install( FILES ${CC_FBO_LIB_SOURCE_DIR}/shaders/Bilateral/bilateral.frag DESTINATION cloudComPy/share/shaders/Bilateral )
+		install( FILES ${CC_FBO_LIB_SOURCE_DIR}/shaders/Bilateral/bilateral.vert DESTINATION cloudComPy/share/shaders/Bilateral )
+		install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/ColorRamp/color_ramp.frag DESTINATION cloudComPy/share/shaders/ColorRamp )
+		install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/DrawNormals/DrawNormals.vs DESTINATION cloudComPy/share/shaders/DrawNormals )
+		install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/DrawNormals/DrawNormals.gs DESTINATION cloudComPy/share/shaders/DrawNormals )
+		install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/DrawNormals/DrawNormals.fs DESTINATION cloudComPy/share/shaders/DrawNormals )
+	else()
+		install( FILES ${CC_FBO_LIB_SOURCE_DIR}/shaders/Bilateral/bilateral.frag DESTINATION "share/cloudcompare/shaders/Bilateral" )
+		install( FILES ${CC_FBO_LIB_SOURCE_DIR}/shaders/Bilateral/bilateral.vert DESTINATION "share/cloudcompare/shaders/Bilateral" )
+		install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/ColorRamp/color_ramp.frag DESTINATION "share/cloudcompare/shaders/ColorRamp" )
+		install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/DrawNormals/DrawNormals.vs DESTINATION "share/cloudcompare/shaders/DrawNormals" )
+		install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/DrawNormals/DrawNormals.gs DESTINATION "share/cloudcompare/shaders/DrawNormals" )
+		install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/shaders/DrawNormals/DrawNormals.fs DESTINATION "share/cloudcompare/shaders/DrawNormals" )
+	endif()
 else()
 	install_ext( FILES ${CC_FBO_LIB_SOURCE_DIR}/shaders/Bilateral/bilateral.frag ${CLOUDCOMPARE_DEST_FOLDER} /shaders/Bilateral )
 	install_ext( FILES ${CC_FBO_LIB_SOURCE_DIR}/shaders/Bilateral/bilateral.vert ${CLOUDCOMPARE_DEST_FOLDER} /shaders/Bilateral )
@@ -176,10 +198,17 @@ if( APPLE )
 		SHADER_DEST_PATH "${CLOUDCOMPARE_MAC_BASE_DIR}/Contents/Shaders"
 	)
 elseif( UNIX )
-	InstallPlugins(
-		DEST_PATH "${CMAKE_INSTALL_PREFIX}/cloudComPy/plugins/CC"
-		SHADER_DEST_PATH "${CMAKE_INSTALL_PREFIX}/cloudComPy/share/shaders"
-	)
+	if ( BUILD_PYPI_PACKAGE )
+		InstallPlugins(
+			DEST_PATH "${CMAKE_INSTALL_PREFIX}/cloudComPy/plugins/CC"
+			SHADER_DEST_PATH "${CMAKE_INSTALL_PREFIX}/cloudComPy/share/shaders"
+		)
+	else()
+		InstallPlugins(
+			DEST_PATH "${CMAKE_INSTALL_LIBDIR}/cloudcompare/plugins"
+			SHADER_DEST_PATH share/cloudcompare/shaders
+		)
+	endif()
 else()
 	InstallPlugins(
 		DEST_PATH "${CLOUDCOMPARE_DEST_FOLDER}"
