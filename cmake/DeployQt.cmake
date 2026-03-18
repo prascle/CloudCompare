@@ -84,6 +84,15 @@ function( DeployQt )
 		endif()
 		set( temp_app_path "${temp_dir}/${app_name}" )
 
+		set( deploy_qt_options
+			--no-compiler-runtime
+			--no-quick-import
+			--no-system-d3d-compiler
+			--concurrent
+			--verbose=1
+		)
+
+		
         if ( INSTALL_PREREQUISITE_LIBRARIES )
 			add_custom_command(
 				TARGET ${DEPLOY_QT_TARGET}
@@ -92,17 +101,12 @@ function( DeployQt )
 				COMMAND ${CMAKE_COMMAND} -E make_directory "${temp_dir}"
 				COMMAND ${CMAKE_COMMAND} -E copy ${app_path} ${temp_app_path}
 				COMMAND "${win_deploy_qt}"
-					${temp_app_path}
-					--no-compiler-runtime
-					--no-angle
-					--no-opengl-sw
-					--no-quick-import
-					--no-system-d3d-compiler
-					--concurrent				
-					--verbose=1
-					--gamepad
+					"--dir"
+					${temp_dir}
+					${app_name}
+					${deploy_qt_options}
 				VERBATIM
-			)
+		)
 		else()
 			add_custom_command(
 				TARGET ${DEPLOY_QT_TARGET}
