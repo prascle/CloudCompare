@@ -211,8 +211,6 @@ function( target_link_GDAL ) # ARGV0 = project name
 				${GDAL_BIN_DIR}/hdf5.dll
 				${GDAL_BIN_DIR}/libxml2.dll
 				${GDAL_BIN_DIR}/xerces-c_3_3.dll
-				${GDAL_BIN_DIR}/ssleay32.dll
-				${GDAL_BIN_DIR}/libeay32.dll
 			)
 		endif()
 		
