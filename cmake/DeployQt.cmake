@@ -15,6 +15,7 @@ if ( APPLE )
 	endif()
 elseif( WIN32 )
 	find_program( win_deploy_qt windeployqt HINTS "${qt6_bin_dir}" )
+	message( STATUS "win_deploy_qt: ${win_deploy_qt}")
 
 	if( NOT EXISTS "${win_deploy_qt}" )
 		message( FATAL_ERROR "windeployqt not found in ${qt6_bin_dir}" )
@@ -88,6 +89,7 @@ function( DeployQt )
 			--no-compiler-runtime
 			--no-quick-import
 			--no-system-d3d-compiler
+			--openglwidgets
 			--concurrent
 			--verbose=1
 		)
@@ -101,9 +103,7 @@ function( DeployQt )
 				COMMAND ${CMAKE_COMMAND} -E make_directory "${temp_dir}"
 				COMMAND ${CMAKE_COMMAND} -E copy ${app_path} ${temp_app_path}
 				COMMAND "${win_deploy_qt}"
-					"--dir"
-					${temp_dir}
-					${app_name}
+					${temp_app_path}
 					${deploy_qt_options}
 				VERBATIM
 		)
