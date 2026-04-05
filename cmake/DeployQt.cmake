@@ -116,7 +116,6 @@ function( DeployQt )
 				COMMAND ${CMAKE_COMMAND} -E copy ${app_path} ${temp_app_path}
 				COMMAND "${win_deploy_qt}"
 					${temp_app_path}
-					--no-angle
 					--no-opengl-sw
 					--no-quick-import
 					--no-compiler-runtime
