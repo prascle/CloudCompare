@@ -9,6 +9,7 @@ if( PLUGIN_STANDARD_QCANUPO )
 
 	set( DLIB_NO_GUI_SUPPORT ON  CACHE BOOL "" FORCE )
 	set( DLIB_USE_CUDA OFF  CACHE BOOL "" FORCE ) # we do not want to mess with CUDA
+	set( DLIB_USE_BLAS OFF  CACHE BOOL "" FORCE ) # problem with blas libraries on windows (conda, blas used instead of cblas ?)
 	add_subdirectory( contrib/dlib )
 
 	if( QCANUPO_COMPILE_PRIVATE_METHODS )
