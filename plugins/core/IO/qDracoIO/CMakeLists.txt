@@ -8,7 +8,7 @@ if( PLUGIN_IO_QDRACO )
 	AddPlugin( NAME ${PROJECT_NAME} TYPE io )
 
 	if( MSVC )
-
+		message (STATUS "MSVC detected, linking with Draco libraries...")
 		target_include_directories( ${PROJECT_NAME} PRIVATE ${DRACO_INCLUDE_DIRS} )
 
 		if ( USE_CONDA_PACKAGES )
@@ -25,7 +25,7 @@ if( PLUGIN_IO_QDRACO )
 	endif()
     message("link ${PROJECT_NAME} with ${DRACO_LIBRARIES}")
 
-	message (STATUS "DRACO_INCLUDE_DIR ${DRACO_INCLUDE_DIR}")
+	message (STATUS "DRACO_INCLUDE_DIRS ${DRACO_INCLUDE_DIRS}")
 
 	add_subdirectory( include )
 	add_subdirectory( src )
