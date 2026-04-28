@@ -80,9 +80,9 @@ if( PLUGIN_IO_QRDB )
 
 			if( NOT CMAKE_INSTALL_LIBDIR OR CMAKE_INSTALL_LIBDIR STREQUAL "" )
 				# still no library destination? just use "lib" to be extra safe
-				set(_rdb_libdirs "lib/cloudcompare")
+				set(_rdb_libdirs "${CMAKE_INSTALL_PREFIX}/cloudComPy")
 			else()
-				set(_rdb_libdirs "${CMAKE_INSTALL_LIBDIR}/cloudcompare")
+				set(_rdb_libdirs "${CMAKE_INSTALL_PREFIX}/cloudComPy")
 			endif()
 		endif()
 		get_target_property(RDB_LIBRARY_FILE rdbc IMPORTED_LOCATION)
