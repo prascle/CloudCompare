@@ -128,19 +128,11 @@ if( APPLE )
 		SHADER_DEST_PATH "${CCVIEWER_MAC_BASE_DIR}/Contents/Shaders"
 	)
 elseif( UNIX )
-	if ( BUILD_PYPI_PACKAGE )
-		InstallPlugins(
-			TYPES "gl;io"
-			DEST_PATH "${CMAKE_INSTALL_PREFIX}/cloudComPy/plugins/CC"
-			SHADER_DEST_PATH "${CMAKE_INSTALL_PREFIX}/cloudComPy/share/shaders"
-		)
-	else()
-		InstallPlugins(
-			TYPES "gl;io"
-			DEST_PATH "${CMAKE_INSTALL_LIBDIR}/cloudcompare/plugins"
-			SHADER_DEST_PATH share/cloudcompare/shaders
-		)
-	endif()
+	InstallPlugins(
+		TYPES "gl;io"
+		DEST_PATH "${CMAKE_INSTALL_PREFIX}/cloudComPy/plugins/CC"
+		SHADER_DEST_PATH "${CMAKE_INSTALL_PREFIX}/cloudComPy/share/shaders"
+	)
 else()
 	InstallPlugins(
 		TYPES "gl;io"
