@@ -525,6 +525,20 @@ class CCBundler:
                 check=False,
             )
 
+        # --- extra fixes for some specific libs (TODO: this should be handled by the CMake scripts of the dependencies)
+
+        subprocess.run(
+            [
+                "install_name_tool",
+                "-change",
+                "/opt/homebrew/opt/libpng/lib/libpng16.16.dylib",
+                "@rpath/libpng16.16.dylib",
+                str(self.config.plugin_path / "ccPlugins" / "libQCANUPO_PLUGIN.dylib"),
+            ],
+            stdout=subprocess.PIPE,
+            check=False,
+        )
+
 
 if __name__ == "__main__":
     # configure logger
