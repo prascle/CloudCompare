@@ -114,17 +114,19 @@ function( DeployQt )
 				COMMAND ${CMAKE_COMMAND} -E remove_directory "${temp_dir}"
 				COMMAND ${CMAKE_COMMAND} -E make_directory "${temp_dir}"
 				COMMAND ${CMAKE_COMMAND} -E copy ${app_path} ${temp_app_path}
-				COMMAND "${win_deploy_qt}"
-					${temp_app_path}
-					--no-opengl-sw
-					--no-quick-import
-					--no-compiler-runtime
-					--no-libraries
-					--no-system-d3d-compiler
-					--concurrent
-					--no-translations				
-					--verbose=1
-				VERBATIM
+				COMMAND ${CMAKE_COMMAND} -E make_directory "${temp_dir}/platforms"
+				COMMAND ${CMAKE_COMMAND} -E copy "${CONDA_ROOT_DIRECTORY}/Library/lib/Qt6/plugins/platforms/qwindows.dll" "${temp_dir}/platforms/qwindows.dll"
+				# COMMAND "${win_deploy_qt}"
+				# 	${temp_app_path}
+				# 	--no-opengl-sw
+				# 	--no-quick-import
+				# 	--no-compiler-runtime
+				# 	--no-libraries
+				# 	--no-system-d3d-compiler
+				# 	--concurrent
+				# 	--no-translations				
+				# 	--verbose=1
+				# VERBATIM
 			)
 		endif()
 
