@@ -40,8 +40,13 @@ message( STATUS "INSTALL_PREREQUISITE_LIBRARIES: ${INSTALL_PREREQUISITE_LIBRARIE
 # Define target folders
 # (now that ccViewer can have its own plugins, qCC and ccViewer must fall in separate folders!
 if(WIN32 OR APPLE)
-	set( CLOUDCOMPARE_DEST_FOLDER CloudCompare )
-	set( CCVIEWER_DEST_FOLDER ccViewer )
+	if ( BUILD_PYPI )
+		set( CLOUDCOMPARE_DEST_FOLDER "${CMAKE_INSTALL_PREFIX}/cloudComPy" )
+		set( CCVIEWER_DEST_FOLDER "${CMAKE_INSTALL_PREFIX}/cloudComPy" )
+	else()
+		set( CLOUDCOMPARE_DEST_FOLDER CloudCompare )
+		set( CCVIEWER_DEST_FOLDER ccViewer )
+	endif()
 else()
 	set( CLOUDCOMPARE_DEST_FOLDER "${CMAKE_INSTALL_PREFIX}/cloudComPy" )
 	set( CCVIEWER_DEST_FOLDER "${CMAKE_INSTALL_PREFIX}/cloudComPy" )
