@@ -213,7 +213,7 @@ else()
 		TARGET
 			${PROJECT_NAME}
 		DEPLOY_PATH
-			${PROJECT_NAME}
+			${CLOUDCOMPARE_DEST_FOLDER}
 	)
 endif()
 
