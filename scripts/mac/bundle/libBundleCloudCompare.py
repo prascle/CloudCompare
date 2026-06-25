@@ -489,7 +489,6 @@ class CCBundler:
         logger.info(" --- Frameworks libs: add rpath to Frameworks")
         nb_frameworks_libs = 0
 
-        # TODO: purge old rpath
         for file in self.config.frameworks_path.iterdir():
             if file.is_file() and file.suffix in (".so", ".dylib"):
                 nb_frameworks_libs += 1
@@ -513,6 +512,11 @@ class CCBundler:
                 self._remove_old_rpath(file)
                 subprocess.run(
                     ["install_name_tool", "-add_rpath", "@loader_path/../../Frameworks", str(file)],
+                    stdout=subprocess.PIPE,
+                    check=False,
+                )
+                subprocess.run(
+                    ["install_name_tool", "-add_rpath", "@loader_path", str(file)],
                     stdout=subprocess.PIPE,
                     check=False,
                 )
