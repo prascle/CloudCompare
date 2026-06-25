@@ -91,6 +91,7 @@ class CCBundler:
     # dictionary of lib dependencies : key depends on (list of libs) (not recursive)
     dependencies: dict[str, list[str]] = dict()
     warnings: dict[str, list[str]] = dict()
+    old_rpath: dict[str, list[str]] = dict()
 
     def __init__(self, config: CCAppBundleConfig) -> None:
         """Construct a CCBundler object"""
@@ -98,7 +99,7 @@ class CCBundler:
 
     def bundle(self) -> None:
         """Bundle the dependencies into the .app"""
-        if config.embed_python:
+        if self.config.embed_python:
             self._embed_python()
 
         libs_found, libs_ex_found, libs_in_plugins = self._collect_dependencies()
@@ -253,6 +254,24 @@ class CCBundler:
         shutil.copytree(self.config.base_python_libs, self.config.embedded_python_lib)
         shutil.copy2(self.config.base_python_binary, self.config.embedded_python_binary)
 
+    def _remove_old_rpath(self, binary_path: Path) -> None:
+        """Remove old rpath from a binary.
+
+        Args:
+        ----
+            binary_path (Path): Path to a binary (lib, executable)
+
+        """
+        if str(binary_path) not in self.old_rpath:
+            logger.warning("no old rpath found for %s", binary_path)
+            return
+        for rpath in self.old_rpath[str(binary_path)]:
+            subprocess.run(
+                ["install_name_tool", "-delete_rpath", rpath, str(binary_path)],
+                stdout=subprocess.PIPE,
+                check=False,
+            )
+
     def _embed_python(self) -> None:
         """Embed python distribution dependencies in site-packages.
 
@@ -292,6 +311,7 @@ class CCBundler:
             lib_ex_found.update(lib_ex)
 
             rpaths = CCBundler._get_rpath(lib2check)
+            self.old_rpath[str(lib2check)] = rpaths
 
             abs_rpaths = CCBundler._convert_rpaths(lib2check, rpaths)
             if self.config.extra_pathlib not in abs_rpaths:
@@ -332,6 +352,7 @@ class CCBundler:
         # TODO: remove old rpath
         deep_sp = len(self.config.embedded_python_lib.parents)
         for file in python_libs:
+            self._remove_old_rpath(file)
             deep_lib_sp = len(file.parents) - deep_sp
             rpath = "@loader_path/../../../"
             for _ in range(deep_lib_sp):
@@ -398,6 +419,7 @@ class CCBundler:
             # TODO: group these two functions since we do not need
             # get all rpath for the current lib
             rpaths_str = CCBundler._get_rpath(lib2check)
+            self.old_rpath[str(lib2check)] = rpaths_str
             # get absolute path from found rpath
             abs_search_paths = CCBundler._convert_rpaths(lib2check, rpaths_str)
 
@@ -442,8 +464,8 @@ class CCBundler:
         Args:
         ----
             libs_found (set[Path]): libs and binaries found in the collect process.
-            libs_ex_found (set[(Path, Path)]): libs and binaries found with an @executable_path dependency.
-            libs_found (set[Path]): libs and binaries found in the plugin dir.
+            lib_ex_found (set[(Path, Path)]): libs and binaries found with an @executable_path dependency.
+            libs_in_plugins (set[Path]): libs and binaries found in the plugin dir.
 
         """
         logger.info("Copying libraries")
@@ -471,6 +493,7 @@ class CCBundler:
         for file in self.config.frameworks_path.iterdir():
             if file.is_file() and file.suffix in (".so", ".dylib"):
                 nb_frameworks_libs += 1
+                self._remove_old_rpath(file)
                 subprocess.run(
                     ["install_name_tool", "-add_rpath", "@loader_path", str(file)],
                     stdout=subprocess.PIPE,
@@ -487,6 +510,7 @@ class CCBundler:
         logger.info(" --- PlugIns libs: add rpath to Frameworks, number of libs: %i", len(libs_in_plugins))
         for file in libs_in_plugins:
             if file.is_file():
+                self._remove_old_rpath(file)
                 subprocess.run(
                     ["install_name_tool", "-add_rpath", "@loader_path/../../Frameworks", str(file)],
                     stdout=subprocess.PIPE,
@@ -511,6 +535,7 @@ class CCBundler:
                 raise Exception("no base path")
                 sys.exit(1)
 
+            self._remove_old_rpath(base_path)
             logger.info("modify : @executable_path -> @rpath: %s", base_path)
 
             subprocess.run(
