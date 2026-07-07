@@ -43,14 +43,11 @@ cmd = [
 	"-S.",
 	# We want build in the .build directory
 	"-B.build",
-<<<<<<< HEAD
-=======
 	"-DCMAKE_OSX_DEPLOYMENT_TARGET=13.0",
 	"-DCMAKE_C_FLAGS=-I$CONDA_PREFIX/include",       # for llvm-openmp detection
 	"-DCMAKE_CXX_FLAGS=-I$CONDA_PREFIX/include",     # for llvm-openmp detection
 	"-DCMAKE_BUILD_TYPE=Release",
 	"-DCMAKE_INSTALL_PREFIX=.build/install",
->>>>>>> f7506f1bd (build for signature and notarization)
 	"-DBUILD_SHARED_LIBS=OFF",
 	"-DCCCORELIB_USE_CGAL=ON",
 	"-DCCCORELIB_USE_TBB=ON",
@@ -89,6 +86,8 @@ cmd = [
 	"-DPLUGIN_IO_QDRACO=ON", #TODO
 	"-DPLUGIN_IO_QE57=ON",
 	"-DPLUGIN_IO_QFBX=ON", 					# Possible, but it needs a proprietary SDK
+	"-DOPTION_SUPPORT_3DCONNEXION_DEVICES=ON",
+	"-DOPTION_HID_DEBUG=ON",
 	"-DPLUGIN_IO_QLAS=ON",
 	"-DPLUGIN_IO_QPHOTOSCAN=ON",
 	"-DPLUGIN_IO_QRDB=OFF", 				# Needs a proprietary lib. The lib is not available for osx-arm64
