@@ -46,6 +46,7 @@ if( OPTION_SUPPORT_3DMOUSE_WITH_3DxWARE ) # former 3DxWare SDK (Windows only)
 
 else()
 
+<<<<<<< HEAD
 	option( OPTION_SUPPORT_3DMOUSE_WITH_HIDAPI "Build with hidapi (3D mouse support)" ON )
 
 	if( OPTION_SUPPORT_3DMOUSE_WITH_HIDAPI )
@@ -67,6 +68,12 @@ else()
 		# Optional verbose logging of raw HID reports to the CloudCompare console.
 		# Off by default; turn on to diagnose device-specific report formats.
 		option( OPTION_HID_DEBUG "Enable verbose HID report logging (3D mouse)" OFF )
+=======
+	option( OPTION_SUPPORT_3DCONNEXION_DEVICES "Build with hidapi (3D mouse support on macOS)" ON )
+	# Optional verbose logging of raw HID reports to the CloudCompare console.
+	# Off by default; turn on to diagnose device-specific report formats.
+	option( OPTION_HID_DEBUG "Enable verbose HID report logging (3D mouse)" OFF )
+>>>>>>> 474f21ad7 (3D mouse (macOS): fix hidapi include, detect 3DConnexionHelper, harden report parsing)
 
 		target_sources( ${PROJECT_NAME}
 			PRIVATE
@@ -93,6 +100,10 @@ else()
 		# the HID-based path. Defined as PUBLIC so that consumers (qCC,
 		# ccViewer) also see it when compiling their mainwindow.cpp files.
 		target_compile_definitions( ${PROJECT_NAME} PUBLIC CC_3DMOUSE_HID )
+
+		if( OPTION_HID_DEBUG )
+			target_compile_definitions( ${PROJECT_NAME} PRIVATE CC_HID_DEBUG )
+		endif()
 
 		if( OPTION_HID_DEBUG )
 			target_compile_definitions( ${PROJECT_NAME} PRIVATE CC_HID_DEBUG )
