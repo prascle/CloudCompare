@@ -1,4 +1,4 @@
-#if( WIN32 )
+if( WIN32 )
 	option( OPTION_SUPPORT_3DCONNEXION_DEVICES "Build with 3dConnexion libraries (3D mouse support)" OFF )
 
 	if( OPTION_SUPPORT_3DCONNEXION_DEVICES )
