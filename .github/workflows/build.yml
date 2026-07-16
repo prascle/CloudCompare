@@ -156,7 +156,7 @@ jobs:
           libopencv-dev
           libboost-dev libboost-iostreams-dev libboost-system-dev libpcap-dev libflann-dev
           libglu1-mesa-dev
-          udev
+          udev libudev-dev
           xvfb
 
       - name: Setup GCC
