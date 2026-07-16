@@ -98,10 +98,6 @@ else()
 			target_compile_definitions( ${PROJECT_NAME} PRIVATE CC_HID_DEBUG )
 		endif()
 
-		if( OPTION_HID_DEBUG )
-			target_compile_definitions( ${PROJECT_NAME} PRIVATE CC_HID_DEBUG )
-		endif()
-
 		target_link_libraries( ${PROJECT_NAME} PUBLIC hidapi::hidapi )
 		if ( WIN32 )
 			#no need to copy a DLL, as hidapi should be compiled as a static library by default
