@@ -22,6 +22,8 @@
 #include <QObject>
 
 #include "ccStdPluginInterface.h"
+#include "qCorkExport.h"
+#include <ccMesh.h>
 
 class QAction;
 
@@ -29,7 +31,7 @@ class QAction;
 /** This plugin is based on Cork: https://github.com/gilbo/cork
 	Required implementation is CC's dedicated fork: https://github.com/cloudcompare/cork
 **/
-class qCork : public QObject, public ccStdPluginInterface
+class QCORK_PLUGIN_LIB_API qCork : public QObject, public ccStdPluginInterface
 {
 	Q_OBJECT
 	Q_INTERFACES( ccPluginInterface ccStdPluginInterface )
@@ -44,6 +46,9 @@ public:
 	//inherited from ccStdPluginInterface
 	virtual void onNewSelection(const ccHObject::Container& selectedEntities);
 	virtual QList<QAction *> getActions() override;
+
+    enum CSG_OPERATION { UNION, INTERSECT, DIFF, SYM_DIFF };
+	static ccMesh* compute(ccMesh* meshA, ccMesh* meshB, CSG_OPERATION operation);
 
 protected:
 

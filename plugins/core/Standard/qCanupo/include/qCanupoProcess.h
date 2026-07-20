@@ -19,6 +19,7 @@
 #define Q_CANUPO_PROCESS_HEADER
 
 //Local
+#include "qCanupoExport.h"
 #include "ccPointDescriptor.h"
 
 //CCCoreLib
@@ -32,7 +33,7 @@ class ccPointCloud;
 class QWidget;
 
 //! CANUPO process (classify)
-class qCanupoProcess
+class QCANUPO_PLUGIN_LIB_API qCanupoProcess
 {
 public:
 

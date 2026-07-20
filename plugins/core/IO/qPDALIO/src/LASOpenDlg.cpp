@@ -61,7 +61,12 @@ void LASOpenDlg::onApplyAll()
 
 void LASOpenDlg::onBrowse()
 {
+#ifdef Q_OS_MAC
+	QString outputPath = QFileDialog::getExistingDirectory(this, "Output path", outputPathLineEdit->text(),
+														   QString(), QFileDialog::ShowDirsOnly | QFileDialog::DontUseNativeDialog);
+#else
 	QString outputPath = QFileDialog::getExistingDirectory(this, "Output path", outputPathLineEdit->text());
+#endif
 	if (outputPath.isEmpty())
 	{
 		// cancelled

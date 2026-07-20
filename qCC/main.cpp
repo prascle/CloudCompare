@@ -56,6 +56,8 @@
 #include <Windows.h>
 #endif
 
+#include "ccLog.h"
+
 static bool IsCommandLine(int argc, char** argv)
 {
 #ifdef Q_OS_MAC
@@ -93,7 +95,9 @@ int main(int argc, char** argv)
 	}
 #endif
 
-	bool commandLine = IsCommandLine(argc, argv);
+	ccLogTrace::settrace(); // activate the terminal trace following the environment variable _CCTRACE_ ("ON" or "OFF")
+
+    bool commandLine = IsCommandLine(argc, argv);
 
 	// Convert the input arguments to QString before the application is initialized
 	// (as it will force utf8, which might prevent from properly reading filenames from the command line)

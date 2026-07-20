@@ -2484,7 +2484,12 @@ void ccRasterizeTool::generateASCIIMatrix() const
 
 	// open file saving dialog
 	QString filter("ASCII file (*.txt)");
+#ifdef Q_OS_MAC
+	QString outputFilename = QFileDialog::getSaveFileName(nullptr, "Save grid as ASCII file", asciiGridSavePath + QString("/raster_matrix.txt"), filter,
+	 	 	 	 										  nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	QString outputFilename = QFileDialog::getSaveFileName(nullptr, "Save grid as ASCII file", asciiGridSavePath + QString("/raster_matrix.txt"), filter);
+#endif
 	if (outputFilename.isNull())
 		return;
 

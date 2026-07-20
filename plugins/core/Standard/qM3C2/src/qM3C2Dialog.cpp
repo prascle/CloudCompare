@@ -138,6 +138,7 @@ qM3C2Dialog::qM3C2Dialog(ccPointCloud* cloud1, ccPointCloud* cloud2, ccMainAppIn
 			cpOtherCloudComboBox->addItem(GetEntityName(m_corePointsCloud), QVariant(m_corePointsCloud->getUniqueID()));
 			normOriCloudComboBox->addItem(GetEntityName(m_corePointsCloud), QVariant(m_corePointsCloud->getUniqueID()));
 		}
+	    updateNormalComboBox();
 	}
 
 	if (m_corePointsCloud)
@@ -697,7 +698,12 @@ void qM3C2Dialog::getParamsFromFile()
 		QSettings settings("qM3C2");
 		QString currentPath = settings.value("currentPath", ccFileUtils::defaultDocPath()).toString();
 
+#ifdef Q_OS_MAC
+		filename = QFileDialog::getOpenFileName(this, "Load M3C2 parameters", currentPath, "*.txt",
+ 						 	 	 	 	 	 	nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 		filename = QFileDialog::getOpenFileName(this, "Load M3C2 parameters", currentPath, "*.txt");
+#endif
 		if (filename.isEmpty())
 			return;
 
@@ -736,7 +742,12 @@ void qM3C2Dialog::saveParamsToFile()
 		QSettings settings("qM3C2");
 		QString currentPath = settings.value("currentPath", ccFileUtils::defaultDocPath()).toString();
 
+#ifdef Q_OS_MAC
+		filename = QFileDialog::getSaveFileName(this, "Save M3C2 parameters", currentPath + QString("/m3c2_params.txt"), "*.txt",
+ 						 	 	 	 	 	 	nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 		filename = QFileDialog::getSaveFileName(this, "Save M3C2 parameters", currentPath + QString("/m3c2_params.txt"), "*.txt");
+#endif
 		if (filename.isEmpty())
 			return;
 
@@ -752,6 +763,20 @@ void qM3C2Dialog::saveParamsToFile()
 		fileSettings.setValue("M3C2VER", QVariant::fromValue<int>(1));
 		saveParamsTo(fileSettings);
 	}
+}
+
+void qM3C2Dialog::saveParamsToGivenFile(const QString& filename)
+{
+    QSettings settings("qM3C2");
+    QString currentPath = QFileInfo(filename).absolutePath();
+    settings.setValue("currentPath", currentPath);
+    //save file
+    {
+        QSettings fileSettings(filename, QSettings::IniFormat);
+        //set version tag (mandatory for a valid parameters file!)
+        fileSettings.setValue("M3C2VER", QVariant::fromValue<int>(1));
+        saveParamsTo(fileSettings);
+    }
 }
 
 void qM3C2Dialog::guessParams(bool fastMode/*=false*/)

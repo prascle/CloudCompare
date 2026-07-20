@@ -40,6 +40,7 @@
 #include <Neighbourhood.h>
 #include <PointProjectionTools.h>
 #include <ReferenceCloud.h>
+#include <ccHObjectCaster.h>
 
 // Qt
 #include <QOpenGLShader>
@@ -4791,4 +4792,18 @@ ccMesh* ccMesh::unroll(ccPointCloud::UnrollMode            mode,
 	}
 
 	return outputMesh;
+}
+
+ccMesh* ccMesh::crop2D(const ccPolyline* poly, unsigned char orthoDim, bool inside)
+{
+    ccPointCloud* cloud = ccHObjectCaster::ToPointCloud(this->getAssociatedCloud());
+    bool ret = cloud->setVisibility(poly, orthoDim, inside);
+    if (!ret)
+    {
+        ccLog::Warning("[ccMesh::crop2D] problem with setVisibility");
+        return nullptr;
+    }
+    ccMesh* result = createNewMeshFromSelection(false);
+    cloud->resetVisibilityArray();
+    return result;
 }

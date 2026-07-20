@@ -30,7 +30,7 @@ function( target_link_libIGL ) # 1 argument: ARGV0 = project name
 	if( LIBIGL_RELEASE_LIBRARY_FILE )
 		#Release mode only by default
 		target_link_libraries( ${ARGV0} optimized ${LIBIGL_RELEASE_LIBRARY_FILE} )
-		target_link_libraries( ${ARGV0} optimized CGAL::CGAL CGAL::CGAL_Core)
+		target_link_libraries( ${ARGV0} optimized CGAL::CGAL) # CGAL::CGAL_Core)
 
 		#optional: debug mode
 		if ( LIBIGL_DEBUG_LIBRARY_FILE )

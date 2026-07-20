@@ -50,7 +50,12 @@ void FacetsExportDlg::browseDestination()
 	}
 
 	//open file saving dialog
+#ifdef Q_OS_MAC
+	QString outputFilename = QFileDialog::getSaveFileName(nullptr, "Select destination", destinationPathLineEdit->text(), saveFileFilter,
+														  nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	QString outputFilename = QFileDialog::getSaveFileName(nullptr, "Select destination", destinationPathLineEdit->text(), saveFileFilter);
+#endif
 
 	if (outputFilename.isEmpty())
 		return;

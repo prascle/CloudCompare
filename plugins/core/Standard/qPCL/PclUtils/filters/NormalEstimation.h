@@ -25,9 +25,10 @@ public:
 	NormalEstimation();
 	~NormalEstimation() override;
 
-protected:
 	//inherited from BaseFilter
 	int compute() override;
+    void setParameters(ccPointCloud* cloud, bool useKnn=false, bool ovewriteCurvature=true, int knn=10, double radius=0.);
+protected:
 	int getParametersFromDialog() override;
 
 protected:

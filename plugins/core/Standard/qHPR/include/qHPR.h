@@ -18,6 +18,8 @@
 #ifndef Q_HPR_PLUGIN_HEADER
 #define Q_HPR_PLUGIN_HEADER
 
+#include <qHPRExport.h>
+
 #include "ccStdPluginInterface.h"
 
 //CCCoreLib
@@ -28,7 +30,7 @@
 	SIGGRAPH 2007
 	http://www.mathworks.com/matlabcentral/fileexchange/16581-hidden-point-removal
 **/
-class qHPR : public QObject, public ccStdPluginInterface
+class QHPR_PLUGIN_LIB_API qHPR : public QObject, public ccStdPluginInterface
 {
 	Q_OBJECT
 	Q_INTERFACES( ccPluginInterface ccStdPluginInterface )
@@ -51,10 +53,10 @@ protected:
 	//! Slot called when associated ation is triggered
 	void doAction();
 
-protected:
+public:
 
 	//! Katz et al. algorithm
-	CCCoreLib::ReferenceCloud* removeHiddenPoints(CCCoreLib::GenericIndexedCloudPersist* theCloud, const CCVector3d& viewPoint, double fParam);
+	static CCCoreLib::ReferenceCloud* removeHiddenPoints(CCCoreLib::GenericIndexedCloudPersist* theCloud, const CCVector3d& viewPoint, double fParam);
 
 	//! Associated action
 	QAction* m_action;

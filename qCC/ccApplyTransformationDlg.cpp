@@ -415,7 +415,12 @@ void ccApplyTransformationDlg::loadFromASCIIFile()
 	settings.beginGroup(ccPS::LoadFile());
 	QString currentPath = settings.value(ccPS::CurrentPath(), ccFileUtils::defaultDocPath()).toString();
 
+#ifdef Q_OS_MAC
+	QString inputFilename = QFileDialog::getOpenFileName(this, "Select input file", currentPath, "*.txt",
+														 nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	QString inputFilename = QFileDialog::getOpenFileName(this, "Select input file", currentPath, "*.txt");
+#endif
 	if (inputFilename.isEmpty())
 		return;
 

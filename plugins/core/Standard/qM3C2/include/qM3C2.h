@@ -18,6 +18,8 @@
 #ifndef Q_M3C2_PLUGIN_HEADER
 #define Q_M3C2_PLUGIN_HEADER
 
+#include <qM3C2Export.h>
+
 //qCC
 #include "ccStdPluginInterface.h"
 
@@ -30,7 +32,7 @@
 	application to the Rangitikei canyon (N-Z)", Lague, D., Brodu, N. and Leroux, J.,
 	2013, ISPRS journal of Photogrammmetry and Remote Sensing
 **/
-class qM3C2Plugin : public QObject, public ccStdPluginInterface
+class QM3C2_PLUGIN_LIB_API qM3C2Plugin : public QObject, public ccStdPluginInterface
 {
 	Q_OBJECT
 	Q_INTERFACES( ccPluginInterface ccStdPluginInterface )

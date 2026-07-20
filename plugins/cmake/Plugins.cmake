@@ -68,6 +68,8 @@ function( AddPlugin )
 		)
 	endif()
 	
+	target_compile_definitions( ${PLUGIN_TARGET} PRIVATE "${PLUGIN_TARGET}_LIBRARY_BUILD" )
+
 	if( WIN32 )
 		# Plugins need the QT_NO_DEBUG preprocessor in release!
 		target_compile_definitions( ${PLUGIN_TARGET} PRIVATE $<$<CONFIG:Release>:QT_NO_DEBUG> )

@@ -23,6 +23,9 @@ qE57IO::qE57IO(QObject* parent)
     : QObject(parent)
     , ccIOPluginInterface(":/CC/plugin/qE57IO/info.json")
 {
+#ifdef _PYTHONAPI_DEBUG_
+    ccLogTrace::settrace();
+#endif
 }
 
 void qE57IO::registerCommands(ccCommandLineInterface* cmd)

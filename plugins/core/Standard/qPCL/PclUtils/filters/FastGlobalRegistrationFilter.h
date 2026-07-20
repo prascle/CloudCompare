@@ -18,6 +18,7 @@
 //##########################################################################
 
 #include "BaseFilter.h"
+#include "ccGLMatrix.h"
 
 //! Filter based on "Q.-Y. Zhou, J. Park, and V. Koltun, Fast Global Registration, ECCV, 2016."
 /** See https://github.com/isl-org/FastGlobalRegistration
@@ -28,10 +29,16 @@ public:
 	FastGlobalRegistrationFilter();
 	~FastGlobalRegistrationFilter() override;
 
-protected:
-
 	//inherited from BaseFilter
 	int compute() override;
+    void setParameters(ccPointCloud* refCloud, std::vector<ccPointCloud*> alignClouds, double radius = 0);
+    double getAutoRadius()
+    {
+        return m_featureRadius;
+    }
+    ccGLMatrix getTransformation() {return m_ccTrans; };
+
+protected:
 	int getParametersFromDialog() override;
 	bool checkSelected() const override;
 	QString getErrorMessage(int errorCode) const override;
@@ -41,4 +48,5 @@ protected: // variables
 	std::vector<ccPointCloud*> m_alignedClouds;
 	ccPointCloud* m_referenceCloud;
 	double m_featureRadius;
+	ccGLMatrix m_ccTrans;
 };

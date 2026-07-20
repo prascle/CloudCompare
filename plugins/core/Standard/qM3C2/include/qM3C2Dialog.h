@@ -21,6 +21,7 @@
 #include <ui_qM3C2Dialog.h>
 
 //Local
+#include <qM3C2Export.h>
 #include <qM3C2Tools.h>
 
 //Qt
@@ -30,7 +31,7 @@ class ccMainAppInterface;
 class ccPointCloud;
 
 //! M3C2 plugin's main dialog
-class qM3C2Dialog : public QDialog, public Ui::M3C2Dialog
+class QM3C2_PLUGIN_LIB_API qM3C2Dialog : public QDialog, public Ui::M3C2Dialog
 {
 	Q_OBJECT
 
@@ -90,6 +91,10 @@ public:
 	//! Saves parameters to persistent settings
 	void saveParamsToPersistentSettings();
 
+    //! Guess parameters from the cloud #1
+    void guessParams(bool fastMode);
+    void saveParamsToGivenFile(const QString& filename);
+
 protected:
 
 	void swapClouds();
@@ -105,9 +110,6 @@ protected:
 	void updateNormalComboBox();
 
 protected: //methods
-
-	//! Guess parameters from the cloud #1
-	void guessParams(bool fastMode);
 
 	//! Sets clouds
 	void setClouds(ccPointCloud* cloud1, ccPointCloud* cloud2);

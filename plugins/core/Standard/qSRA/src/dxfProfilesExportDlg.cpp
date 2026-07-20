@@ -114,8 +114,12 @@ void DxfProfilesExportDlg::browseVertFile()
 	QString filter("Vertical profiles (*.dxf)");
 
 	//open file loading dialog
+#ifdef Q_OS_MAC
+	QString filename = QFileDialog::getSaveFileName(nullptr,"Select output file",vertOutputFileLineEdit->text(),filter,
+													nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	QString filename = QFileDialog::getSaveFileName(nullptr,"Select output file",vertOutputFileLineEdit->text(),filter);
-
+#endif
 	if (filename.isEmpty())
 		return;
 
@@ -132,8 +136,12 @@ void DxfProfilesExportDlg::browseHorizFile()
 	QString filter("Horizontal profiles (*.dxf)");
 
 	//open file loading dialog
+#ifdef Q_OS_MAC
+	QString filename = QFileDialog::getSaveFileName(nullptr,"Select output file",horizOutputFileLineEdit->text(),filter,
+													nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	QString filename = QFileDialog::getSaveFileName(nullptr,"Select output file",horizOutputFileLineEdit->text(),filter);
-
+#endif
 	if (filename.isEmpty())
 		return;
 

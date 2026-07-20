@@ -1,0 +1,6 @@
+#ifndef __OPTDEFINESHPR_H__
+#define __OPTDEFINESHPR_H__
+
+#cmakedefine USE_EXTERNAL_QHULL_FOR_QHPR
+
+#endif

@@ -17,6 +17,8 @@
 //#                                                                        #
 //##########################################################################
 
+#include <qRANSAC_SDExport.h>
+
 #include "ccStdPluginInterface.h"
 
 //! Wrapper to Schnabel et al. library for automatic shape detection in point cloud
@@ -24,7 +26,7 @@
 	and Reinhard Klein, in Computer Graphics Forum (June 2007), 26:2(214-226)
 	http://cg.cs.uni-bonn.de/en/publications/paper-details/schnabel-2007-efficient/
 **/
-class qRansacSD : public QObject, public ccStdPluginInterface
+class QRANSAC_SD_PLUGIN_LIB_API qRansacSD : public QObject, public ccStdPluginInterface
 {
 	Q_OBJECT
 	Q_INTERFACES( ccPluginInterface ccStdPluginInterface )

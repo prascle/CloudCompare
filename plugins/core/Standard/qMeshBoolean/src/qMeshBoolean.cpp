@@ -40,12 +40,12 @@
 #endif
 #include <igl/copyleft/cgal/mesh_boolean.h>
 
-//! ligIGL mesh
-struct IGLMesh
-{
-	Eigen::MatrixXd V; //!< Vertices
-	Eigen::MatrixXi F; //!< Triangles
-};
+////! ligIGL mesh
+//struct IGLMesh
+//{
+//	Eigen::MatrixXd V; //!< Vertices
+//	Eigen::MatrixXi F; //!< Triangles
+//};
 
 qMeshBoolean::qMeshBoolean(QObject* parent/*=nullptr*/)
 	: QObject(parent)
@@ -81,7 +81,7 @@ void qMeshBoolean::onNewSelection(const ccHObject::Container& selectedEntities)
 	}
 }
 
-bool ToIGLMesh(const ccMesh* in, IGLMesh& out, ccMainAppInterface* app = nullptr)
+bool ToIGLMesh(const ccMesh* in, IGLMesh& out, ccMainAppInterface* app)
 {
 	if (!in || !in->getAssociatedCloud())
 	{
@@ -134,7 +134,7 @@ bool ToIGLMesh(const ccMesh* in, IGLMesh& out, ccMainAppInterface* app = nullptr
 	return true;
 }
 
-ccMesh* FromIGLMesh(const IGLMesh& in, ccMainAppInterface* app = nullptr)
+ccMesh* FromIGLMesh(const IGLMesh& in, ccMainAppInterface* app)
 {
 	if (in.F.rows() == 0 || in.V.rows() == 0)
 	{
@@ -190,22 +190,12 @@ ccMesh* FromIGLMesh(const IGLMesh& in, ccMainAppInterface* app = nullptr)
 	return mesh;
 }
 
-//! Boolean operation parameters (for concurrent run)
-struct BoolOpParameters
-{
-	ccMeshBooleanDialog::CSG_OPERATION operation = ccMeshBooleanDialog::UNION;
-	IGLMesh* meshA = nullptr;
-	IGLMesh* meshB = nullptr;
-	IGLMesh output;
-	QString nameA;
-	QString nameB;
-	ccMainAppInterface* app = nullptr;
-};
+BoolOpParameters qMeshBoolean::s_params;
 
-static bool DoPerformBooleanOp(BoolOpParameters& params)
+bool DoPerformMeshBooleanOp()
 {
 	//invalid parameters
-	if (!params.meshA || !params.meshB)
+	if (!qMeshBoolean::s_params.meshA || !qMeshBoolean::s_params.meshB)
 	{
 		assert(false);
 		return false;
@@ -218,7 +208,7 @@ static bool DoPerformBooleanOp(BoolOpParameters& params)
 
 		igl::MeshBooleanType booleanType = igl::NUM_MESH_BOOLEAN_TYPES; // = invalid
 		//perform the boolean operation
-		switch (params.operation)
+		switch (qMeshBoolean::s_params.operation)
 		{
 		case ccMeshBooleanDialog::UNION:
 			booleanType = igl::MESH_BOOLEAN_TYPE_UNION;
@@ -238,36 +228,36 @@ static bool DoPerformBooleanOp(BoolOpParameters& params)
 
 		default:
 			assert(false);
-			if (params.app)
-				params.app->dispToConsole("[Mesh boolean] Unhandled operation?!", ccMainAppInterface::WRN_CONSOLE_MESSAGE); //DGM: can't issue an error message (i.e. with dialog) in another thread!
+			if (qMeshBoolean::s_params.app)
+				qMeshBoolean::s_params.app->dispToConsole("[Mesh boolean] Unhandled operation?!", ccMainAppInterface::WRN_CONSOLE_MESSAGE); //DGM: can't issue an error message (i.e. with dialog) in another thread!
 			return false;
 		}
 
-		params.output = IGLMesh();
-		if (!igl::copyleft::cgal::mesh_boolean(	params.meshA->V,
-												params.meshA->F,
-												params.meshB->V,
-												params.meshB->F,
+		qMeshBoolean::s_params.output = IGLMesh();
+		if (!igl::copyleft::cgal::mesh_boolean(	qMeshBoolean::s_params.meshA->V,
+												qMeshBoolean::s_params.meshA->F,
+												qMeshBoolean::s_params.meshB->V,
+												qMeshBoolean::s_params.meshB->F,
 												booleanType,
-												params.output.V,
-												params.output.F ))
+												qMeshBoolean::s_params.output.V,
+												qMeshBoolean::s_params.output.F ))
 		{
-			if (params.app)
-				params.app->dispToConsole("[Mesh boolean] CSG operation failed", ccMainAppInterface::WRN_CONSOLE_MESSAGE);
+			if (qMeshBoolean::s_params.app)
+				qMeshBoolean::s_params.app->dispToConsole("[Mesh boolean] CSG operation failed", ccMainAppInterface::WRN_CONSOLE_MESSAGE);
 			return false;
 		}
 
-		if (params.app)
+		if (qMeshBoolean::s_params.app)
 		{
 			// display the duration time
-			params.app->dispToConsole(QString("[Mesh boolean] CSG operation duration: %1 s").arg(timer.elapsed() / 1000.0, 0, 'f', 2));
+			qMeshBoolean::s_params.app->dispToConsole(QString("[Mesh boolean] CSG operation duration: %1 s").arg(timer.elapsed() / 1000.0, 0, 'f', 2));
 		}
 
 	}
 	catch (const std::exception& e)
 	{
-		if (params.app)
-			params.app->dispToConsole(QString("[Mesh boolean] Exception caught: %1").arg(e.what()), ccMainAppInterface::WRN_CONSOLE_MESSAGE);
+		if (qMeshBoolean::s_params.app)
+			qMeshBoolean::s_params.app->dispToConsole(QString("[Mesh boolean] Exception caught: %1").arg(e.what()), ccMainAppInterface::WRN_CONSOLE_MESSAGE);
 		return false;
 	}
 
@@ -348,7 +338,7 @@ void qMeshBoolean::doAction()
 		params.nameB     = meshB->getName();
 		params.operation = cDlg.getSelectedOperation();
 
-		QFuture<bool> future = QtConcurrent::run([&params]() { return DoPerformBooleanOp(params); });
+		QFuture<bool> future = QtConcurrent::run(DoPerformMeshBooleanOp);
 
 		ccBackgroundTask::Wait(future);
 
@@ -416,4 +406,69 @@ void qMeshBoolean::doAction()
 		// display the duration time
 		m_app->dispToConsole(QString("[Mesh boolean] Total duration: %1 s").arg(timer.elapsed() / 1000.0, 0, 'f', 2));
 	}
+}
+
+ccMesh* computeMeshBoolean(ccMesh* meshA,
+	ccMesh* meshB,
+	ccMeshBooleanDialog::CSG_OPERATION operation)
+{
+	//try to convert both meshes to IGLMesh structures
+	IGLMesh iglMeshA;
+	if (!ToIGLMesh(meshA, iglMeshA))
+		return nullptr;
+	IGLMesh iglMeshB;
+	if (!ToIGLMesh(meshB, iglMeshB))
+		return nullptr;
+
+	qMeshBoolean::s_params.app = nullptr;
+	qMeshBoolean::s_params.meshA = &iglMeshA;
+	qMeshBoolean::s_params.meshB = &iglMeshB;
+	qMeshBoolean::s_params.nameA = meshA->getName();
+	qMeshBoolean::s_params.nameB = meshB->getName();
+	qMeshBoolean::s_params.operation = operation;
+
+	bool res = DoPerformMeshBooleanOp();
+
+	if (!res)
+	{
+		CCTRACE("error in computeMeshBoolean");
+		return nullptr;
+	}
+
+	//convert the updated mesh (A) to a new ccMesh structure
+	ccMesh* result = FromIGLMesh(qMeshBoolean::s_params.output);
+
+	if (result)
+	{
+		//set name
+		QString opName;
+		switch (operation)
+		{
+		case ccMeshBooleanDialog::UNION:
+			opName = "union";
+			break;
+		case ccMeshBooleanDialog::INTERSECT:
+			opName = "isect";
+			break;
+		case ccMeshBooleanDialog::DIFF:
+			opName = "diff";
+			break;
+		case ccMeshBooleanDialog::SYM_DIFF:
+			opName = "sym_diff";
+			break;
+		default:
+			assert(false);
+			break;
+		}
+		result->setName(QString("(%1).%2.(%3)").arg(meshA->getName()).arg(opName).arg(meshB->getName()));
+
+		//normals
+		bool hasNormals = false;
+		if (meshA->hasTriNormals())
+			hasNormals = result->computePerTriangleNormals();
+		else if (meshA->hasNormals())
+			hasNormals = result->computePerVertexNormals();
+		meshA->showNormals(hasNormals && meshA->normalsShown());
+	}
+	return result;
 }

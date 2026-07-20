@@ -116,7 +116,8 @@ MLSSmoothingUpsampling::MLSSmoothingUpsampling()
 	: BaseFilter(FilterDescription(	"MLS smoothing",
 									"Smooth using MLS, optionally upsample",
 									"Smooth the cloud using Moving Least Sqares algorithm, estimate normals and optionally upsample",
-									":/toolbar/PclUtils/icons/mls_smoothing.png"))
+									":/toolbar/PclUtils/icons/mls_smoothing.png")),
+      m_outputCloud(0)
 {
 }
 
@@ -182,7 +183,7 @@ int MLSSmoothingUpsampling::compute()
 	}
 
 	Q_EMIT newEntity(outputCCCloud);
-
+	m_outputCloud = outputCCCloud;
 	return Success;
 }
 
@@ -223,3 +224,25 @@ template int SmoothMLS<pcl::PointXYZ, pcl::PointNormal>(	const pcl::PointCloud<p
 															,	pcl::PointIndicesPtr &used_ids
 #endif
   );
+
+void MLSSmoothingUpsampling::setParameters(ccPointCloud* cloud,
+    bool computeNormals, double searchRadius,
+    bool polyfit, int order, double sqrGauss,
+    int upsampleMethod, double upsampingRadius, double upsamplingStep,
+    int stepPointDensity, double dilationVoxelSize, int dilationIterations)
+{
+    m_selectedEntities.push_back(cloud);
+    m_parameters.search_radius_ = searchRadius;
+    m_parameters.compute_normals_ = computeNormals;
+    m_parameters.polynomial_fit_ = polyfit;
+    m_parameters.order_ = order;
+    m_parameters.sqr_gauss_param_ = sqrGauss;
+    m_parameters.upsample_method_ = static_cast<MLSParameters::UpsamplingMethod>(upsampleMethod);
+    m_parameters.upsampling_radius_ = upsampingRadius;
+    m_parameters.upsampling_step_ = upsamplingStep;
+    m_parameters.step_point_density_ = stepPointDensity;
+    m_parameters.dilation_voxel_size_ = dilationVoxelSize;
+    m_parameters.dilation_iterations_ = dilationIterations;
+    CCTRACE("m_parameters.upsample_method_ = " <<  m_parameters.upsample_method_);
+}
+
