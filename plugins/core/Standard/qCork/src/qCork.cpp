@@ -457,3 +457,54 @@ void qCork::doAction()
 		m_app->dispToConsole(QString("[Cork] Total duration: %1 s").arg(timer.elapsed() / 1000.0, 0, 'f', 2));
 	}
 }
+
+ccMesh* qCork::compute(ccMesh* meshA, ccMesh* meshB, qCork::CSG_OPERATION operation)
+{
+    CorkMesh corkA;
+    if (!ToCorkMesh(meshA, corkA, nullptr))
+        return nullptr;
+    CorkMesh corkB;
+    if (!ToCorkMesh(meshB, corkB, nullptr))
+        return nullptr;
+
+    //perform the boolean operation
+    QString opName;
+    switch (operation)
+    {
+    case ccCorkDlg::UNION:
+        corkA.boolUnion(corkB);
+        opName = "union";
+        break;
+
+    case ccCorkDlg::INTERSECT:
+        corkA.boolIsct(corkB);
+        opName = "isect";
+        break;
+
+    case ccCorkDlg::DIFF:
+        corkA.boolDiff(corkB);
+        opName = "diff";
+        break;
+
+    case ccCorkDlg::SYM_DIFF:
+        corkA.boolXor(corkB);
+        opName = "sym_diff";
+        break;
+    default:
+        opName = "noop";
+        break;
+    }
+
+    ccMesh* result = FromCorkMesh(corkA);
+    if (result)
+    {
+        result->setName(QString("(%1).%2.(%3)").arg(meshA->getName()).arg(opName).arg(meshB->getName()));
+        //normals
+        bool hasNormals = false;
+        if (meshA->hasTriNormals())
+            hasNormals = result->computePerTriangleNormals();
+        else if (meshA->hasNormals())
+            hasNormals = result->computePerVertexNormals();
+    }
+    return result;
+}

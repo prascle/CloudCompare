@@ -10,11 +10,20 @@ if ( OPTION_USE_SHAPE_LIB )
             ${CMAKE_CURRENT_LIST_DIR}/TestData.qrc
     )
 
-    target_link_libraries( TestShpFilter
-        PRIVATE
-            QCC_IO_LIB
-            Qt6::Test
-    )
+	if( NOT APPLE )
+        target_link_libraries( TestShpFilter
+            PRIVATE
+                QCC_IO_LIB
+                Qt6::Test
+    		    "-static-libstdc++"
+		)
+    else()
+        target_link_libraries( TestShpFilter
+            PRIVATE
+                QCC_IO_LIB
+                Qt6::Test
+        )
+	endif()
 
     if ( WIN32 )
         set_target_properties( TestShpFilter PROPERTIES

@@ -305,11 +305,15 @@ struct LasField
 		QString sanitizedStr = str;
 		sanitizedStr.replace('=', "_eq_");
 		sanitizedStr.replace(' ', "__");
+		sanitizedStr.replace('(', '_');
+		sanitizedStr.replace(')', '_');
+		sanitizedStr.replace('.', '_');
 
 		if (sanitizedStr.size() > 32)
 		{
 			sanitizedStr = sanitizedStr.left(32);
 		}
+
 
 		return sanitizedStr;
 	}

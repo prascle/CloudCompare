@@ -1306,7 +1306,12 @@ void DistanceMapGenerationDlg::exportMapAsGrid()
 	QString filter("Grid file (*.csv)");
 
 	//open file saving dialog
+#ifdef Q_OS_MAC
+	QString filename = QFileDialog::getSaveFileName(nullptr, "Select output file", path, filter,
+													nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	QString filename = QFileDialog::getSaveFileName(nullptr, "Select output file", path, filter);
+#endif
 	if (filename.isEmpty())
 		return;
 
@@ -1465,7 +1470,12 @@ void DistanceMapGenerationDlg::loadOverlaySymbols()
 	QString filter("Symbols (*.txt)");
 
 	//open file loading dialog
+#ifdef Q_OS_MAC
+	QString filename = QFileDialog::getOpenFileName(nullptr, "Select symbols file", path, filter,
+													nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	QString filename = QFileDialog::getOpenFileName(nullptr, "Select symbols file", path, filter);
+#endif
 	if (filename.isEmpty())
 		return;
 

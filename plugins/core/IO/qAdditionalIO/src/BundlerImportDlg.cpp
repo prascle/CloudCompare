@@ -237,7 +237,6 @@ void BundlerImportDlg::browseAltKeypointsFilename()
 	                                 "Open alternative keypoints file",
 	                                 altKeypointsFilePathLineEdit->text(),
 	                                 "Cloud/mesh (*.*)");
-
 	if (!altKeypointsFilename.isEmpty())
 		altKeypointsFilePathLineEdit->setText(altKeypointsFilename);
 }
