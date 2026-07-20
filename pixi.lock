@@ -5993,6 +5993,8 @@ packages:
   - python_abi 3.12.* *_cp312
   - typing_extensions >=4.4
   - yarl >=1.17.0,<2.0
+  arch: arm64
+  platform: osx
   license: MIT AND Apache-2.0
   license_family: Apache
   run_exports: {}
@@ -6004,6 +6006,8 @@ packages:
   depends:
   - __osx >=11.0
   - libcxx >=16
+  arch: arm64
+  platform: osx
   license: BSD-2-Clause
   license_family: BSD
   run_exports:
@@ -6021,6 +6025,8 @@ packages:
   - lz4-c >=1.10.0,<1.11.0a0
   - snappy >=1.2.1,<1.3.0a0
   - zstd >=1.5.6,<1.6.0a0
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports:
@@ -6062,6 +6068,8 @@ packages:
   md5: b50612e7d190b8061ab4e7dc119cf4d5
   depends:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: bzip2-1.0.6
   license_family: BSD
   run_exports:
@@ -6074,6 +6082,8 @@ packages:
   md5: 4cc01a374215de38387d45e19c8c5c9c
   depends:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   run_exports:
@@ -6089,6 +6099,8 @@ packages:
   - clang_osx-arm64 18.*
   - ld64 >=530
   - llvm-openmp
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports: {}
@@ -6101,14 +6113,17 @@ packages:
   - __osx >=11.0
   - fontconfig >=2.15.0,<3.0a0
   - fonts-conda-ecosystem
-  - freetype >=2.12.1,<3.0a0
-  - icu >=75.1,<76.0a0
-  - libcxx >=18
-  - libexpat >=2.6.4,<3.0a0
-  - libglib >=2.82.2,<3.0a0
-  - libpng >=1.6.47,<1.7.0a0
+  - icu >=78.1,<79.0a0
+  - libcxx >=19
+  - libexpat >=2.7.3,<3.0a0
+  - libfreetype >=2.14.1
+  - libfreetype6 >=2.14.1
+  - libglib >=2.86.3,<3.0a0
+  - libpng >=1.6.53,<1.7.0a0
   - libzlib >=1.3.1,<2.0a0
-  - pixman >=0.44.2,<1.0a0
+  - pixman >=0.46.4,<1.0a0
+  arch: arm64
+  platform: osx
   license: LGPL-2.1-only or MPL-1.1
   run_exports:
     weak:
@@ -6122,6 +6137,8 @@ packages:
   - cctools_osx-arm64 1021.4 h12580ec_0
   - ld64 954.16 h4c6efb1_0
   - libllvm18 >=18.1.8,<18.2.0a0
+  arch: arm64
+  platform: osx
   license: APSL-2.0
   license_family: Other
   run_exports: {}
@@ -6142,6 +6159,8 @@ packages:
   - ld64 954.16.*
   - cctools 1021.4.*
   - clang 18.1.*
+  arch: arm64
+  platform: osx
   license: APSL-2.0
   license_family: Other
   run_exports: {}
@@ -6158,6 +6177,8 @@ packages:
   - libboost-devel
   - libcxx >=19
   - mpfr >=4.2.1,<5.0a0
+  arch: arm64
+  platform: osx
   license: GPL3/LGPL3
   run_exports: {}
   size: 6052721
@@ -6170,6 +6191,8 @@ packages:
   - libclang-cpp18.1 18.1.8 default_hf3020a7_18
   - libcxx >=18.1.8
   - libllvm18 >=18.1.8,<18.2.0a0
+  arch: arm64
+  platform: osx
   license: Apache-2.0 WITH LLVM-exception
   license_family: Apache
   run_exports: {}
@@ -6221,6 +6244,8 @@ packages:
   - compiler-rt 18.1.8.*
   - ld64_osx-arm64
   - llvm-tools 18.1.8.*
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports: {}
@@ -6231,6 +6256,8 @@ packages:
   md5: d9ee862b94f4049c9e121e6dd18cc874
   depends:
   - clang_impl_osx-arm64 18.1.8 h2ae9ea5_25
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports: {}
@@ -6242,6 +6269,8 @@ packages:
   depends:
   - clang 18.1.8 default_hf9bcbb7_18
   - libcxx-devel 18.1.8.*
+  arch: arm64
+  platform: osx
   license: Apache-2.0 WITH LLVM-exception
   license_family: Apache
   run_exports: {}
@@ -6255,6 +6284,8 @@ packages:
   - clangxx 18.1.8.*
   - libcxx >=18
   - libllvm18 >=18.1.8,<18.2.0a0
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports: {}
@@ -6266,6 +6297,8 @@ packages:
   depends:
   - clang_osx-arm64 18.1.8 h07b0088_25
   - clangxx_impl_osx-arm64 18.1.8 h555f467_25
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports:
@@ -6277,8 +6310,10 @@ packages:
   sha256: 3ce1dffc09d5374096014f5e16d73ea50265aea35c6109a8ab52a4c95f1a1566
   md5: 94aec8760e8c3b2e3bdf33350c54a076
   depends:
-  - libcxx >=19
   - __osx >=11.0
+  - libcxx >=19
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports: {}
@@ -6299,6 +6334,8 @@ packages:
   - ncurses >=6.5,<7.0a0
   - rhash >=1.4.6,<2.0a0
   - zstd >=1.5.7,<1.6.0a0
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports: {}
@@ -6311,6 +6348,8 @@ packages:
   - __osx >=11.0
   - clang 18.1.8.*
   - compiler-rt_osx-arm64 18.1.8.*
+  arch: arm64
+  platform: osx
   license: Apache-2.0 WITH LLVM-exception
   license_family: APACHE
   run_exports: {}
@@ -6326,6 +6365,8 @@ packages:
   - __osx >=11.0
   - libcxx >=19
   - python_abi 3.12.* *_cp312
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports: {}
@@ -6337,6 +6378,8 @@ packages:
   depends:
   - c-compiler 1.9.0 hdf49b6b_0
   - clangxx_osx-arm64 18.*
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports: {}
@@ -6347,10 +6390,12 @@ packages:
   md5: 2867ea6551e97e53a81787fd967162b1
   depends:
   - __osx >=11.0
-  - krb5 >=1.21.3,<1.22.0a0
-  - libcxx >=18
+  - krb5 >=1.22.2,<1.23.0a0
+  - libcxx >=19
   - libntlm >=1.8,<2.0a0
-  - openssl >=3.5.0,<4.0a0
+  - openssl >=3.5.5,<4.0a0
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause-Attribution
   license_family: BSD
   run_exports:
@@ -6361,6 +6406,8 @@ packages:
 - conda: https://conda.anaconda.org/conda-forge/osx-arm64/dav1d-1.2.1-hb547adb_0.conda
   sha256: 93e077b880a85baec8227e8c72199220c7f87849ad32d02c14fb3807368260b8
   md5: 5a74cdee497e6b65173e10d94582fae6
+  arch: arm64
+  platform: osx
   license: BSD-2-Clause
   license_family: BSD
   run_exports:
@@ -6388,7 +6435,9 @@ packages:
   md5: 4dce99b1430bf11b64432e2edcc428fa
   depends:
   - __osx >=11.0
-  - libcxx >=18
+  - libcxx >=19
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports:
@@ -6412,6 +6461,8 @@ packages:
   depends:
   - __osx >=11.0
   - libcxx >=19
+  arch: arm64
+  platform: osx
   license: MPL-2.0
   license_family: MOZILLA
   run_exports: {}
@@ -6448,7 +6499,7 @@ packages:
   - aom >=3.9.1,<3.10.0a0
   - bzip2 >=1.0.8,<2.0a0
   - dav1d >=1.2.1,<1.2.2.0a0
-  - fontconfig >=2.15.0,<3.0a0
+  - fontconfig >=2.17.1,<3.0a0
   - fonts-conda-ecosystem
   - gmp >=6.3.0,<7.0a0
   - harfbuzz >=12.2.0
@@ -6478,7 +6529,7 @@ packages:
   - libvulkan-loader >=1.4.328.1,<2.0a0
   - libxml2
   - libxml2-16 >=2.14.6
-  - libzlib >=1.3.1,<2.0a0
+  - libzlib >=1.3.2,<2.0a0
   - openh264 >=2.6.0,<2.6.1.0a0
   - openssl >=3.5.4,<4.0a0
   - sdl2 >=2.32.56,<3.0a0
@@ -6486,6 +6537,8 @@ packages:
   - svt-av1 >=3.1.2,<3.1.3.0a0
   - x264 >=1!164.3095,<1!165
   - x265 >=3.5,<3.6.0a0
+  arch: arm64
+  platform: osx
   license: GPL-2.0-or-later
   license_family: GPL
   run_exports:
@@ -6502,6 +6555,8 @@ packages:
   - libcxx >=19
   - llvm-openmp >=19.1.7
   - lz4-c >=1.10.0,<1.11.0a0
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports:
@@ -6551,6 +6606,8 @@ packages:
   - python >=3.12,<3.13.0a0 *_cpython
   - python_abi 3.12.* *_cp312
   - unicodedata2 >=15.1.0
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   run_exports: {}
@@ -6572,6 +6629,8 @@ packages:
   - libzlib >=1.3.2,<2.0a0
   - openexr >=3.4.12,<3.5.0a0
   - openjpeg >=2.5.4,<3.0a0
+  arch: arm64
+  platform: osx
   license: GPL-2.0-or-later OR GPL-3.0-or-later OR FreeImage
   run_exports:
     weak:
@@ -6599,6 +6658,8 @@ packages:
   - libexpat >=2.6.4,<3.0a0
   - libiconv >=1.17,<2.0a0
   - minizip >=4.0.7,<5.0a0
+  arch: arm64
+  platform: osx
   license: MPL-1.1
   license_family: MOZILLA
   run_exports:
@@ -6611,6 +6672,8 @@ packages:
   md5: 2bb7d7dd91116b8c85e805b0e08cc67b
   depends:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: LGPL-2.1-or-later
   run_exports:
     weak:
@@ -6626,6 +6689,8 @@ packages:
   - python >=3.12,<3.13.0a0
   - python >=3.12,<3.13.0a0 *_cpython
   - python_abi 3.12.* *_cp312
+  arch: arm64
+  platform: osx
   license: Apache-2.0
   license_family: APACHE
   run_exports: {}
@@ -6636,12 +6701,14 @@ packages:
   md5: 0b349c0400357e701cf2fa69371e5d39
   depends:
   - __osx >=11.0
-  - libglib >=2.86.0,<3.0a0
+  - libglib >=2.88.2,<3.0a0
   - libintl >=0.25.1,<1.0a0
-  - libjpeg-turbo >=3.1.0,<4.0a0
-  - liblzma >=5.8.1,<6.0a0
-  - libpng >=1.6.50,<1.7.0a0
+  - libjpeg-turbo >=3.1.4.1,<4.0a0
+  - liblzma >=5.8.3,<6.0a0
+  - libpng >=1.6.58,<1.7.0a0
   - libtiff >=4.7.1,<4.8.0a0
+  arch: arm64
+  platform: osx
   license: LGPL-2.1-or-later
   license_family: LGPL
   run_exports:
@@ -6655,6 +6722,8 @@ packages:
   depends:
   - __osx >=11.0
   - libcxx >=19
+  arch: arm64
+  platform: osx
   license: LGPL-2.1-only
   run_exports:
     weak:
@@ -6678,6 +6747,8 @@ packages:
   md5: 13c0abed8df38b7e9678b7713559202a
   depends:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports:
@@ -6731,13 +6802,15 @@ packages:
   - __osx >=11.0
   - cairo >=1.18.4,<2.0a0
   - graphite2 >=1.3.14,<2.0a0
-  - icu >=75.1,<76.0a0
+  - icu >=78.3,<79.0a0
   - libcxx >=19
-  - libexpat >=2.7.1,<3.0a0
-  - libfreetype >=2.14.1
-  - libfreetype6 >=2.14.1
-  - libglib >=2.86.1,<3.0a0
-  - libzlib >=1.3.1,<2.0a0
+  - libexpat >=2.8.1,<3.0a0
+  - libfreetype >=2.14.3
+  - libfreetype6 >=2.14.3
+  - libglib >=2.88.1,<3.0a0
+  - libzlib >=1.3.2,<2.0a0
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   run_exports:
@@ -6752,6 +6825,8 @@ packages:
   - libcxx >=15.0.7
   - libjpeg-turbo >=3.0.0,<4.0a0
   - libzlib >=1.2.13,<2.0.0a0
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports:
@@ -6783,6 +6858,8 @@ packages:
   md5: 5eb22c1d7b3fc4abb50d92d621583137
   depends:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   run_exports:
@@ -6821,6 +6898,8 @@ packages:
   md5: 94f14ef6157687c30feb44e1abecd577
   depends:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   run_exports:
@@ -6834,6 +6913,8 @@ packages:
   depends:
   - __osx >=11.0
   - libcxx >=18
+  arch: arm64
+  platform: osx
   license: LicenseRef-Public-Domain OR MIT
   run_exports:
     weak:
@@ -6843,6 +6924,8 @@ packages:
 - conda: https://conda.anaconda.org/conda-forge/osx-arm64/jxrlib-1.1-h93a5062_3.conda
   sha256: c9e0d3cf9255d4585fa9b3d07ace3bd934fdc6a67ef4532e5507282eff2364ab
   md5: 879997fd868f8e9e4c2a12aec8583799
+  arch: arm64
+  platform: osx
   license: BSD-2-Clause
   license_family: BSD
   run_exports:
@@ -6859,6 +6942,8 @@ packages:
   - libcxx >=19
   - python 3.12.* *_cpython
   - python_abi 3.12.* *_cp312
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports: {}
@@ -6869,10 +6954,12 @@ packages:
   md5: c6dc8a0fdec13a0565936655c33069a1
   depends:
   - __osx >=11.0
-  - libcxx >=16
-  - libedit >=3.1.20191231,<3.2.0a0
-  - libedit >=3.1.20191231,<4.0a0
-  - openssl >=3.3.1,<4.0a0
+  - libcxx >=19
+  - libedit >=3.1.20250104,<3.2.0a0
+  - libedit >=3.1.20250104,<4.0a0
+  - openssl >=3.5.7,<4.0a0
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   run_exports:
@@ -6883,6 +6970,8 @@ packages:
 - conda: https://conda.anaconda.org/conda-forge/osx-arm64/lame-3.100-h1a8c8d9_1003.tar.bz2
   sha256: f40ce7324b2cf5338b766d4cdb8e0453e4156a4f83c2f31bbfff750785de304c
   md5: bff0e851d66725f78dc2fd8b032ddb7e
+  arch: arm64
+  platform: osx
   license: LGPL-2.0-only
   license_family: LGPL
   run_exports:
@@ -6895,6 +6984,8 @@ packages:
   md5: 66960d0b562f9380f5bf5db93a1af633
   depends:
   - libcxx >=11.1.0
+  arch: arm64
+  platform: osx
   license: LGPL-2.1-or-later
   license_family: LGPL
   run_exports: {}
@@ -6923,6 +7014,8 @@ packages:
   constrains:
   - cctools_osx-arm64 1021.4.*
   - cctools 1021.4.*
+  arch: arm64
+  platform: osx
   license: APSL-2.0
   license_family: Other
   run_exports: {}
@@ -6942,6 +7035,8 @@ packages:
   - cctools_osx-arm64 1021.4.*
   - cctools 1021.4.*
   - clang >=18.1.8,<19.0a0
+  arch: arm64
+  platform: osx
   license: APSL-2.0
   license_family: Other
   run_exports: {}
@@ -6965,10 +7060,12 @@ packages:
   md5: 360dbb413ee2c170a0a684a33c4fc6b8
   depends:
   - __osx >=11.0
-  - libcxx >=18
+  - libcxx >=19
   constrains:
-  - libabseil-static =20250512.1=cxx17*
-  - abseil-cpp =20250512.1
+  - abseil-cpp =20260107.1
+  - libabseil-static =20260107.1=cxx17*
+  arch: arm64
+  platform: osx
   license: Apache-2.0
   license_family: Apache
   run_exports:
@@ -7005,6 +7102,8 @@ packages:
   - lzo >=2.10,<3.0a0
   - openssl >=3.5.7,<4.0a0
   - zstd >=1.5.7,<1.6.0a0
+  arch: arm64
+  platform: osx
   license: BSD-2-Clause
   license_family: BSD
   run_exports:
@@ -7025,21 +7124,25 @@ packages:
   - harfbuzz >=11.0.1
   - libfreetype >=2.13.3
   - libfreetype6 >=2.13.3
+  arch: arm64
+  platform: osx
   license: ISC
   run_exports:
     weak:
     - libass >=0.17.4,<0.17.5.0a0
   size: 138339
   timestamp: 1749328988096
-- conda: https://conda.anaconda.org/conda-forge/osx-arm64/libavif16-1.3.0-hb06b76e_2.conda
-  sha256: 8bd31f1fc65a177815d9abebf42768a1d8b5b07b055d54485bcb4b1beb93993a
-  md5: ab7aaf5c139849228894d3ac72ec8f77
+- conda: https://conda.anaconda.org/conda-forge/osx-arm64/libavif16-1.4.2-hfce71f6_0.conda
+  sha256: 587bf5ae30a80bf95921fec83190d8c2fc86dedfcc784aa63d54480ed7d6aaa0
+  md5: 63225683f46e75fb7b85fd08361e0468
   depends:
   - __osx >=11.0
   - aom >=3.9.1,<3.10.0a0
   - dav1d >=1.2.1,<1.2.2.0a0
-  - rav1e >=0.7.1,<0.8.0a0
-  - svt-av1 >=3.1.2,<3.1.3.0a0
+  - rav1e >=0.8.1,<0.9.0a0
+  - svt-av1 >=4.0.1,<4.0.2.0a0
+  arch: arm64
+  platform: osx
   license: BSD-2-Clause
   license_family: BSD
   run_exports:
@@ -7073,13 +7176,15 @@ packages:
   depends:
   - __osx >=11.0
   - bzip2 >=1.0.8,<2.0a0
-  - icu >=75.1,<76.0a0
+  - icu >=78.1,<79.0a0
   - libcxx >=19
   - liblzma >=5.8.1,<6.0a0
   - libzlib >=1.3.1,<2.0a0
   - zstd >=1.5.7,<1.6.0a0
   constrains:
   - boost-cpp <0.0a0
+  arch: arm64
+  platform: osx
   license: BSL-1.0
   run_exports: {}
   size: 1954928
@@ -7088,10 +7193,12 @@ packages:
   sha256: 794ca2145f99e347cfd379843b531aa0b494870778bc8f3cc5aef037fb174ff9
   md5: bd9ce2843b13383efa2c7687105ad4b9
   depends:
-  - libboost 1.88.0 h18cd856_6
-  - libboost-headers 1.88.0 hce30654_6
+  - libboost 1.88.0 h0419b56_7
+  - libboost-headers 1.88.0 hce30654_7
   constrains:
   - boost-cpp <0.0a0
+  arch: arm64
+  platform: osx
   license: BSL-1.0
   run_exports:
     weak:
@@ -7103,6 +7210,8 @@ packages:
   md5: 2c6c26ccc8395de079dd8ad4ce4dd682
   constrains:
   - boost-cpp <0.0a0
+  arch: arm64
+  platform: osx
   license: BSL-1.0
   run_exports: {}
   size: 14688515
@@ -7112,6 +7221,8 @@ packages:
   md5: b457450ba3f27c4749783c0204bd17b0
   depends:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   run_exports:
@@ -7169,6 +7280,8 @@ packages:
   - __osx >=11.0
   - libcxx >=18.1.8
   - libllvm18 >=18.1.8,<18.2.0a0
+  arch: arm64
+  platform: osx
   license: Apache-2.0 WITH LLVM-exception
   license_family: Apache
   run_exports:
@@ -7183,6 +7296,8 @@ packages:
   - __osx >=11.0
   - libcxx >=19.1.7
   - libllvm19 >=19.1.7,<19.2.0a0
+  arch: arm64
+  platform: osx
   license: Apache-2.0 WITH LLVM-exception
   license_family: Apache
   run_exports:
@@ -7232,12 +7347,14 @@ packages:
   md5: 36190179a799f3aee3c2d20a8a2b970d
   depends:
   - __osx >=11.0
-  - krb5 >=1.21.3,<1.22.0a0
-  - libnghttp2 >=1.67.0,<2.0a0
+  - krb5 >=1.22.2,<1.23.0a0
+  - libnghttp2 >=1.68.1,<2.0a0
   - libssh2 >=1.11.1,<2.0a0
-  - libzlib >=1.3.1,<2.0a0
-  - openssl >=3.5.4,<4.0a0
+  - libzlib >=1.3.2,<2.0a0
+  - openssl >=3.5.7,<4.0a0
   - zstd >=1.5.7,<1.6.0a0
+  arch: arm64
+  platform: osx
   license: curl
   license_family: MIT
   run_exports:
@@ -7250,6 +7367,8 @@ packages:
   md5: 5303ba06fab927399ed8dfb3227b0af8
   depends:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: Apache-2.0 WITH LLVM-exception
   license_family: Apache
   run_exports: {}
@@ -7260,6 +7379,8 @@ packages:
   md5: fdf0850d6d1496f33e3996e377f605ed
   depends:
   - libcxx >=18.1.8
+  arch: arm64
+  platform: osx
   license: Apache-2.0 WITH LLVM-exception
   license_family: Apache
   run_exports: {}
@@ -7270,6 +7391,8 @@ packages:
   md5: 78650d671cb56909bb3e5c13bce310f9
   depends:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   run_exports:
@@ -7320,6 +7443,8 @@ packages:
   md5: 43c04d9cb46ef176bb2a4c77e324d599
   depends:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   run_exports:
@@ -7365,36 +7490,7 @@ packages:
   sha256: 329debbc42b3f78a1bfc88e50e602507bdf8785b491b7afd8152e766f61cbe6d
   md5: 0a8a1099b42999f8996e4db33ca8d241
   depends:
-  - __osx >=11.0
-  - blosc >=1.21.6,<2.0a0
-  - geos >=3.14.1,<3.14.2.0a0
-  - giflib >=5.2.2,<5.3.0a0
-  - json-c >=0.18,<0.19.0a0
-  - lerc >=4.0.0,<5.0a0
-  - libarchive >=3.8.2,<3.9.0a0
-  - libcurl >=8.17.0,<9.0a0
-  - libcxx >=19
-  - libdeflate >=1.25,<1.26.0a0
-  - libexpat >=2.7.1,<3.0a0
-  - libiconv >=1.18,<2.0a0
-  - libjpeg-turbo >=3.1.2,<4.0a0
-  - libjxl >=0.11,<0.12.0a0
-  - libkml >=1.3.0,<1.4.0a0
-  - liblzma >=5.8.1,<6.0a0
-  - libpng >=1.6.50,<1.7.0a0
-  - libspatialite >=5.1.0,<5.2.0a0
-  - libsqlite >=3.51.0,<4.0a0
-  - libwebp-base >=1.6.0,<2.0a0
-  - libxml2
-  - libxml2-16 >=2.14.6
-  - libzlib >=1.3.1,<2.0a0
-  - lz4-c >=1.10.0,<1.11.0a0
-  - muparser >=2.3.5,<2.4.0a0
-  - openssl >=3.5.4,<4.0a0
-  - pcre2 >=10.46,<10.47.0a0
-  - proj >=9.7.0,<9.8.0a0
-  - xerces-c >=3.3.0,<3.4.0a0
-  - zstd >=1.5.7,<1.6.0a0
+  - _openmp_mutex
   constrains:
   - libgdal 3.12.0.*
   license: MIT
@@ -7431,13 +7527,15 @@ packages:
   md5: 763fe1ac03ae016c0349856556760dc0
   depends:
   - __osx >=11.0
-  - libffi >=3.5.2,<3.6.0a0
+  - pcre2 >=10.47,<10.48.0a0
   - libiconv >=1.18,<2.0a0
   - libintl >=0.25.1,<1.0a0
-  - libzlib >=1.3.1,<2.0a0
-  - pcre2 >=10.46,<10.47.0a0
+  - libzlib >=1.3.2,<2.0a0
+  - libffi >=3.5.2,<3.6.0a0
   constrains:
-  - glib 2.86.2 *_0
+  - glib >2.66
+  arch: arm64
+  platform: osx
   license: LGPL-2.1-or-later
   run_exports:
     weak:
@@ -7452,6 +7550,8 @@ packages:
   - libcxx >=19
   - libxml2
   - libxml2-16 >=2.14.6
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports:
@@ -7476,6 +7576,8 @@ packages:
   md5: 17f4744c0873e9f77ac9b5cd0a27c187
   depends:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: LGPL-2.1-only
   run_exports:
     weak:
@@ -7488,6 +7590,8 @@ packages:
   depends:
   - __osx >=11.0
   - libiconv >=1.18,<2.0a0
+  arch: arm64
+  platform: osx
   license: LGPL-2.1-or-later
   run_exports:
     weak:
@@ -7501,6 +7605,8 @@ packages:
   - __osx >=11.0
   constrains:
   - jpeg <0.0.0a
+  arch: arm64
+  platform: osx
   license: IJG AND BSD-3-Clause AND Zlib
   run_exports:
     weak:
@@ -7532,6 +7638,8 @@ packages:
   - libexpat >=2.7.5,<3.0a0
   - libzlib >=1.3.2,<2.0a0
   - uriparser >=0.9.8,<1.0a0
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports: {}
@@ -7581,6 +7689,8 @@ packages:
   - libxml2-16 >=2.14.6
   - libzlib >=1.3.1,<2.0a0
   - zstd >=1.5.7,<1.6.0a0
+  arch: arm64
+  platform: osx
   license: Apache-2.0 WITH LLVM-exception
   license_family: Apache
   run_exports:
@@ -7598,6 +7708,8 @@ packages:
   - libxml2-16 >=2.14.5
   - libzlib >=1.3.1,<2.0a0
   - zstd >=1.5.7,<1.6.0a0
+  arch: arm64
+  platform: osx
   license: Apache-2.0 WITH LLVM-exception
   license_family: Apache
   run_exports:
@@ -7615,6 +7727,8 @@ packages:
   - libxml2-16 >=2.14.6
   - libzlib >=1.3.2,<2.0a0
   - zstd >=1.5.7,<1.6.0a0
+  arch: arm64
+  platform: osx
   license: Apache-2.0 WITH LLVM-exception
   license_family: Apache
   run_exports:
@@ -7665,6 +7779,8 @@ packages:
   - libzlib >=1.3.1,<2.0a0
   - openssl >=3.5.5,<4.0a0
   - zstd >=1.5.7,<1.6.0a0
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   run_exports:
@@ -7695,6 +7811,8 @@ packages:
   md5: c90c1d3bd778f5ec0d4bb4ef36cbd5b6
   depends:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: LGPL-2.1-or-later
   run_exports:
     weak:
@@ -7706,6 +7824,8 @@ packages:
   md5: 29b8b11f6d7e6bd0e76c029dcf9dd024
   depends:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports:
@@ -7766,7 +7886,7 @@ packages:
   - libprotobuf >=6.31.1,<6.31.2.0a0
   - libtiff >=4.7.1,<4.8.0a0
   - libwebp-base >=1.6.0,<2.0a0
-  - libzlib >=1.3.1,<2.0a0
+  - libzlib >=1.3.2,<2.0a0
   - numpy >=1.23,<3
   - openexr >=3.4.4,<3.5.0a0
   - qt6-main >=6.9.3,<6.10.0a0
@@ -7796,7 +7916,7 @@ packages:
   depends:
   - __osx >=11.0
   - libcxx >=19
-  - libopenvino 2025.2.0 h56e7ac4_1
+  - libopenvino 2026.0.0 h3e6d54f_1
   - pugixml >=1.15,<1.16.0a0
   - tbb >=2021.13.0
   run_exports: {}
@@ -7830,7 +7950,7 @@ packages:
   depends:
   - __osx >=11.0
   - libcxx >=19
-  - libopenvino 2025.2.0 h56e7ac4_1
+  - libopenvino 2026.0.0 h3e6d54f_1
   - pugixml >=1.15,<1.16.0a0
   run_exports: {}
   size: 173628
@@ -7841,7 +7961,7 @@ packages:
   depends:
   - __osx >=11.0
   - libcxx >=19
-  - libopenvino 2025.2.0 h56e7ac4_1
+  - libopenvino 2026.0.0 h3e6d54f_1
   - pugixml >=1.15,<1.16.0a0
   run_exports:
     weak:
@@ -7854,7 +7974,7 @@ packages:
   depends:
   - __osx >=11.0
   - libabseil * cxx17*
-  - libabseil >=20250512.1,<20250513.0a0
+  - libabseil >=20260107.1,<20260108.0a0
   - libcxx >=19
   - libopenvino 2025.2.0 h56e7ac4_1
   - libprotobuf >=6.31.1,<6.31.2.0a0
@@ -7869,7 +7989,7 @@ packages:
   depends:
   - __osx >=11.0
   - libabseil * cxx17*
-  - libabseil >=20250512.1,<20250513.0a0
+  - libabseil >=20260107.1,<20260108.0a0
   - libcxx >=19
   - libopenvino 2025.2.0 h56e7ac4_1
   - libprotobuf >=6.31.1,<6.31.2.0a0
@@ -7896,10 +8016,10 @@ packages:
   depends:
   - __osx >=11.0
   - libabseil * cxx17*
-  - libabseil >=20250512.1,<20250513.0a0
+  - libabseil >=20260107.1,<20260108.0a0
   - libcxx >=19
-  - libopenvino 2025.2.0 h56e7ac4_1
-  - libprotobuf >=6.31.1,<6.31.2.0a0
+  - libopenvino 2026.0.0 h3e6d54f_1
+  - libprotobuf >=6.33.5,<6.33.6.0a0
   - snappy >=1.2.2,<1.3.0a0
   run_exports:
     weak:
@@ -7923,6 +8043,8 @@ packages:
   md5: 66c2ba320f3687ee66d53cc5546ded5f
   depends:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports:
@@ -7947,10 +8069,12 @@ packages:
   md5: 0ec602b45be7781667d92fb8e5373494
   depends:
   - __osx >=11.0
-  - icu >=75.1,<76.0a0
-  - krb5 >=1.21.3,<1.22.0a0
-  - openldap >=2.6.10,<2.7.0a0
-  - openssl >=3.5.4,<4.0a0
+  - icu >=78.3,<79.0a0
+  - krb5 >=1.22.2,<1.23.0a0
+  - openldap >=2.6.13,<2.7.0a0
+  - openssl >=3.5.6,<4.0a0
+  arch: arm64
+  platform: osx
   license: PostgreSQL
   run_exports:
     weak:
@@ -7963,7 +8087,7 @@ packages:
   depends:
   - __osx >=11.0
   - libabseil * cxx17*
-  - libabseil >=20250512.1,<20250513.0a0
+  - libabseil >=20260107.1,<20260108.0a0
   - libcxx >=19
   - libzlib >=1.3.2,<2.0a0
   license: BSD-3-Clause
@@ -7995,12 +8119,17 @@ packages:
   depends:
   - __osx >=11.0
   - cairo >=1.18.4,<2.0a0
-  - gdk-pixbuf >=2.44.3,<3.0a0
-  - libglib >=2.86.0,<3.0a0
+  - fontconfig >=2.18.0,<3.0a0
+  - fonts-conda-ecosystem
+  - gdk-pixbuf >=2.44.6,<3.0a0
+  - harfbuzz >=14.2.0
+  - libglib >=2.88.1,<3.0a0
   - libxml2-16 >=2.14.6
   - pango >=1.56.4,<2.0a0
   constrains:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: LGPL-2.1-or-later
   run_exports:
     weak:
@@ -8014,6 +8143,8 @@ packages:
   - __osx >=11.0
   - geos >=3.14.1,<3.14.2.0a0
   - libcxx >=19
+  arch: arm64
+  platform: osx
   license: GPL-2.0-or-later
   license_family: GPL
   run_exports:
@@ -8043,14 +8174,16 @@ packages:
   - libcxx >=19
   - libiconv >=1.18,<2.0a0
   - librttopo >=1.1.0,<1.2.0a0
-  - libsqlite >=3.50.4,<4.0a0
+  - libsqlite >=3.51.2,<4.0a0
   - libxml2
   - libxml2-16 >=2.14.6
   - libxml2-devel
   - libzlib >=1.3.1,<2.0a0
-  - proj >=9.7.0,<9.8.0a0
+  - proj >=9.8.0,<9.9.0a0
   - sqlite
   - zlib
+  arch: arm64
+  platform: osx
   license: MPL-1.1
   license_family: MOZILLA
   run_exports:
@@ -8092,6 +8225,8 @@ packages:
   - libogg >=1.3.5,<1.4.0a0
   - libvorbis 1.3.*
   - libvorbis >=1.3.7,<1.4.0a0
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports:
@@ -8112,6 +8247,8 @@ packages:
   - libwebp-base >=1.6.0,<2.0a0
   - libzlib >=1.3.2,<2.0a0
   - zstd >=1.5.7,<1.6.0a0
+  arch: arm64
+  platform: osx
   license: HPND
   run_exports:
     weak:
@@ -8123,6 +8260,8 @@ packages:
   md5: f6654e9e96e9d973981b3b2f898a5bfa
   depends:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: LGPL-2.1-or-later
   run_exports:
     weak:
@@ -8134,6 +8273,8 @@ packages:
   md5: de09bd0f175611e94f21b28f8c708e80
   depends:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   run_exports:
@@ -8149,6 +8290,8 @@ packages:
   - libcxx >=19
   - __osx >=11.0
   - libogg >=1.3.5,<1.4.0a0
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports:
@@ -8190,6 +8333,8 @@ packages:
   - __osx >=11.0
   constrains:
   - libwebp 1.6.0
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports:
@@ -8217,12 +8362,14 @@ packages:
   md5: 438c97d1e9648dd7342f86049dd44638
   depends:
   - __osx >=11.0
-  - icu >=75.1,<76.0a0
+  - icu >=78.3,<79.0a0
   - libiconv >=1.18,<2.0a0
-  - liblzma >=5.8.1,<6.0a0
-  - libzlib >=1.3.1,<2.0a0
+  - liblzma >=5.8.3,<6.0a0
+  - libzlib >=1.3.2,<2.0a0
   constrains:
-  - libxml2 2.15.1
+  - libxml2 2.15.3
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   run_exports: {}
@@ -8251,12 +8398,14 @@ packages:
   md5: 7d270ae441104772ef25a7adfb8f4e6e
   depends:
   - __osx >=11.0
-  - icu >=75.1,<76.0a0
+  - icu >=78.3,<79.0a0
   - libiconv >=1.18,<2.0a0
-  - liblzma >=5.8.1,<6.0a0
-  - libxml2 2.15.1 h9329255_0
-  - libxml2-16 2.15.1 h0ff4647_0
-  - libzlib >=1.3.1,<2.0a0
+  - liblzma >=5.8.3,<6.0a0
+  - libxml2 2.15.3 h5654f7c_0
+  - libxml2-16 2.15.3 h5ef1a60_0
+  - libzlib >=1.3.2,<2.0a0
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   run_exports:
@@ -8272,6 +8421,8 @@ packages:
   - __osx >=11.0
   - libxml2
   - libxml2-16 >=2.14.6
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   run_exports:
@@ -8287,6 +8438,8 @@ packages:
   - bzip2 >=1.0.8,<2.0a0
   - libzlib >=1.3.1,<2.0a0
   - openssl >=3.3.2,<4.0a0
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports:
@@ -8353,6 +8506,8 @@ packages:
   - clang-tools 18.1.8
   - clang       18.1.8
   - llvm        18.1.8
+  arch: arm64
+  platform: osx
   license: Apache-2.0 WITH LLVM-exception
   license_family: Apache
   run_exports: {}
@@ -8376,6 +8531,8 @@ packages:
   md5: 7fad2bcb66997fc0a53442db98031a39
   depends:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: GPL-2.0-or-later
   license_family: GPL
   run_exports:
@@ -8402,10 +8559,11 @@ packages:
   - pillow >=8
   - pyparsing >=2.3.1
   - python >=3.12,<3.13.0a0
-  - python >=3.12,<3.13.0a0 *_cpython
   - python-dateutil >=2.7
   - python_abi 3.12.* *_cp312
   - qhull >=2020.2,<2020.3.0a0
+  arch: arm64
+  platform: osx
   license: PSF-2.0
   license_family: PSF
   run_exports: {}
@@ -8423,6 +8581,8 @@ packages:
   - libzlib >=1.3.2,<2.0a0
   - openssl >=3.5.7,<4.0a0
   - zstd >=1.5.7,<1.6.0a0
+  arch: arm64
+  platform: osx
   license: Zlib
   license_family: Other
   run_exports:
@@ -8436,6 +8596,8 @@ packages:
   depends:
   - __osx >=11.0
   - gmp >=6.3.0,<7.0a0
+  arch: arm64
+  platform: osx
   license: LGPL-3.0-only
   license_family: LGPL
   run_exports:
@@ -8451,6 +8613,8 @@ packages:
   - libcxx >=19
   - __osx >=11.0
   - python_abi 3.12.* *_cp312
+  arch: arm64
+  platform: osx
   license: Apache-2.0
   license_family: APACHE
   run_exports: {}
@@ -8464,6 +8628,8 @@ packages:
   - python >=3.12,<3.13.0a0
   - python >=3.12,<3.13.0a0 *_cpython
   - python_abi 3.12.* *_cp312
+  arch: arm64
+  platform: osx
   license: Apache-2.0
   license_family: APACHE
   run_exports: {}
@@ -8476,6 +8642,8 @@ packages:
   - __osx >=11.0
   - libcxx >=18
   - llvm-openmp >=18.1.8
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   run_exports:
@@ -8486,6 +8654,8 @@ packages:
 - conda: https://conda.anaconda.org/conda-forge/osx-arm64/nanoflann-1.6.1-hd04e3b9_0.conda
   sha256: ad51fe356a0162d075ff40b28c6bce739d0ba1cc88ecc20345f8465f967e89b2
   md5: e951f716fef5b6f2c12e907a69c9f7bd
+  arch: arm64
+  platform: osx
   license: BSD
   run_exports: {}
   size: 26047
@@ -8495,6 +8665,8 @@ packages:
   md5: 3dfa0d0316dc246cd44937a557de4501
   depends:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: X11 AND BSD-3-Clause
   run_exports:
     weak:
@@ -8517,6 +8689,8 @@ packages:
   md5: 0debf38c50bb3ea6f712c87310a00289
   constrains:
   - nlohmann_json-abi ==3.12.0
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   run_exports: {}
@@ -8535,6 +8709,8 @@ packages:
   - libblas >=3.9.0,<4.0a0
   constrains:
   - numpy-base <0a0
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports:
@@ -8547,12 +8723,19 @@ packages:
   md5: 14a70759f3c518908bad3dad85471255
   depends:
   - __osx >=11.0
-  - fontconfig >=2.14.2,<3.0a0
+  - fontconfig >=2.17.1,<3.0a0
   - fonts-conda-ecosystem
   - freeimage >=3.18.0,<3.19.0a0
-  - freetype >=2.12.1,<3.0a0
-  - libcxx >=17
+  - freetype
+  - libcxx >=19
+  - libfreetype >=2.14.2
+  - libfreetype6 >=2.14.2
   - rapidjson
+  - tbb >=2022.3.0
+  - vtk
+  - vtk-base >=9.6.0,<9.6.1.0a0
+  arch: arm64
+  platform: osx
   license: LGPL-2.1-only
   license_family: LGPL
   run_exports:
@@ -8568,6 +8751,8 @@ packages:
   - libprotobuf >=6.31.1,<6.31.2.0a0
   - py-opencv 4.12.0 qt6_py312he92a2c1_609
   - python_abi 3.12.* *_cp312
+  arch: arm64
+  platform: osx
   license: Apache-2.0
   license_family: Apache
   run_exports: {}
@@ -8611,6 +8796,8 @@ packages:
   - libpng >=1.6.55,<1.7.0a0
   - libtiff >=4.7.1,<4.8.0a0
   - libzlib >=1.3.1,<2.0a0
+  arch: arm64
+  platform: osx
   license: BSD-2-Clause
   license_family: BSD
   run_exports:
@@ -8637,10 +8824,12 @@ packages:
   md5: 6fd5d73c63b5d37d9196efb4f044af76
   depends:
   - __osx >=11.0
-  - cyrus-sasl >=2.1.27,<3.0a0
-  - krb5 >=1.21.3,<1.22.0a0
-  - libcxx >=18
-  - openssl >=3.5.0,<4.0a0
+  - cyrus-sasl >=2.1.28,<3.0a0
+  - krb5 >=1.22.2,<1.23.0a0
+  - libcxx >=19
+  - openssl >=3.5.6,<4.0a0
+  arch: arm64
+  platform: osx
   license: OLDAP-2.8
   license_family: BSD
   run_exports:
@@ -8654,6 +8843,8 @@ packages:
   depends:
   - __osx >=11.0
   - ca-certificates
+  arch: arm64
+  platform: osx
   license: Apache-2.0
   license_family: Apache
   run_exports:
@@ -8667,16 +8858,18 @@ packages:
   depends:
   - __osx >=11.0
   - cairo >=1.18.4,<2.0a0
-  - fontconfig >=2.15.0,<3.0a0
+  - fontconfig >=2.17.1,<3.0a0
   - fonts-conda-ecosystem
-  - fribidi >=1.0.10,<2.0a0
-  - harfbuzz >=11.0.1
-  - libexpat >=2.7.0,<3.0a0
-  - libfreetype >=2.13.3
-  - libfreetype6 >=2.13.3
-  - libglib >=2.84.2,<3.0a0
-  - libpng >=1.6.49,<1.7.0a0
-  - libzlib >=1.3.1,<2.0a0
+  - fribidi >=1.0.16,<2.0a0
+  - harfbuzz >=13.2.1
+  - libexpat >=2.7.4,<3.0a0
+  - libfreetype >=2.14.2
+  - libfreetype6 >=2.14.2
+  - libglib >=2.86.4,<3.0a0
+  - libpng >=1.6.55,<1.7.0a0
+  - libzlib >=1.3.2,<2.0a0
+  arch: arm64
+  platform: osx
   license: LGPL-2.1-or-later
   run_exports:
     weak:
@@ -8689,15 +8882,16 @@ packages:
   depends:
   - __osx >=11.0
   - eigen
+  - eigen-abi >=3.4.0.100,<3.4.0.101.0a0
   - flann >=1.9.2,<1.9.3.0a0
-  - glew >=2.2.0,<2.3.0a0
+  - glew >=2.3.0,<2.4.0a0
   - libboost >=1.88.0,<1.89.0a0
   - libboost-devel
   - libcxx >=19
   - libpng >=1.6.51,<1.7.0a0
   - nanoflann
   - qhull >=2020.2,<2020.3.0a0
-  - qt6-main >=6.9.3,<6.10.0a0
+  - qt6-main >=6.10.2,<6.11.0a0
   - vtk
   - vtk-base >=9.5.2,<9.5.3.0a0
   - eigen-abi >=3.4.0.100,<3.4.0.101.0a0
@@ -8715,6 +8909,8 @@ packages:
   - __osx >=11.0
   - bzip2 >=1.0.8,<2.0a0
   - libzlib >=1.3.1,<2.0a0
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports:
@@ -8750,6 +8946,8 @@ packages:
   depends:
   - __osx >=11.0
   - libcxx >=19
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   run_exports:
@@ -8771,6 +8969,8 @@ packages:
   - libtiff >=4.7.1,<4.8.0a0
   constrains:
   - proj4 ==999999999999
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   run_exports:
@@ -8786,6 +8986,8 @@ packages:
   - python >=3.12,<3.13.0a0
   - python >=3.12,<3.13.0a0 *_cpython
   - python_abi 3.12.* *_cp312
+  arch: arm64
+  platform: osx
   license: Apache-2.0
   license_family: APACHE
   run_exports: {}
@@ -8796,6 +8998,8 @@ packages:
   md5: d4852e6054b74645cf49ca10f6349191
   depends:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   run_exports: {}
@@ -8807,6 +9011,8 @@ packages:
   depends:
   - __osx >=11.0
   - libcxx >=18
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   run_exports:
@@ -8823,6 +9029,8 @@ packages:
   - numpy >=1.23,<3
   - python >=3.12,<3.13.0a0
   - python_abi 3.12.* *_cp312
+  arch: arm64
+  platform: osx
   license: Apache-2.0
   license_family: Apache
   run_exports:
@@ -8834,16 +9042,18 @@ packages:
   sha256: 281d9cb048d8044e186638efacd2bcfb1a465bdea2cab59f56f779377eda46cb
   md5: 17c8b73cdb21b465daf510ae807211cc
   depends:
+  - python
+  - qt6-main 6.10.2.*
+  - libcxx >=19
   - __osx >=11.0
   - libclang13 >=19.1.7
-  - libcxx >=19
+  - qt6-main >=6.10.2,<6.11.0a0
   - libxml2
   - libxml2-16 >=2.14.6
-  - libxslt >=1.1.43,<2.0a0
-  - python >=3.12,<3.13.0a0
   - python_abi 3.12.* *_cp312
-  - qt6-main 6.9.3.*
-  - qt6-main >=6.9.3,<6.10.0a0
+  - libxslt >=1.1.43,<2.0a0
+  arch: arm64
+  platform: osx
   license: LGPL-3.0-only
   license_family: LGPL
   run_exports: {}
@@ -8867,6 +9077,8 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.12.* *_cp312
+  arch: arm64
+  platform: osx
   license: Python-2.0
   run_exports:
     weak:
@@ -8881,38 +9093,45 @@ packages:
   depends:
   - __osx >=11.0
   - libcxx >=16
+  arch: arm64
+  platform: osx
   license: LicenseRef-Qhull
   run_exports:
     weak:
     - qhull >=2020.2,<2020.3.0a0
   size: 516376
   timestamp: 1720814307311
-- conda: https://conda.anaconda.org/conda-forge/osx-arm64/qt6-main-6.9.3-hb266e41_0.conda
-  sha256: d00722613930f7b048417dcd8335b7525d105350376976f60c734385ad11e854
-  md5: 9c4c7c477173f43b4239d85bcf1df658
+- conda: https://conda.anaconda.org/conda-forge/osx-arm64/qt6-main-6.10.2-pl5321h01fc3ab_6.conda
+  sha256: a20eae7f002278c0517d5d38dbe0f2a292f57b0df04a3b96c722ce3dfd6e7e3e
+  md5: 125f9a5dc035657ac027eec502ccaec9
   depends:
-  - __osx >=11.0
-  - double-conversion >=3.3.1,<3.4.0a0
-  - harfbuzz >=12.0.0
-  - icu >=75.1,<76.0a0
-  - krb5 >=1.21.3,<1.22.0a0
-  - libclang-cpp19.1 >=19.1.7,<19.2.0a0
-  - libclang13 >=19.1.7
   - libcxx >=19
-  - libglib >=2.86.0,<3.0a0
-  - libjpeg-turbo >=3.1.0,<4.0a0
-  - libllvm19 >=19.1.7,<19.2.0a0
-  - libpng >=1.6.50,<1.7.0a0
-  - libpq >=18.0,<19.0a0
-  - libsqlite >=3.50.4,<4.0a0
-  - libtiff >=4.7.1,<4.8.0a0
+  - __osx >=11.0
+  - openssl >=3.5.5,<4.0a0
+  - libpq >=18.3,<19.0a0
   - libwebp-base >=1.6.0,<2.0a0
-  - libzlib >=1.3.1,<2.0a0
-  - openssl >=3.5.3,<4.0a0
-  - pcre2 >=10.46,<10.47.0a0
+  - libsqlite >=3.52.0,<4.0a0
+  - libtiff >=4.7.1,<4.8.0a0
+  - libclang13 >=19.1.7
+  - libjpeg-turbo >=3.1.2,<4.0a0
+  - icu >=78.3,<79.0a0
+  - harfbuzz >=13.1.1
+  - libbrotlicommon >=1.2.0,<1.3.0a0
+  - libbrotlienc >=1.2.0,<1.3.0a0
+  - libbrotlidec >=1.2.0,<1.3.0a0
   - zstd >=1.5.7,<1.6.0a0
+  - libllvm19 >=19.1.7,<19.2.0a0
+  - libglib >=2.86.4,<3.0a0
+  - libzlib >=1.3.1,<2.0a0
+  - krb5 >=1.22.2,<1.23.0a0
+  - libclang-cpp19.1 >=19.1.7,<19.2.0a0
+  - pcre2 >=10.47,<10.48.0a0
+  - double-conversion >=3.4.0,<3.5.0a0
+  - libpng >=1.6.55,<1.7.0a0
   constrains:
-  - qt 6.9.3
+  - qt ==6.10.2
+  arch: arm64
+  platform: osx
   license: LGPL-3.0-only
   license_family: LGPL
   run_exports:
@@ -8938,6 +9157,8 @@ packages:
   - __osx >=11.0
   constrains:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: BSD-2-Clause
   license_family: BSD
   run_exports:
@@ -8963,6 +9184,8 @@ packages:
   md5: 5cec61f5b18ca8c5bbb1ad2dc5923a8e
   depends:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   run_exports:
@@ -8992,6 +9215,9 @@ packages:
   - libusb >=1.0.29,<2.0a0
   - libvulkan-loader >=1.4.357.0,<2.0a0
   - dbus >=1.16.2,<2.0a0
+  - libvulkan-loader >=1.4.341.0,<2.0a0
+  arch: arm64
+  platform: osx
   license: Zlib
   run_exports:
     weak:
@@ -9044,6 +9270,8 @@ packages:
   depends:
   - libcxx >=19
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports:
@@ -9086,6 +9314,8 @@ packages:
   depends:
   - __osx >=11.0
   - libcxx >=19
+  arch: arm64
+  platform: osx
   license: BSD-2-Clause
   license_family: BSD
   run_exports:
@@ -9100,6 +9330,8 @@ packages:
   - __osx >=11.0
   - libcxx >=17.0.0.a0
   - ncurses >=6.5,<7.0a0
+  arch: arm64
+  platform: osx
   license: NCSA
   license_family: MIT
   run_exports: {}
@@ -9149,6 +9381,8 @@ packages:
   - python >=3.12,<3.13.0a0
   - python >=3.12,<3.13.0a0 *_cpython
   - python_abi 3.12.* *_cp312
+  arch: arm64
+  platform: osx
   license: Apache-2.0
   license_family: Apache
   run_exports: {}
@@ -9160,6 +9394,8 @@ packages:
   depends:
   - __osx >=11.0
   - libcxx >=16
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports:
@@ -9252,6 +9488,8 @@ packages:
   - libnetcdf >=4.9.3,<4.9.4.0a0
   constrains:
   - libboost-headers >=1.88.0,<1.89.0a0
+  arch: arm64
+  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   run_exports:
@@ -9277,6 +9515,8 @@ packages:
 - conda: https://conda.anaconda.org/conda-forge/osx-arm64/x264-1!164.3095-h57fd34a_2.tar.bz2
   sha256: debdf60bbcfa6a60201b12a1d53f36736821db281a28223a09e0685edcce105a
   md5: b1f6dccde5d3a1f911960b6e567113ff
+  arch: arm64
+  platform: osx
   license: GPL-2.0-or-later
   license_family: GPL
   run_exports:
@@ -9289,6 +9529,8 @@ packages:
   md5: b1f7f2780feffe310b068c021e8ff9b2
   depends:
   - libcxx >=12.0.1
+  arch: arm64
+  platform: osx
   license: GPL-2.0-or-later
   license_family: GPL
   run_exports:
@@ -9296,13 +9538,15 @@ packages:
     - x265 >=3.5,<3.6.0a0
   size: 1832744
   timestamp: 1646609481185
-- conda: https://conda.anaconda.org/conda-forge/osx-arm64/xerces-c-3.3.0-hd62221f_0.conda
-  sha256: 54e36cb8172675de7f8ce39b5914de602b860c1febb1770b758f0f220836f41e
-  md5: 619c817c693a09599ecb7e864d538f63
+- conda: https://conda.anaconda.org/conda-forge/osx-arm64/xerces-c-3.3.0-h25f632f_1.conda
+  sha256: 89152175f45b5e84e0f1575848f607e305ffc122ab59d9704ea77ce699b1bd2b
+  md5: 0b886d06130b774f086d3b2ce0b7277a
   depends:
   - __osx >=11.0
-  - icu >=75.1,<76.0a0
-  - libcxx >=17
+  - icu >=78.1,<79.0a0
+  - libcxx >=19
+  arch: arm64
+  platform: osx
   license: Apache-2.0
   license_family: Apache
   run_exports:
@@ -9315,6 +9559,8 @@ packages:
   md5: 31d71ce1b056f69b6ec67ee0712bdf97
   depends:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   run_exports:
@@ -9327,6 +9573,8 @@ packages:
   md5: f51e9414bf1b7bb556aac1a0b74a75fe
   depends:
   - __osx >=11.0
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   run_exports:
@@ -9345,6 +9593,8 @@ packages:
   - python >=3.12,<3.13.0a0
   - python >=3.12,<3.13.0a0 *_cpython
   - python_abi 3.12.* *_cp312
+  arch: arm64
+  platform: osx
   license: Apache-2.0
   license_family: Apache
   run_exports: {}

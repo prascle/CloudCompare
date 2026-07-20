@@ -42,7 +42,12 @@ CSVMatrixOpenDialog::CSVMatrixOpenDialog(QWidget* parent /*=nullptr*/)
 
 void CSVMatrixOpenDialog::browseTextureFile()
 {
+#ifdef Q_OS_MAC
+	QString inputFilename = QFileDialog::getOpenFileName(this, "Texture file", textureFilenameLineEdit->text(), "*.*",
+														 nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	QString inputFilename = QFileDialog::getOpenFileName(this, "Texture file", textureFilenameLineEdit->text(), "*.*");
+#endif
 	if (inputFilename.isEmpty())
 		return;
 

@@ -254,3 +254,56 @@ void qCSF::registerCommands(ccCommandLineInterface* cmd)
 	}
 	cmd->registerCommand(ccCommandLineInterface::Command::Shared(new CommandCSF));
 }
+
+std::vector<ccHObject*> qCSF::computeCSF( ccPointCloud* pc,
+                                          int csfRigidness,
+                                          int maxIteration,
+                                          double clothResolution,
+                                          double classThreshold,
+                                          bool csfPostprocessing,
+                                          bool computeMesh)
+{
+    std::vector<ccHObject*> results;
+
+    //setup parameters
+    CSF::Parameters csfParams;
+    {
+        csfParams.smoothSlope = csfPostprocessing;
+        csfParams.class_threshold = classThreshold;
+        csfParams.cloth_resolution = clothResolution;
+        csfParams.rigidness = csfRigidness;
+        csfParams.iterations = maxIteration;
+    }
+
+        ccPointCloud* groundCloud = nullptr;
+        ccPointCloud* offGroundCloud = nullptr;
+        ccMesh* clothMesh = nullptr;
+
+        if (!CSF::Apply(pc,
+                        csfParams,
+                        groundCloud,
+                        offGroundCloud,
+                        computeMesh,
+                        clothMesh,
+                        nullptr))
+        {
+            CCTRACE("Not enough memory");
+            return results;
+        }
+
+        if (groundCloud)
+        {
+            results.push_back(groundCloud);
+        }
+        if (offGroundCloud)
+        {
+            results.push_back(offGroundCloud);
+        }
+        if (clothMesh)
+        {
+            results.push_back(clothMesh);
+        }
+
+    return results;
+}
+

@@ -47,6 +47,8 @@
 #include <QtConcurrentMap>
 #include <QMessageBox>
 
+M3C2Params qM3C2Process::s_M3C2Params;
+
 //! Default name for M3C2 scalar fields
 static const char M3C2_DIST_SF_NAME[]			= "M3C2 distance";
 static const char DIST_UNCERTAINTY_SF_NAME[]	= "distance uncertainty";
@@ -68,15 +70,6 @@ static void RemoveScalarField(ccPointCloud* cloud, const std::string& sfName)
 
 static ScalarType SCALAR_ZERO = 0;
 static ScalarType SCALAR_ONE = 1;
-
-// Precision maps (See "3D uncertainty-based topographic change detection with SfM photogrammetry: precision maps for ground control and directly georeferenced surveys" by James et al.)
-struct PrecisionMaps
-{
-	PrecisionMaps() : sX(nullptr), sY(nullptr), sZ(nullptr), scale(1.0) {}
-	bool valid() const { return (sX != nullptr && sY != nullptr && sZ != nullptr); }
-	CCCoreLib::ScalarField *sX, *sY, *sZ;
-	double scale;
-};
 
 // Computes the uncertainty based on 'precision maps' (as scattered scalar fields)
 static double ComputePMUncertainty(CCCoreLib::DgmOctree::NeighboursSet& set, const CCVector3& N, const PrecisionMaps& PM)
@@ -138,57 +131,8 @@ static double ComputePMUncertainty(CCCoreLib::DgmOctree::NeighboursSet& set, con
 	return NS.norm();
 }
 
-// Structure for parallel call to ComputeM3C2DistForPoint
-struct M3C2Params
-{
-	//input data
-	ccPointCloud* outputCloud = nullptr;
-	ccPointCloud* corePoints = nullptr;
-	NormsIndexesTableType* coreNormals = nullptr;
 
-	//main options
-	PointCoordinateType projectionRadius = 0;
-	PointCoordinateType projectionDepth = 0;
-	bool updateNormal = false;
-	bool exportNormal = false;
-	bool useMedian = false;
-	bool computeConfidence = false;
-	bool progressiveSearch = false;
-	bool onlyPositiveSearch = false;
-	unsigned minPoints4Stats = 3;
-	double registrationRms = 0;
-
-	//export
-	qM3C2Dialog::ExportOptions exportOption;
-	bool keepOriginalCloud = false;
-
-	//octrees
-	ccOctree::Shared cloud1Octree;
-	unsigned char level1 = 0;
-	ccOctree::Shared cloud2Octree;
-	unsigned char level2 = 0;
-
-	//scalar fields
-	ccScalarField* m3c2DistSF = nullptr;		//M3C2 distance
-	ccScalarField* distUncertaintySF = nullptr;	//distance uncertainty
-	ccScalarField* sigChangeSF = nullptr;		//significant change
-	ccScalarField* stdDevCloud1SF = nullptr;	//standard deviation information for cloud #1
-	ccScalarField* stdDevCloud2SF = nullptr;	//standard deviation information for cloud #2
-	ccScalarField* densityCloud1SF = nullptr;	//export point density at projection scale for cloud #1
-	ccScalarField* densityCloud2SF = nullptr;	//export point density at projection scale for cloud #2
-
-	//precision maps
-	PrecisionMaps cloud1PM, cloud2PM;
-	bool usePrecisionMaps = false;
-
-	//progress notification
-	CCCoreLib::NormalizedProgress* nProgress = nullptr;
-	bool processCanceled = false;
-	bool processFailed = false;
-};
-static M3C2Params s_M3C2Params;
-
-void ComputeM3C2DistForPoint(unsigned index)
+void qM3C2Process::ComputeM3C2DistForPoint(unsigned index)
 {
 	if (s_M3C2Params.processCanceled)
 		return;
@@ -446,6 +390,87 @@ void ComputeM3C2DistForPoint(unsigned index)
 	}
 }
 
+bool qM3C2Process::getM3C2Params(double& normalScale,
+                                 double& projectionScale,
+                                 qM3C2Normals::ComputationMode& normMode,
+                                 double& samplingDist,
+                                 ccScalarField*& normalScaleSF,
+                                 int& maxThreadCount,
+                                 bool allowDialogs,
+                                 const qM3C2Dialog& dlg,
+                                 QString& errorMessage,
+                                 QWidget* parentWidget)
+{
+    //get the clouds in the right order
+    ccPointCloud* cloud1 = dlg.getCloud1(); // from dlg constructor
+    ccPointCloud* cloud2 = dlg.getCloud2(); // from dlg constructor
+
+    if (!cloud1 || !cloud2)
+    {
+        assert(false);
+        return false;
+    }
+
+    if (allowDialogs)
+    {
+        s_M3C2Params = M3C2Params(); // else for CloudComPy: s_M3C2Params is already partially initialized with parameters not found in param file
+    }
+    //normals computation parameters
+    normalScale = dlg.normalScaleDoubleSpinBox->value();       // from param file NormalScale
+    projectionScale = dlg.cylDiameterDoubleSpinBox->value();   // from param file SearchScale
+    normMode = dlg.getNormalsComputationMode();                // from param file NormalMode
+    samplingDist = dlg.cpSubsamplingDoubleSpinBox->value();    // from param file SubsampleRadius
+    normalScaleSF = nullptr; //normal scale (multi-scale mode only)
+    maxThreadCount = dlg.getMaxThreadCount();                  // from param file MaxThreadCount
+
+    //other parameters are stored in 's_M3C2Params' for parallel call
+    s_M3C2Params.projectionRadius = static_cast<PointCoordinateType>(projectionScale / 2); //we want the radius in fact ;)
+    s_M3C2Params.projectionDepth = static_cast<PointCoordinateType>(dlg.cylHalfHeightDoubleSpinBox->value()); // from param file SearchDepth
+    s_M3C2Params.corePoints = dlg.getCorePointsCloud();          // from dlg constructor
+    s_M3C2Params.registrationRms = dlg.rmsCheckBox->isChecked() ? dlg.rmsDoubleSpinBox->value() : 0.0; // from param file RegistrationError, RegistrationErrorEnabled
+    s_M3C2Params.exportOption = dlg.getExportOption();           // from param file ProjDestIndex
+    s_M3C2Params.keepOriginalCloud = dlg.keepOriginalCloud();    // from param file useOriginalCloudCheckBox
+    s_M3C2Params.useMedian = dlg.useMedianCheckBox->isChecked(); // from param file useMedianCheckBox
+    s_M3C2Params.minPoints4Stats = dlg.getMinPointsForStats();   // from param file UseMinPoints4Stat, MinPoints4Stat
+    s_M3C2Params.progressiveSearch = !dlg.useSinglePass4DepthCheckBox->isChecked(); // from param file UseSinglePass4Depth
+    s_M3C2Params.onlyPositiveSearch = dlg.positiveSearchOnlyCheckBox->isChecked();  // from param file PositiveSearchOnly
+
+    //precision maps
+
+    if (allowDialogs)
+    {
+        s_M3C2Params.usePrecisionMaps = dlg.precisionMapsGroupBox->isEnabled() && dlg.precisionMapsGroupBox->isChecked(); // from param file UsePrecisionMaps
+        if (s_M3C2Params.usePrecisionMaps)
+        {
+            if (QMessageBox::question(parentWidget, "Precision Maps", "Are you sure you want to compute the M3C2 distances with precision maps?", QMessageBox::Yes, QMessageBox::No) == QMessageBox::No)
+            {
+                s_M3C2Params.usePrecisionMaps = false;
+                dlg.precisionMapsGroupBox->setChecked(false);
+            }
+        }
+        if (s_M3C2Params.usePrecisionMaps)
+        {
+            s_M3C2Params.cloud1PM.sX = cloud1->getScalarField(dlg.c1SxComboBox->currentIndex());
+            s_M3C2Params.cloud1PM.sY = cloud1->getScalarField(dlg.c1SyComboBox->currentIndex());
+            s_M3C2Params.cloud1PM.sZ = cloud1->getScalarField(dlg.c1SzComboBox->currentIndex());
+            s_M3C2Params.cloud1PM.scale = dlg.pm1ScaleDoubleSpinBox->value();
+
+            s_M3C2Params.cloud2PM.sX = cloud2->getScalarField(dlg.c2SxComboBox->currentIndex());
+            s_M3C2Params.cloud2PM.sY = cloud2->getScalarField(dlg.c2SyComboBox->currentIndex());
+            s_M3C2Params.cloud2PM.sZ = cloud2->getScalarField(dlg.c2SzComboBox->currentIndex());
+            s_M3C2Params.cloud2PM.scale = dlg.pm2ScaleDoubleSpinBox->value();
+
+            if (!s_M3C2Params.cloud1PM.valid() || !s_M3C2Params.cloud2PM.valid())
+            {
+                errorMessage = "Invalid 'Precision maps' settings!";
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
 bool qM3C2Process::Compute(const qM3C2Dialog& dlg, QString& errorMessage, ccPointCloud*& outputCloud, bool allowDialogs, QWidget* parentWidget/*=nullptr*/, ccMainAppInterface* app/*=nullptr*/)
 {
 	errorMessage.clear();
@@ -462,96 +487,32 @@ bool qM3C2Process::Compute(const qM3C2Dialog& dlg, QString& errorMessage, ccPoin
 	}
 
 	//normals computation parameters
-	double normalScale = dlg.normalScaleDoubleSpinBox->value();
-	double projectionScale = dlg.cylDiameterDoubleSpinBox->value();
-	qM3C2Normals::ComputationMode normMode = dlg.getNormalsComputationMode();
-	// 		DEFAULT_MODE			= 0, //compute normals on core points
-	// USE_CLOUD1_NORMALS		= 1,
-	// 	MULTI_SCALE_MODE		= 2,
-	// 	VERT_MODE				= 3,
-	// 	HORIZ_MODE				= 4,
-	// 	USE_CORE_POINTS_NORMALS	= 5,
-	QString msg("[qM3C2Process::Compute] normal mode: ");
-	switch (normMode) {
-	case qM3C2Normals::DEFAULT_MODE:
-		msg += "DEFAULT_MODE";
-		break;
-	case qM3C2Normals::USE_CLOUD1_NORMALS:
-		msg += "USE_CLOUD1_NORMALS";
-		break;
-	case qM3C2Normals::MULTI_SCALE_MODE:
-		msg += "MULTI_SCALE_MODE";
-		break;
-	case qM3C2Normals::VERT_MODE:
-		msg += "VERT_MODE";
-		break;
-	case qM3C2Normals::HORIZ_MODE:
-		msg += "HORIZ_MODE";
-		break;
-	case qM3C2Normals::USE_CORE_POINTS_NORMALS:
-		msg += "USE_CORE_POINTS_NORMALS";
-		break;
-	default:
-		ccLog::Error("[qM3C2Process::Compute] Unexpected normal mode " + QString::number(normMode));
-		break;
-	}
-	ccLog::Print(msg);
-	double samplingDist = dlg.cpSubsamplingDoubleSpinBox->value();
-	ccScalarField* normalScaleSF = nullptr; //normal scale (multi-scale mode only)
 
-	//other parameters are stored in 's_M3C2Params' for parallel call
-	s_M3C2Params = M3C2Params();
-	s_M3C2Params.projectionRadius = static_cast<PointCoordinateType>(projectionScale / 2); //we want the radius in fact ;)
-	s_M3C2Params.projectionDepth = static_cast<PointCoordinateType>(dlg.cylHalfHeightDoubleSpinBox->value());
-	s_M3C2Params.corePoints = dlg.getCorePointsCloud();
-	s_M3C2Params.registrationRms = dlg.rmsCheckBox->isChecked() ? dlg.rmsDoubleSpinBox->value() : 0.0;
-	s_M3C2Params.exportOption = dlg.getExportOption();
-	s_M3C2Params.keepOriginalCloud = dlg.keepOriginalCloud();
-	s_M3C2Params.useMedian = dlg.useMedianCheckBox->isChecked();
-	s_M3C2Params.minPoints4Stats = dlg.getMinPointsForStats();
-	s_M3C2Params.progressiveSearch = !dlg.useSinglePass4DepthCheckBox->isChecked();
-	s_M3C2Params.onlyPositiveSearch = dlg.positiveSearchOnlyCheckBox->isChecked();
+	double normalScale;
+	double projectionScale;
+	qM3C2Normals::ComputationMode normMode;
+	double samplingDist;
+	ccScalarField* normalScaleSF = nullptr;
 
-	//precision maps
+    //max thread count
+    int maxThreadCount;
+
+	if (!getM3C2Params(normalScale, projectionScale, normMode, samplingDist, normalScaleSF, maxThreadCount,
+	                   allowDialogs, dlg, errorMessage, parentWidget))
 	{
-		s_M3C2Params.usePrecisionMaps = dlg.precisionMapsGroupBox->isEnabled() && dlg.precisionMapsGroupBox->isChecked();
-		if (s_M3C2Params.usePrecisionMaps)
-		{
-			if (allowDialogs && QMessageBox::question(parentWidget, "Precision Maps", "Are you sure you want to compute the M3C2 distances with precision maps?", QMessageBox::Yes, QMessageBox::No) == QMessageBox::No)
-			{
-				s_M3C2Params.usePrecisionMaps = false;
-				dlg.precisionMapsGroupBox->setChecked(false);
-			}
-		}
-		if (s_M3C2Params.usePrecisionMaps)
-		{
-			s_M3C2Params.cloud1PM.sX = cloud1->getScalarField(dlg.c1SxComboBox->currentIndex());
-			s_M3C2Params.cloud1PM.sY = cloud1->getScalarField(dlg.c1SyComboBox->currentIndex());
-			s_M3C2Params.cloud1PM.sZ = cloud1->getScalarField(dlg.c1SzComboBox->currentIndex());
-			s_M3C2Params.cloud1PM.scale = dlg.pm1ScaleDoubleSpinBox->value();
-
-			s_M3C2Params.cloud2PM.sX = cloud2->getScalarField(dlg.c2SxComboBox->currentIndex());
-			s_M3C2Params.cloud2PM.sY = cloud2->getScalarField(dlg.c2SyComboBox->currentIndex());
-			s_M3C2Params.cloud2PM.sZ = cloud2->getScalarField(dlg.c2SzComboBox->currentIndex());
-			s_M3C2Params.cloud2PM.scale = dlg.pm2ScaleDoubleSpinBox->value();
-
-			if (!s_M3C2Params.cloud1PM.valid() || !s_M3C2Params.cloud2PM.valid())
-			{
-				errorMessage = "Invalid 'Precision maps' settings!";
-				return false;
-			}
-		}
+	    return false;
 	}
-
-
-	//max thread count
-	int maxThreadCount = dlg.getMaxThreadCount();
 
 	if (app)
 		app->dispToConsole(QString("[M3C2] Will use %1 threads").arg(maxThreadCount == 0 ? "the max number of" : QString::number(maxThreadCount)), ccMainAppInterface::STD_CONSOLE_MESSAGE);
 
 	//progress dialog
-	ccProgressDialog pDlg(parentWidget);
+    ccProgressDialog myDlg(parentWidget);
+	ccProgressDialog* pDlg =nullptr;
+    if (app)
+    {
+        pDlg = &myDlg;
+    }
 
 	//Duration: initialization & normals computation
 	QElapsedTimer initTimer;
@@ -561,7 +522,7 @@ bool qM3C2Process::Compute(const qM3C2Dialog& dlg, QString& errorMessage, ccPoin
 	s_M3C2Params.cloud1Octree = cloud1->getOctree();
 	if (!s_M3C2Params.cloud1Octree)
 	{
-		s_M3C2Params.cloud1Octree = cloud1->computeOctree(&pDlg);
+		s_M3C2Params.cloud1Octree = cloud1->computeOctree(pDlg);
 		if (s_M3C2Params.cloud1Octree && cloud1->getParent() && app)
 		{
 			app->addToDB(cloud1->getOctreeProxy());
@@ -576,7 +537,7 @@ bool qM3C2Process::Compute(const qM3C2Dialog& dlg, QString& errorMessage, ccPoin
 	s_M3C2Params.cloud2Octree = cloud2->getOctree();
 	if (!s_M3C2Params.cloud2Octree)
 	{
-		s_M3C2Params.cloud2Octree = cloud2->computeOctree(&pDlg);
+		s_M3C2Params.cloud2Octree = cloud2->computeOctree(pDlg);
 		if (s_M3C2Params.cloud2Octree && cloud2->getParent() && app)
 		{
 			app->addToDB(cloud2->getOctreeProxy());
@@ -600,7 +561,7 @@ bool qM3C2Process::Compute(const qM3C2Dialog& dlg, QString& errorMessage, ccPoin
 			static_cast<PointCoordinateType>(samplingDist),
 			modParams,
 			s_M3C2Params.cloud1Octree.data(),
-			&pDlg);
+			pDlg);
 
 		if (subsampled)
 		{
@@ -711,7 +672,7 @@ bool qM3C2Process::Compute(const qM3C2Dialog& dlg, QString& errorMessage, ccPoin
 				invalidNormals,
 				maxThreadCount,
 				normalScaleSF,
-				&pDlg,
+				pDlg,
 				baseOctree);
 
 			//now fix the orientation
@@ -753,7 +714,7 @@ bool qM3C2Process::Compute(const qM3C2Dialog& dlg, QString& errorMessage, ccPoin
 																			*s_M3C2Params.coreNormals,
 																			orientationCloud,
 																			maxThreadCount,
-																			&pDlg)
+																			pDlg)
 						)
 					{
 						errorMessage = "[M3C2] Failed to re-orient the normals with input point cloud!";
@@ -846,11 +807,14 @@ bool qM3C2Process::Compute(const qM3C2Dialog& dlg, QString& errorMessage, ccPoin
 		unsigned corePointCount = s_M3C2Params.corePoints->size();
 		assert(normMode == qM3C2Normals::VERT_MODE || (s_M3C2Params.coreNormals && corePointCount == s_M3C2Params.coreNormals->currentSize()));
 
-		pDlg.reset();
-		CCCoreLib::NormalizedProgress nProgress(&pDlg, corePointCount);
-		pDlg.setMethodTitle(QObject::tr("M3C2 Distances Computation"));
-		pDlg.setInfo(QObject::tr("Core points: %1").arg(corePointCount));
-		pDlg.start();
+		if (pDlg) pDlg->reset();
+		CCCoreLib::NormalizedProgress nProgress(pDlg, corePointCount);
+		if (pDlg)
+		{
+            pDlg->setMethodTitle(QObject::tr("M3C2 Distances Computation"));
+            pDlg->setInfo(QObject::tr("Core points: %1").arg(corePointCount));
+            pDlg->start();
+		}
 		s_M3C2Params.nProgress = &nProgress;
 
 		//allocate distances SF

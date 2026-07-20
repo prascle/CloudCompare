@@ -18,6 +18,7 @@
 #ifndef QHOUGH_NORMALS_PLUGIN_HEADER
 #define QHOUGH_NORMALS_PLUGIN_HEADER
 
+#include "qHoughNormalsExport.h"
 #include "ccStdPluginInterface.h"
 
 //! Wrapper to the 'normals_Hough' library (https://github.com/aboulch/normals_Hough)
@@ -52,5 +53,14 @@ protected:
 	//! Associated action
 	QAction* m_action;
 };
+
+void QHoughNormals_PLUGIN_LIB_API computeHoughNormalsPy(ccPointCloud* cloud,
+                                                        int           K             = 100,
+                                                        int           T             = 1000,
+                                                        int           n_phi         = 15,
+                                                        int           n_rot         = 5,
+                                                        bool          use_density   = false,
+                                                        float         tol_angle_rad = 0.79f,
+                                                        int           k_density     = 5);
 
 #endif //QHOUGH_NORMALS_PLUGIN_HEADER

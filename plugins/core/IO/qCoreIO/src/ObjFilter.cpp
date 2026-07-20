@@ -145,7 +145,6 @@ CC_FILE_ERROR ObjFilter::saveToFile(ccHObject* entity, const QString& filename, 
 
 	stream << "# " << FileIO::createdBy() << Qt::endl;
 	stream << "# " << FileIO::createdDateTime() << Qt::endl;
-
 	if (file.error() != QFile::NoError)
 	{
 		return CC_FERR_WRITING;

@@ -935,6 +935,8 @@ class QCC_DB_LIB_API ccPointCloud : public CCCoreLib::PointCloudTpl<ccGenericPoi
 	/** Must be called before the OpenGL context is released.
 	 **/
 	static void ReleaseShaders();
+	//! Sets the visibility array from a polyline, a direction (oX, oY, oZ), a status (inside, outside)
+    virtual bool setVisibility(const ccPolyline* poly, unsigned char orthoDim, bool inside=true);
 
 	//! Releases OpenGL ressources (textures, VBOs, etc.)
 	static void ReleaseOpenGLRessources();

@@ -91,6 +91,7 @@ class CCBundler:
     # dictionary of lib dependencies : key depends on (list of libs) (not recursive)
     dependencies: dict[str, list[str]] = dict()
     warnings: dict[str, list[str]] = dict()
+    old_rpath: dict[str, list[str]] = dict()
 
     def __init__(self, config: CCAppBundleConfig) -> None:
         """Construct a CCBundler object"""
@@ -98,7 +99,7 @@ class CCBundler:
 
     def bundle(self) -> None:
         """Bundle the dependencies into the .app"""
-        if config.embed_python:
+        if self.config.embed_python:
             self._embed_python()
 
         libs_found, libs_ex_found, libs_in_plugins = self._collect_dependencies()
@@ -253,6 +254,79 @@ class CCBundler:
         shutil.copytree(self.config.base_python_libs, self.config.embedded_python_lib)
         shutil.copy2(self.config.base_python_binary, self.config.embedded_python_binary)
 
+    def _replace_install_name(self, binary_path: Path, old_name: str, new_name: str) -> None:
+        """Replace install name of a binary.
+
+        Args:
+        ----
+            binary_path (Path): Path to a binary (lib, executable)
+            old_name (str): Old install name to replace
+            new_name (str): New install name to set
+
+        """
+        subprocess.run(
+            ["install_name_tool", "-change", old_name, new_name, str(binary_path)],
+            stdout=subprocess.PIPE,
+            check=False,
+        )
+    
+    def _collect_old_install_names(self, binary_path: Path) -> list[str]:
+        """Collect old install names of a binary.
+
+        Args:
+        ----
+            binary_path (Path): Path to a binary (lib, executable)
+
+        Returns:
+        -------
+            list[str]: List of old install names
+
+        """
+        old_names = []
+        with subprocess.Popen(["otool", "-L", str(binary_path)], stdout=subprocess.PIPE) as proc:
+            lines = proc.stdout.readlines()
+            lines.pop(0)  # Drop the first line as it contains the name of the lib / binary
+            for line in lines:
+                vals = line.split()
+                if len(vals) < 2:
+                    continue
+                old_name = vals[0].decode()
+                if old_name.startswith("@rpath"):
+                    old_names.append(old_name)
+        return old_names
+    
+    def _replace_install_names(self, binary_path: Path, relative_path: str) -> None:
+        """Replace install names of a binary.
+
+        Args:
+        ----
+            binary_path (Path): Path to a binary (lib, executable)
+            relative_path (str): Relative path for the new install names
+        """
+        old_names = self._collect_old_install_names(binary_path)
+        for old_name in old_names:
+            lib_name = old_name.split("/")[-1]
+            new_name = "@loader_path" + relative_path + lib_name
+            self._replace_install_name(binary_path, old_name, new_name)
+    
+    def _remove_old_rpath(self, binary_path: Path) -> None:
+        """Remove old rpath from a binary.
+
+        Args:
+        ----
+            binary_path (Path): Path to a binary (lib, executable)
+
+        """
+        if str(binary_path) not in self.old_rpath:
+            logger.warning("no old rpath found for %s", binary_path)
+            return
+        for rpath in self.old_rpath[str(binary_path)]:
+            subprocess.run(
+                ["install_name_tool", "-delete_rpath", rpath, str(binary_path)],
+                stdout=subprocess.PIPE,
+                check=False,
+            )
+
     def _embed_python(self) -> None:
         """Embed python distribution dependencies in site-packages.
 
@@ -292,6 +366,7 @@ class CCBundler:
             lib_ex_found.update(lib_ex)
 
             rpaths = CCBundler._get_rpath(lib2check)
+            self.old_rpath[str(lib2check)] = rpaths
 
             abs_rpaths = CCBundler._convert_rpaths(lib2check, rpaths)
             if self.config.extra_pathlib not in abs_rpaths:
@@ -324,14 +399,14 @@ class CCBundler:
                     self.config.frameworks_path,
                 )  # copy libs that are not in framework yet
                 added_to_framework_count = added_to_framework_count + 1
-        logger.info("libs added to Frameworks: %i", {added_to_framework_count})
+        logger.info("libs added to Frameworks: %i", added_to_framework_count)
 
         logger.info(" --- Python libs: set rpath to Frameworks, nb libs: %i", len(python_libs))
 
         # Set the rpath to the Frameworks path
-        # TODO: remove old rpath
         deep_sp = len(self.config.embedded_python_lib.parents)
         for file in python_libs:
+            self._remove_old_rpath(file)
             deep_lib_sp = len(file.parents) - deep_sp
             rpath = "@loader_path/../../../"
             for _ in range(deep_lib_sp):
@@ -398,6 +473,7 @@ class CCBundler:
             # TODO: group these two functions since we do not need
             # get all rpath for the current lib
             rpaths_str = CCBundler._get_rpath(lib2check)
+            self.old_rpath[str(lib2check)] = rpaths_str
             # get absolute path from found rpath
             abs_search_paths = CCBundler._convert_rpaths(lib2check, rpaths_str)
 
@@ -408,6 +484,10 @@ class CCBundler:
             # we can take advantage of that...
             if self.config.extra_pathlib not in abs_search_paths:
                 abs_search_paths.append(self.config.extra_pathlib)
+
+            fbxPath="/Applications/Autodesk/FBX SDK/2020.2.1/lib/clang/release"
+            if fbxPath not in abs_search_paths:
+                abs_search_paths.append(fbxPath)
 
             # TODO: check if exists, else throw and exception
             for dependency in lib_deps:
@@ -438,13 +518,15 @@ class CCBundler:
         Args:
         ----
             libs_found (set[Path]): libs and binaries found in the collect process.
-            libs_ex_found (set[(Path, Path)]): libs and binaries found with an @executable_path dependency.
-            libs_found (set[Path]): libs and binaries found in the plugin dir.
+            lib_ex_found (set[(Path, Path)]): libs and binaries found with an @executable_path dependency.
+            libs_in_plugins (set[Path]): libs and binaries found in the plugin dir.
 
         """
         logger.info("Copying libraries")
         logger.info("lib_ex_found to add to Frameworks: %i", len(lib_ex_found))
         logger.info("libs_found to add to Frameworks: %i", len(libs_found))
+
+        ## --- Copy libs to Frameworks if not already there and not in plugins
 
         libs_in_frameworks = set(self.config.frameworks_path.iterdir())
 
@@ -456,33 +538,28 @@ class CCBundler:
             if (base not in libs_in_frameworks) and (lib not in libs_in_plugins):
                 shutil.copy2(lib, self.config.frameworks_path)
                 nb_libs_added += 1
-        logger.info("number of libs added to Frameworks: %i", {nb_libs_added})
+        logger.info("number of libs added to Frameworks: %i", nb_libs_added)
+        shutil.copy2("/Applications/Autodesk/FBX SDK/2020.2.1/lib/clang/release/libfbxsdk.dylib",  self.config.frameworks_path)
 
-        # --- ajout des rpath pour les libraries du framework : framework et ccPlugins
-        logger.info(" --- Frameworks libs: add rpath to Frameworks")
-        nb_frameworks_libs = 0
+        ## --- some extra fixes for some specific libs (TODO: this should be handled by the CMake scripts of the dependencies)
+        #      to be done before the other changes to the plugins libs since we are changing the install_names based on rpath
 
-        # TODO: purge old rpath
-        for file in self.config.frameworks_path.iterdir():
-            if file.is_file() and file.suffix in (".so", ".dylib"):
-                nb_frameworks_libs += 1
-                subprocess.run(
-                    ["install_name_tool", "-add_rpath", "@loader_path", str(file)],
-                    stdout=subprocess.PIPE,
-                    check=False,
-                )
-        logger.info("number of Frameworks libs with rpath modified: %i", nb_frameworks_libs)
-        logger.info(" --- PlugIns libs: add rpath to Frameworks, number of libs: %i", len(libs_in_plugins))
-        for file in libs_in_plugins:
-            if file.is_file():
-                subprocess.run(
-                    ["install_name_tool", "-add_rpath", "@loader_path/../../Frameworks", str(file)],
-                    stdout=subprocess.PIPE,
-                    check=False,
-                )
+        subprocess.run(
+            [
+                "install_name_tool",
+                "-change",
+                "/opt/homebrew/opt/libpng/lib/libpng16.16.dylib",
+                "@rpath/libpng16.16.dylib",
+                str(self.config.plugin_path / "ccPlugins" / "libQCANUPO_PLUGIN.dylib"),
+            ],
+            stdout=subprocess.PIPE,
+            check=False,
+        )
 
-        # TODO: make a function for this
-        # Embed libs with an @executable_path dependencies
+        #      TODO: make a function for this
+        #      Embed libs with an @executable_path dependencies
+        #      to be done before the other changes to the plugins libs since we are changing the install_names based on rpath
+        
         for lib_ex in lib_ex_found:
             base = lib_ex[0]
             target = lib_ex[1]
@@ -499,6 +576,7 @@ class CCBundler:
                 raise Exception("no base path")
                 sys.exit(1)
 
+            self._remove_old_rpath(base_path)
             logger.info("modify : @executable_path -> @rpath: %s", base_path)
 
             subprocess.run(
@@ -512,6 +590,46 @@ class CCBundler:
                 stdout=subprocess.PIPE,
                 check=False,
             )
+
+        ## --- add rpath to Frameworks for all libs in the bundle (frameworks and plugins)
+
+        logger.info(" --- Frameworks libs: add rpath to Frameworks")
+        nb_frameworks_libs = 0
+
+        for file in self.config.frameworks_path.iterdir():
+            if file.is_file() and file.suffix in (".so", ".dylib"):
+                nb_frameworks_libs += 1
+                self._remove_old_rpath(file)
+                subprocess.run(
+                    ["install_name_tool", "-add_rpath", "@loader_path", str(file)],
+                    stdout=subprocess.PIPE,
+                    check=False,
+                )
+                # --- add rpath to ccPlugins for .so files (Python pybind11)
+                if file.suffix in (".so"):
+                    subprocess.run(
+                        ["install_name_tool", "-add_rpath", "@loader_path/../Plugins/ccPlugins", str(file)],
+                        stdout=subprocess.PIPE,
+                        check=False,
+                    )
+        logger.info("number of Frameworks libs with rpath modified: %i", nb_frameworks_libs)
+
+        logger.info(" --- PlugIns libs: add rpath to Frameworks, number of libs: %i", len(libs_in_plugins))
+        for file in libs_in_plugins:
+            if file.is_file():
+                self._remove_old_rpath(file)
+                subprocess.run(
+                    ["install_name_tool", "-add_rpath", "@loader_path/../../Frameworks", str(file)],
+                    stdout=subprocess.PIPE,
+                    check=False,
+                )
+                subprocess.run(
+                    ["install_name_tool", "-add_rpath", "@loader_path", str(file)],
+                    stdout=subprocess.PIPE,
+                    check=False,
+                )
+                # --- replace install names needed for libs in plugins to avoid problems with delocate (PyPI build)
+                self._replace_install_names(file, "/../../Frameworks/")
 
 
 if __name__ == "__main__":

@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 	ccViewerApplication::InitOpenGL();
 
 	// Convert the input arguments to QString before the application is initialized
-	// (as it will force utf8, which might prevent from properly reading filenmaes from the command line)
+	// (as it will force utf8, which might prevent from properly reading filenames from the command line)
 	QStringList argumentsLocal8Bit;
 	for (int i = 0; i < argc; ++i)
 	{

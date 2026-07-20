@@ -3519,7 +3519,12 @@ void ccCompass::exportToSVG()
 	constexpr float zoom = 2.0f; //TODO: create popup box
 
 	//get filename for the svg file
+#ifdef Q_OS_MAC
+	QString filename = QFileDialog::getSaveFileName(m_dlg, tr("SVG Output file"), "", tr("SVG files (*.svg)"),
+	 	 											nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	QString filename = QFileDialog::getSaveFileName(m_dlg, tr("SVG Output file"), "", tr("SVG files (*.svg)"));
+#endif
 	if (filename.isEmpty())
 	{
 		//process cancelled by the user
@@ -3538,7 +3543,12 @@ void ccCompass::exportToSVG()
 void ccCompass::onSave()
 {
 	//get output file path
+#ifdef Q_OS_MAC
+	QString filename = QFileDialog::getSaveFileName(m_dlg, tr("Output file"), "", tr("CSV files (*.csv *.txt);;XML (*.xml)"),
+													nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	QString filename = QFileDialog::getSaveFileName(m_dlg, tr("Output file"), "", tr("CSV files (*.csv *.txt);;XML (*.xml)"));
+#endif
 	if (filename.isEmpty())
 	{
 		//process cancelled by the user

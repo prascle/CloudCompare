@@ -176,3 +176,54 @@ void qHoughNormals::doAction()
 	//currently selected entities appearance may have changed!
 	m_app->refreshAll();
 }
+
+void computeHoughNormalsPy(ccPointCloud* cloud,
+                           int           K,
+                           int           T,
+                           int           n_phi,
+                           int           n_rot,
+                           bool          use_density,
+                           float         tol_angle_rad,
+                           int           k_density)
+{
+	size_t           pointCount = cloud->size();
+	Eigen::MatrixX3d pc;
+	pc.resize(pointCount, 3);
+	for (size_t i = 0; i < pointCount; ++i)
+	{
+		const CCVector3* P = cloud->getPoint(static_cast<unsigned>(i));
+		pc.row(i)          = Eigen::Vector3d(P->x, P->y, P->z);
+	}
+
+	// Create estimator
+	Eigen::MatrixX3d       normals;
+	Eigen_Normal_Estimator ne(pc, normals);
+	ne.get_K()             = K;
+	ne.get_T()             = T;
+	ne.density_sensitive() = use_density;
+	ne.get_n_phi()         = n_phi;
+	ne.get_n_rot()         = n_rot;
+	ne.get_tol_angle_rad() = tol_angle_rad;
+	ne.get_K_density()     = k_density;
+
+	// Estimate
+	ne.estimate_normals();
+
+	if (!cloud->resizeTheNormsTable())
+	{
+		ccLog::Error("Not enough memory");
+		return;
+	}
+
+	for (size_t i = 0; i < pointCount; ++i)
+	{
+		const Eigen::Vector3d& n = normals.row(i);
+		CCVector3              N(static_cast<PointCoordinateType>(n.x()),
+                    static_cast<PointCoordinateType>(n.y()),
+                    static_cast<PointCoordinateType>(n.z()));
+		cloud->setPointNormal(static_cast<unsigned>(i), N);
+	}
+
+	cloud->showNormals(true);
+	cloud->prepareDisplayForRefresh_recursive();
+}
