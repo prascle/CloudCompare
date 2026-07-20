@@ -101,8 +101,9 @@ else()
 		target_link_libraries( ${PROJECT_NAME} PUBLIC hidapi::hidapi )
 		if ( WIN32 )
 			#no need to copy a DLL, as hidapi should be compiled as a static library by default
-			#set( HIDAPI_LIB ${HIDAPI_BINARY_DIR}/src/windows/hidapi.dll )
-			#install( PROGRAMS ${HIDAPI_LIB} DESTINATION ${CLOUDCOMPARE_DEST_FOLDER} )
+			# but still required when building the cloudComPy documentation and testing.
+			set( HIDAPI_LIB ${HIDAPI_BINARY_DIR}/src/windows/hidapi.dll )
+			install( PROGRAMS ${HIDAPI_LIB} DESTINATION ${CLOUDCOMPARE_DEST_FOLDER} )
 		elseif ( LINUX )
 			set( HIDAPI_LIB ${HIDAPI_BINARY_DIR}/src/linux/libhidapi-hidraw.so.0.16.0 )
 			install( FILES ${HIDAPI_LIB} DESTINATION ${CLOUDCOMPARE_DEST_FOLDER} RENAME "libhidapi-hidraw.so.0")
