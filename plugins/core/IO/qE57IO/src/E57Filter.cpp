@@ -2835,7 +2835,7 @@ CC_FILE_ERROR E57Filter::loadFile(const QString& filename, ccHObject& container,
 				const e57::Node scanNode = data3D.get(i);
 				QString         scanGUID;
 
-				LoadedScan scan = LoadScan(scanNode, scanGUID, showGlobalProgress ? nullptr : progressDlg.data(), parameters.extraData);
+				LoadedScan scan = LoadScan(scanNode, scanGUID, showGlobalProgress ? nullptr : progressDlg.get(), parameters.extraData);
 
 				if (scan.entity)
 				{
