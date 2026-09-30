@@ -1,6 +1,6 @@
 [workspace]
 name = "cloudcompare"
-version = "2.14.0"
+version = "2.13.90"
 description = "CloudCompare is a 3D point cloud processing software."
 authors = ["Daniel Girardeau-Montaut <admin@cloudcompare.org>"]
 channels = ["conda-forge"]
