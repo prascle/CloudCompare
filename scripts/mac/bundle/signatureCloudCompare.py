@@ -125,6 +125,8 @@ class CCSignBundle:
                 "runtime",
                 "-i",
                 self.config.identifier,
+                "-o",
+                "runtime",
                 "--entitlements",
                 str(entitlements),
                 str(path),
